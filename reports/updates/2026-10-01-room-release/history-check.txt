@@ -1,0 +1,1 @@
+Verified 92 historical report files against statesync-v2-client-transitions.zip: all identical.

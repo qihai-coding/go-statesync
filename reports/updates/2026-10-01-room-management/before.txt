@@ -1,0 +1,6 @@
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+    server_lifecycle_test.go:68: unrelated room join blocked by initialization Application error 0xb (local): join canceled
+--- FAIL: TestRoomInitializationDoesNotBlockOtherJoins (0.30s)
+FAIL
+FAIL	example.com/statesync	0.322s
+FAIL

@@ -1,0 +1,19 @@
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+    room_release_test.go:58: ended room retains game, entities, sessions or queue references
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+    room_release_test.go:58: ended room retains game, entities, sessions or queue references
+--- FAIL: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- FAIL: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- FAIL: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+    room_release_test.go:123: ended room retains game, entities, sessions or queue references
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+    room_release_test.go:123: ended room retains game, entities, sessions or queue references
+--- FAIL: TestRoomReleaseWithPendingMessages (0.07s)
+    --- FAIL: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- FAIL: TestRoomReleaseWithPendingMessages/panic (0.03s)
+FAIL
+FAIL	example.com/statesync	0.092s
+FAIL

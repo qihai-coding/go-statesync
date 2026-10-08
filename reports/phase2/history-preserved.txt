@@ -1,0 +1,15 @@
+首版报告与首版压缩包逐文件摘要一致：
+reports/bench.txt
+reports/builds.txt
+reports/cli-smoke.txt
+reports/cpu-profile.txt
+reports/fuzz.txt
+reports/smoke.json
+reports/soak-10m.json
+reports/soak-cpu.prof
+reports/SOURCE.sha256
+reports/tests-coverage.txt
+reports/tests-race.txt
+reports/VALIDATION.md
+reports/weak-150ms.json
+reports/weak-300ms.json

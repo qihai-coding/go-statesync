@@ -1,0 +1,52 @@
+=== RUN   TestInvalidProbabilitiesRejected
+=== RUN   TestInvalidProbabilitiesRejected/loss/NaN
+    proxy_test.go:26: invalid update accepted
+    proxy_test.go:29: invalid update changed the active profile
+    proxy_test.go:36: invalid initial profile accepted
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/NaN
+    proxy_test.go:26: invalid update accepted
+    proxy_test.go:29: invalid update changed the active profile
+    proxy_test.go:36: invalid initial profile accepted
+=== RUN   TestInvalidProbabilitiesRejected/reorder/NaN
+    proxy_test.go:26: invalid update accepted
+    proxy_test.go:29: invalid update changed the active profile
+    proxy_test.go:36: invalid initial profile accepted
+=== RUN   TestInvalidProbabilitiesRejected/loss/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/reorder/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/loss/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/reorder/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/loss/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/reorder/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/loss/1.01
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/1.01
+=== RUN   TestInvalidProbabilitiesRejected/reorder/1.01
+--- FAIL: TestInvalidProbabilitiesRejected (0.00s)
+    --- FAIL: TestInvalidProbabilitiesRejected/loss/NaN (0.00s)
+    --- FAIL: TestInvalidProbabilitiesRejected/duplicate/NaN (0.00s)
+    --- FAIL: TestInvalidProbabilitiesRejected/reorder/NaN (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/1.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/1.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/1.01 (0.00s)
+=== RUN   TestProfileBoundaryValues
+--- PASS: TestProfileBoundaryValues (0.00s)
+FAIL
+FAIL	example.com/statesync/internal/nettest	0.025s
+=== RUN   TestShortRunDoesNotClaimMemoryStability
+2 秒：在线=1，保留=0，堆=0.95 MiB（兆二进制字节），最慢房间第99百分位=200µs
+    main_test.go:19: short run falsely claimed long-term memory stability
+--- FAIL: TestShortRunDoesNotClaimMemoryStability (2.02s)
+FAIL
+FAIL	example.com/statesync/cmd/check	2.045s
+FAIL

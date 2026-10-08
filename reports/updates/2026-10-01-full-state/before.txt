@@ -1,0 +1,49 @@
+=== RUN   TestFullStateRejectsInvalidResync
+=== RUN   TestFullStateRejectsInvalidResync/unsolicited
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/controlled_ID
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/controlled_generation
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/ack_behind_cutoff
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/ack_ahead_of_cutoff
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/action_rollback
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/tick_rate
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/snapshot_rate
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/grace_period
+    full_state_test.go:62: invalid full state accepted <nil>
+    full_state_test.go:67: rejected full state changed world, session or pending prediction
+=== RUN   TestFullStateRejectsInvalidResync/invalid_state
+--- FAIL: TestFullStateRejectsInvalidResync (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/unsolicited (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/controlled_ID (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/controlled_generation (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/ack_behind_cutoff (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/ack_ahead_of_cutoff (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/action_rollback (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/tick_rate (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/snapshot_rate (0.00s)
+    --- FAIL: TestFullStateRejectsInvalidResync/grace_period (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/invalid_state (0.00s)
+=== RUN   TestFullStateRestoresResyncAndFreshConnection
+=== RUN   TestFullStateRestoresResyncAndFreshConnection/resync
+=== RUN   TestFullStateRestoresResyncAndFreshConnection/fresh_connection
+--- PASS: TestFullStateRestoresResyncAndFreshConnection (0.00s)
+    --- PASS: TestFullStateRestoresResyncAndFreshConnection/resync (0.00s)
+    --- PASS: TestFullStateRestoresResyncAndFreshConnection/fresh_connection (0.00s)
+FAIL
+FAIL	example.com/statesync	0.025s
+FAIL

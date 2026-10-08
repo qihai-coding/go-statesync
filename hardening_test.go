@@ -1,0 +1,266 @@
+package statesync
+
+import (
+	"bytes"
+	"context"
+	"errors"
+	"reflect"
+	"testing"
+	"time"
+)
+
+func TestAtomicLifecycleBatch(t *testing.T) {
+	original := Entity{ID: 1, Generation: 1, State: []byte{1}}
+	r := &Room{entities: map[uint32]Entity{1: original}, players: make(map[uint32]*player), revision: 7}
+	for _, changes := range [][]Change{
+		{{Entity: Entity{ID: 1, Generation: 1, State: []byte{2}}}, {Entity: Entity{ID: 0, Generation: 1}}},
+		{{Delete: true, Entity: original}, {Entity: original}},
+	} {
+		if err := r.apply(changes, nil); err == nil {
+			t.Fatal("invalid batch accepted")
+		}
+		if r.revision != 7 || len(r.entities) != 1 || !bytes.Equal(r.entities[1].State, original.State) {
+			t.Fatal("partial batch committed")
+		}
+	}
+	large := make([]Change, MaxEntities*2)
+	for i := range large {
+		large[i] = Change{Entity: Entity{ID: 1, Generation: 1, State: make([]byte, MaxState)}}
+	}
+	if err := r.apply(large, nil); err == nil {
+		t.Fatal("oversized frame accepted")
+	}
+	if r.revision != 7 || !bytes.Equal(r.entities[1].State, original.State) {
+		t.Fatal("oversized batch committed")
+	}
+}
+func TestSnapshotQueueReplacesOldBatch(t *testing.T) {
+	p := &peer{room: &Room{}, snapshots: make(chan [][]byte, 1)}
+	for i := 0; i < 1000; i++ {
+		p.offer([][]byte{{byte(i % 256)}})
+	}
+	if len(p.snapshots) != 1 || p.room.snapshotDrops.Load() != 999 {
+		t.Fatal("snapshot queue grew or failed to replace")
+	}
+	if (<-p.snapshots)[0][0] != byte(999%256) {
+		t.Fatal("old snapshot retained")
+	}
+}
+func TestOldConnectionMessagesCannotMutateSession(t *testing.T) {
+	old := &peer{id: 1}
+	current := &peer{id: 1}
+	p := &player{peer: current, ack: 5}
+	r := &Room{players: map[uint32]*player{1: p}}
+	// The identity comparison must reject the stale peer before invoking its
+	// transport or game; both are deliberately absent in this deterministic check.
+	r.receive(inputBatch{peer: old, inputs: []Input{{Sequence: 6, Data: []byte{1}}}})
+	if p.ack != 5 || p.pending[6].Sequence != 0 {
+		t.Fatal("old connection input survived")
+	}
+}
+func TestResyncCooldownStartsAtResponse(t *testing.T) {
+	c := testClient(t)
+	c.resyncing = true
+	c.lastResync = time.Now().Add(-2 * time.Second)
+	es := []Entity{c.entities[1].entity, c.entities[2].entity}
+	if err := c.applyFull(encodeFull(View{Tick: 1, Revision: 1, Player: 1, Entities: es}, DefaultConfig(), sessionState{})); err != nil {
+		t.Fatal(err)
+	}
+	if !errors.Is(c.Resync(), ErrBusy) {
+		t.Fatal("response did not restart cooldown")
+	}
+}
+func TestClosedRoomReportsNormalClosure(t *testing.T) {
+	ctx, cancel := context.WithCancelCause(context.Background())
+	r := &Room{ctx: ctx, cancel: cancel, done: make(chan struct{})}
+	cancel(nil)
+	close(r.done)
+	r.Close()
+	if r.Err() != nil {
+		t.Fatal(r.Err())
+	}
+}
+
+func clientAtCapacity(t *testing.T) *Client {
+	t.Helper()
+	c := testClient(t)
+	for id := uint32(2); id <= MaxEntities; id++ {
+		e := Entity{ID: id, Generation: 1, State: []byte{0}}
+		c.entities[id] = &tracked{entity: e, samples: []sample{{state: e.State}}}
+	}
+	return c
+}
+
+func TestLifecycleBatchUsesFinalEntityCount(t *testing.T) {
+	c := clientAtCapacity(t)
+	created := Entity{ID: MaxEntities + 1, Generation: 1, State: []byte{7}}
+	changes := []Change{{Entity: created}, {Delete: true, Entity: c.entities[2].entity}}
+	r := &Room{entities: make(map[uint32]Entity), revision: c.revision}
+	for id, state := range c.entities {
+		r.entities[id] = state.entity
+	}
+	if err := r.apply(changes, nil); err != nil {
+		t.Fatal("server rejected a valid replacement", err)
+	}
+	if err := c.applyChanges(encodeChanges(1, r.revision, changes)); err != nil {
+		t.Fatal("client rejected a server-valid replacement", err)
+	}
+	if len(c.entities) != MaxEntities || c.entities[2] != nil || c.entities[created.ID].entity.State[0] != 7 {
+		t.Fatal("replacement not applied")
+	}
+}
+
+func TestLifecycleBatchPreflightDoesNotPublishPartialState(t *testing.T) {
+	for _, reason := range []string{"capacity", "state codec"} {
+		t.Run(reason, func(t *testing.T) {
+			c := clientAtCapacity(t)
+			first := c.entities[2].entity
+			first.State = []byte{9}
+			second := Entity{ID: MaxEntities + 1, Generation: 1, State: []byte{7}}
+			if reason == "state codec" {
+				second = c.entities[3].entity
+				second.State = []byte{1, 2}
+			}
+			revision := c.revision
+			if err := c.applyChanges(encodeChanges(1, revision+1, []Change{{Entity: first}, {Entity: second}})); !errors.Is(err, ErrProtocol) {
+				t.Fatal("invalid batch accepted", err)
+			}
+			if c.entities[2].entity.State[0] != 0 || c.revision != revision || len(c.entities) != MaxEntities {
+				t.Fatal("invalid batch published partial state")
+			}
+		})
+	}
+}
+
+func TestLifecycleBatchTracksRepeatedIDs(t *testing.T) {
+	for _, recreate := range []bool{false, true} {
+		c := clientAtCapacity(t)
+		first := Entity{ID: MaxEntities + 1, Generation: 1, State: []byte{7}}
+		last := first
+		last.State = []byte{8}
+		changes := []Change{{Entity: first}}
+		if recreate {
+			changes = append(changes, Change{Delete: true, Entity: first})
+			last.Generation++
+		}
+		changes = append(changes, Change{Entity: last}, Change{Delete: true, Entity: c.entities[2].entity})
+		if err := c.applyChanges(encodeChanges(1, c.revision+1, changes)); err != nil {
+			t.Fatal("repeated ID incorrectly increased entity count", err)
+		}
+		if len(c.entities) != MaxEntities || c.entities[last.ID].entity.Generation != last.Generation || c.entities[last.ID].entity.State[0] != 8 {
+			t.Fatal("repeated ID lost its final state")
+		}
+	}
+}
+
+func TestLifecycleBatchRejectsInvalidTransitionsAtomically(t *testing.T) {
+	entity := func(id, gen, owner uint32, dynamic bool, ack uint64) Entity {
+		return Entity{ID: id, Generation: gen, Owner: owner, Dynamic: dynamic, Ack: ack, State: []byte{0}}
+	}
+	local := entity(1, 1, 1, true, 2)
+	remote := entity(2, 2, 2, true, 0)
+	for _, tc := range []struct {
+		name    string
+		changes []Change
+	}{
+		{"generation rollback", []Change{{Entity: entity(2, 1, 2, true, 0)}}},
+		{"owner mutation", []Change{{Entity: entity(2, 2, 99, true, 0)}}},
+		{"dynamic mutation", []Change{{Entity: entity(2, 2, 2, false, 0)}}},
+		{"missing deletion", []Change{{Delete: true, Entity: entity(3, 1, 0, false, 0)}}},
+		{"wrong deletion generation", []Change{{Delete: true, Entity: entity(2, 1, 2, true, 0)}}},
+		{"same generation reuse", []Change{{Delete: true, Entity: remote}, {Entity: remote}}},
+		{"local deletion", []Change{{Delete: true, Entity: local}}},
+		{"local replacement", []Change{{Entity: entity(1, 2, 1, true, 2)}}},
+		{"local owner change", []Change{{Entity: entity(1, 2, 99, true, 2)}}},
+		{"extra controlled entity", []Change{{Entity: entity(3, 1, 1, true, 2)}}},
+		{"future acknowledgement", []Change{{Entity: entity(1, 1, 1, true, 6)}}},
+		{"acknowledgement rollback", []Change{{Entity: entity(1, 1, 1, true, 1)}}},
+		{"in-batch acknowledgement rollback", []Change{{Entity: entity(1, 1, 1, true, 4)}, {Entity: entity(1, 1, 1, true, 3)}}},
+		{"stale tick", nil},
+		{"revision overflow", nil},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			c := testClient(t)
+			c.entities[1].entity = local
+			c.entities[2].entity = remote
+			c.sequence = 5
+			c.tick = 10
+			tick := uint64(10)
+			if tc.name == "stale tick" {
+				tick--
+			}
+			if tc.name == "revision overflow" {
+				c.revision = ^uint64(0)
+			}
+			before := c.Authoritative()
+			first := remote
+			first.State = []byte{9}
+			changes := append([]Change{{Entity: first}}, tc.changes...)
+			if err := c.applyChanges(encodeChanges(tick, c.revision+1, changes)); !errors.Is(err, ErrProtocol) {
+				t.Error("invalid lifecycle transition accepted", err)
+			}
+			if !reflect.DeepEqual(c.Authoritative(), before) || c.predicted[0] != 0 {
+				t.Error("invalid batch changed previously accepted state")
+			}
+		})
+	}
+}
+
+func TestLifecycleBatchAllowsRemoteGenerationAdvance(t *testing.T) {
+	c := testClient(t)
+	old := c.entities[2].entity
+	next := old
+	next.Generation++
+	next.Owner = 3
+	next.State = []byte{8}
+	for _, remove := range []bool{false, true} {
+		c = testClient(t)
+		changes := []Change{}
+		if remove {
+			changes = append(changes, Change{Delete: true, Entity: old})
+		}
+		changes = append(changes, Change{Entity: next})
+		if err := c.applyChanges(encodeChanges(1, 2, changes)); err != nil {
+			t.Fatal("valid remote replacement rejected", err)
+		}
+		got := c.entities[2]
+		if got.entity.Generation != 2 || got.entity.Owner != 3 || len(got.samples) != 1 || got.entity.State[0] != 8 {
+			t.Fatal("replacement retained old interpolation state")
+		}
+	}
+}
+
+func FuzzLifecyclePreflight(f *testing.F) {
+	remote := Entity{ID: 2, Generation: 1, Owner: 2, Dynamic: true, State: []byte{7}}
+	local := Entity{ID: 1, Generation: 1, Owner: 1, Dynamic: true, State: []byte{0}}
+	f.Add(encodeChanges(1, 2, []Change{{Entity: remote}}))
+	f.Add(encodeChanges(1, 2, []Change{{Entity: remote}, {Delete: true, Entity: local}}))
+	f.Add(encodeChanges(1, 2, []Change{{Delete: true, Entity: remote}, {Entity: remote}}))
+	local.Ack = 1
+	f.Add(encodeChanges(1, 2, []Change{{Entity: remote}, {Entity: local}}))
+	f.Fuzz(func(t *testing.T, packet []byte) {
+		if len(packet) > MaxFrame {
+			return
+		}
+		c := testClient(t)
+		before := c.Authoritative()
+		if err := c.applyChanges(packet); err != nil {
+			if !reflect.DeepEqual(c.Authoritative(), before) || c.predicted[0] != 0 || c.anchor != 0 {
+				t.Fatal("rejected lifecycle batch published partial state")
+			}
+		} else {
+			localCount := 0
+			for _, e := range c.entities {
+				if e.entity.Owner == c.player {
+					localCount++
+					if e.entity.ID != 1 || e.entity.Generation != 1 || !e.entity.Dynamic || e.entity.Ack != 0 {
+						t.Fatal("local control invariant changed")
+					}
+				}
+			}
+			if localCount != 1 || len(c.entities) > MaxEntities || c.revision != 2 {
+				t.Fatal("accepted lifecycle batch violated world invariants")
+			}
+		}
+	})
+}

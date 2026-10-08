@@ -1,0 +1,329 @@
+package statesync_test
+
+import (
+	"bytes"
+	"context"
+	"crypto/tls"
+	"encoding/binary"
+	syncnet "github.com/qihai-coding/go-statesync"
+	"github.com/qihai-coding/go-statesync/arena"
+	"github.com/qihai-coding/go-statesync/internal/nettest"
+	"github.com/quic-go/quic-go"
+	"io"
+	"math"
+	"sync"
+	"testing"
+	"time"
+)
+
+type fixture struct {
+	s   *syncnet.Server
+	r   *syncnet.Room
+	tls *tls.Config
+}
+
+func setup(t *testing.T) fixture {
+	t.Helper()
+	cert, pem, err := syncnet.LocalCertificate()
+	if err != nil {
+		t.Fatal(err)
+	}
+	tc, err := syncnet.ClientTLS(pem, "localhost")
+	if err != nil {
+		t.Fatal(err)
+	}
+	s, err := syncnet.Listen("127.0.0.1:0", syncnet.ServerTLS(cert), syncnet.DefaultConfig())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(s.Close)
+	r, err := s.CreateRoom("alpha", arena.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return fixture{s, r, tc}
+}
+func connect(t *testing.T, f fixture, addr, room string) *syncnet.Client {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
+	defer cancel()
+	c, err := syncnet.Dial(ctx, addr, room, f.tls, arena.Model{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(c.Close)
+	return c
+}
+func eventually(t *testing.T, timeout time.Duration, fn func() bool) {
+	t.Helper()
+	deadline := time.Now().Add(timeout)
+	for time.Now().Before(deadline) {
+		if fn() {
+			return
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	t.Fatal("condition not reached")
+}
+func own(c *syncnet.Client) syncnet.Entity {
+	for _, e := range c.Authoritative().Entities {
+		if e.Owner == c.Player() {
+			return e
+		}
+	}
+	return syncnet.Entity{}
+}
+func inspect(t *testing.T, r *syncnet.Room) (syncnet.View, syncnet.Metrics) {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	v, m, err := r.Inspect(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return v, m
+}
+func TestRoomsLifecycleAndPickup(t *testing.T) {
+	f := setup(t)
+	other, err := f.s.CreateRoom("beta", arena.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c1 := connect(t, f, f.s.Addr().String(), "alpha")
+	c2 := connect(t, f, f.s.Addr().String(), "alpha")
+	eventually(t, time.Second, func() bool { return len(c1.Authoritative().Entities) == 18 })
+	v, _ := inspect(t, other)
+	if len(v.Entities) != 16 {
+		t.Fatal("rooms leaked entities")
+	}
+	var wg sync.WaitGroup
+	results := make(chan error, 2)
+	for _, c := range []*syncnet.Client{c1, c2} {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+			_, err := c.Action(ctx, 1, arena.Pickup(1, 1))
+			results <- err
+		}()
+	}
+	wg.Wait()
+	close(results)
+	wins := 0
+	for err := range results {
+		if err == nil {
+			wins++
+		}
+	}
+	if wins != 1 {
+		t.Fatalf("pickup winners: %d", wins)
+	}
+	eventually(t, time.Second, func() bool { return len(c1.Authoritative().Entities) == 17 && len(c2.Authoritative().Entities) == 17 })
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	c1.Action(ctx, 1, arena.Pickup(1, 1))
+	v, _ = inspect(t, f.r)
+	total := uint32(0)
+	for _, e := range v.Entities {
+		s, _ := arena.Decode(e.State)
+		total += s.Pickups
+	}
+	if total != 1 {
+		t.Fatal("duplicate action mutated state")
+	}
+	oldPlayer := c2.Player()
+	c2.Close()
+	eventually(t, time.Second, func() bool {
+		for _, e := range c1.Authoritative().Entities {
+			if e.Owner == oldPlayer {
+				return false
+			}
+		}
+		return true
+	})
+	c3 := connect(t, f, f.s.Addr().String(), "alpha")
+	if c3.Player() == oldPlayer {
+		t.Fatal("reconnect reused session identity")
+	}
+	if err := f.s.CloseRoom("alpha"); err != nil {
+		t.Fatal(err)
+	}
+	select {
+	case <-c1.Done():
+	case <-time.After(time.Second):
+		t.Fatal("room close did not disconnect")
+	}
+	inspect(t, other)
+}
+func TestCapacityAndCertificateVerification(t *testing.T) {
+	f := setup(t)
+	for i := 0; i < 16; i++ {
+		connect(t, f, f.s.Addr().String(), "alpha")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	if c, err := syncnet.Dial(ctx, f.s.Addr().String(), "alpha", f.tls, arena.Model{}); err == nil {
+		c.Close()
+		t.Fatal("17th player admitted")
+	}
+	_, wrongPEM, _ := syncnet.LocalCertificate()
+	bad, _ := syncnet.ClientTLS(wrongPEM, "localhost")
+	if c, err := syncnet.Dial(ctx, f.s.Addr().String(), "alpha", bad, arena.Model{}); err == nil {
+		c.Close()
+		t.Fatal("untrusted certificate accepted")
+	}
+}
+func TestWeakNetworkConverges(t *testing.T) {
+	for _, rtt := range []time.Duration{0, 150 * time.Millisecond, 300 * time.Millisecond} {
+		t.Run(rtt.String(), func(t *testing.T) {
+			f := setup(t)
+			profile := nettest.Profile{RTT: rtt, Jitter: 30 * time.Millisecond, Loss: .05, Duplicate: .02, Reorder: .02}
+			p, err := nettest.New(f.s.Addr().String(), 42, profile)
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Cleanup(p.Close)
+			c := connect(t, f, p.Addr(), "alpha")
+			rate := time.NewTicker(time.Second / 30)
+			defer rate.Stop()
+			for i := 0; i < 90; i++ {
+				<-rate.C
+				if err := c.SubmitInput(arena.Move(1, 0)); err != nil {
+					t.Fatal(err)
+				}
+				select {
+				case <-c.Done():
+					t.Fatal(c.Err())
+				default:
+				}
+			}
+			p.Set(nettest.Profile{})
+			for i := 0; i < 30; i++ {
+				<-rate.C
+				if err := c.SubmitInput(arena.Move(0, 0)); err != nil {
+					t.Fatal(err)
+				}
+			}
+			v, _ := inspect(t, f.r)
+			server := syncnet.Entity{}
+			for _, e := range v.Entities {
+				if e.Owner == c.Player() {
+					server = e
+				}
+			}
+			client := own(c)
+			if !bytes.Equal(server.State, client.State) {
+				t.Fatalf("not converged: server=%x client=%x", server.State, client.State)
+			}
+			predicted, _ := c.Sample(client.ID, time.Now())
+			if !bytes.Equal(predicted, server.State) {
+				t.Fatalf("prediction not converged: %x != %x", predicted, server.State)
+			}
+		})
+	}
+}
+func TestHistoryOverflowResynchronizes(t *testing.T) {
+	f := setup(t)
+	c := connect(t, f, f.s.Addr().String(), "alpha")
+	for i := 0; i < 130; i++ {
+		if err := c.SubmitInput(arena.Move(1, 0)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	eventually(t, 3*time.Second, func() bool { return c.ResyncCount() > 0 && own(c).Ack >= 128 })
+	if err := c.SubmitInput(arena.Move(0, 0)); err != nil {
+		t.Fatal(err)
+	}
+}
+func TestInvalidInputRejectedAndSpeedBounded(t *testing.T) {
+	f := setup(t)
+	c := connect(t, f, f.s.Addr().String(), "alpha")
+	if err := c.SubmitInput(arena.Move(float32(math.NaN()), 0)); err == nil {
+		t.Fatal("NaN accepted")
+	}
+	for i := 0; i < 100; i++ {
+		if err := c.SubmitInput(arena.Move(1, 0)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	time.Sleep(150 * time.Millisecond)
+	v, m := inspect(t, f.r)
+	for _, e := range v.Entities {
+		if e.Owner == c.Player() {
+			state, _ := arena.Decode(e.State)
+			if state.X > float32(m.Ticks)*arena.Speed/30+.001 {
+				t.Fatal("client accelerated simulation")
+			}
+		}
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	raw, err := quic.DialAddr(ctx, f.s.Addr().String(), f.tls, &quic.Config{EnableDatagrams: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer raw.CloseWithError(0, "test done")
+	st, err := raw.OpenStreamSync(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	join := append([]byte{2, 1, 5, 0, 'a', 'l', 'p', 'h', 'a'}, make([]byte, 32)...)
+	frame := binary.LittleEndian.AppendUint32(nil, uint32(len(join)))
+	frame = append(frame, join...)
+	if _, err = st.Write(frame); err != nil {
+		t.Fatal(err)
+	}
+	var h [4]byte
+	if _, err = io.ReadFull(st, h[:]); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = io.CopyN(io.Discard, st, int64(binary.LittleEndian.Uint32(h[:]))); err != nil {
+		t.Fatal(err)
+	}
+	valid := []byte{2, 7, 1}
+	valid = binary.LittleEndian.AppendUint64(valid, 1)
+	valid = binary.LittleEndian.AppendUint16(valid, 8)
+	valid = append(valid, arena.Move(1, 0)...)
+	for i := 0; i < 20; i++ {
+		if err := raw.SendDatagram(valid); err != nil {
+			t.Fatal(err)
+		}
+	}
+	eventually(t, time.Second, func() bool {
+		view, _ := inspect(t, f.r)
+		for _, e := range view.Entities {
+			if e.Dynamic && e.Owner != c.Player() {
+				return e.Ack == 1
+			}
+		}
+		return false
+	})
+	for i := 0; i < 20; i++ {
+		if err := raw.SendDatagram(valid); err != nil {
+			t.Fatal(err)
+		}
+	}
+	time.Sleep(100 * time.Millisecond)
+	view, _ := inspect(t, f.r)
+	for _, e := range view.Entities {
+		if e.Dynamic && e.Owner != c.Player() {
+			state, err := arena.Decode(e.State)
+			if err != nil || e.Ack != 1 || math.Abs(float64(state.X-arena.Speed/30)) > .001 {
+				t.Fatal("duplicate input advanced simulation", state, e.Ack, err)
+			}
+		}
+	}
+	bad := []byte{2, 7, 1}
+	bad = binary.LittleEndian.AppendUint64(bad, 1)
+	bad = binary.LittleEndian.AppendUint16(bad, 8)
+	bad = append(bad, arena.Move(float32(math.NaN()), 0)...)
+	for i := 0; i < 3; i++ {
+		raw.SendDatagram(bad)
+	}
+	select {
+	case <-raw.Context().Done():
+	case <-ctx.Done():
+		t.Fatal("server accepted invalid input")
+	}
+}

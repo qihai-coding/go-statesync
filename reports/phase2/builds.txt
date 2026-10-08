@@ -1,0 +1,4 @@
+最终源码静态检查通过
+Windows amd64 构建通过
+Linux amd64 交叉编译通过（未运行）
+macOS arm64 交叉编译通过（未运行）

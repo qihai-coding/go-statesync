@@ -1,0 +1,108 @@
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.07s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.03s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.03s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.03s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.03s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.03s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.02s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.02s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.02s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.02s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.03s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.02s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.02s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.03s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.04s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.03s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.01s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.02s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.02s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.03s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.03s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+PASS
+ok  	example.com/statesync	2.845s
+?   	example.com/statesync/arena	[no test files]
+?   	example.com/statesync/cmd/check	[no test files]
+?   	example.com/statesync/cmd/client	[no test files]
+?   	example.com/statesync/cmd/server	[no test files]
+?   	example.com/statesync/internal/measure	[no test files]
+?   	example.com/statesync/internal/nettest	[no test files]

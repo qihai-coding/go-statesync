@@ -1,0 +1,284 @@
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.66s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.03s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.03s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.02s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.63s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.03s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.02s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.63s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.02s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.02s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.63s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.02s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.02s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.64s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.02s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.02s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.63s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.04s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.03s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.65s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.04s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.03s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.65s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.04s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.03s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.65s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.05s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.03s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.65s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.04s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.03s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+PASS
+ok  	example.com/statesync	7.936s
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.30s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.29s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.27s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.26s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+PASS
+ok  	example.com/statesync/cmd/client	3.789s

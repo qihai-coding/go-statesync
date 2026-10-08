@@ -1,0 +1,3 @@
+Windows 构建和静态检查通过
+Linux amd64 交叉编译通过（未运行）
+macOS arm64 交叉编译通过（未运行）

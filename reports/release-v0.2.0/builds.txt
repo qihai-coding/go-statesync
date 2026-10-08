@@ -1,0 +1,4 @@
+go version go1.26.5 windows/amd64
+go vet ./... passed
+go build ./... passed
+gofmt -l . clean

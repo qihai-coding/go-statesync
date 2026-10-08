@@ -1,0 +1,11 @@
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+    resume_test.go:705: oversized request prefix left server waiting for its body
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+    resume_test.go:705: oversized request prefix left server waiting for its body
+--- FAIL: TestServerRejectsOversizedRequestsFromPrefix (1.03s)
+    --- FAIL: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.53s)
+    --- FAIL: TestServerRejectsOversizedRequestsFromPrefix/command (0.50s)
+FAIL
+FAIL	example.com/statesync	1.057s
+FAIL

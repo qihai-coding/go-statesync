@@ -1,0 +1,96 @@
+=== RUN   TestAtomicLifecycleBatch
+--- PASS: TestAtomicLifecycleBatch (0.00s)
+=== RUN   TestSnapshotQueueReplacesOldBatch
+--- PASS: TestSnapshotQueueReplacesOldBatch (0.00s)
+=== RUN   TestOldConnectionMessagesCannotMutateSession
+--- PASS: TestOldConnectionMessagesCannotMutateSession (0.00s)
+=== RUN   TestResyncCooldownStartsAtResponse
+--- PASS: TestResyncCooldownStartsAtResponse (0.00s)
+=== RUN   TestClosedRoomReportsNormalClosure
+--- PASS: TestClosedRoomReportsNormalClosure (0.00s)
+=== RUN   TestProtocolGoldenAndBounds
+--- PASS: TestProtocolGoldenAndBounds (0.00s)
+=== RUN   TestSessionWireLayout
+--- PASS: TestSessionWireLayout (0.00s)
+=== RUN   TestIndependentSnapshotChunks
+--- PASS: TestIndependentSnapshotChunks (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestInterpolationHoldsAtEdges
+--- PASS: TestInterpolationHoldsAtEdges (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestRoomsLifecycleAndPickup
+--- PASS: TestRoomsLifecycleAndPickup (0.09s)
+=== RUN   TestCapacityAndCertificateVerification
+--- PASS: TestCapacityAndCertificateVerification (0.19s)
+=== RUN   TestWeakNetworkConverges
+=== RUN   TestWeakNetworkConverges/0s
+=== RUN   TestWeakNetworkConverges/150ms
+=== RUN   TestWeakNetworkConverges/300ms
+--- PASS: TestWeakNetworkConverges (15.17s)
+    --- PASS: TestWeakNetworkConverges/0s (4.17s)
+    --- PASS: TestWeakNetworkConverges/150ms (4.88s)
+    --- PASS: TestWeakNetworkConverges/300ms (6.12s)
+=== RUN   TestHistoryOverflowResynchronizes
+--- PASS: TestHistoryOverflowResynchronizes (0.02s)
+=== RUN   TestInvalidInputRejectedAndSpeedBounded
+--- PASS: TestInvalidInputRejectedAndSpeedBounded (0.28s)
+=== RUN   TestResumeWeakNetworkMatrix
+=== RUN   TestResumeWeakNetworkMatrix/0s
+=== RUN   TestResumeWeakNetworkMatrix/150ms
+=== RUN   TestResumeWeakNetworkMatrix/300ms
+--- PASS: TestResumeWeakNetworkMatrix (8.09s)
+    --- PASS: TestResumeWeakNetworkMatrix/0s (1.76s)
+    --- PASS: TestResumeWeakNetworkMatrix/150ms (2.94s)
+    --- PASS: TestResumeWeakNetworkMatrix/300ms (3.40s)
+=== RUN   TestResumeTakeoverAndOperationReplay
+--- PASS: TestResumeTakeoverAndOperationReplay (0.08s)
+=== RUN   TestClosedRoomRejectsResume
+--- PASS: TestClosedRoomRejectsResume (0.01s)
+=== RUN   TestResumeConcurrentTakeovers
+--- PASS: TestResumeConcurrentTakeovers (0.01s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.06s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.03s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.03s)
+=== RUN   TestResumeExpiryCapacityAndLeave
+--- PASS: TestResumeExpiryCapacityAndLeave (0.46s)
+=== RUN   TestResumeCredentialsAndRestart
+--- PASS: TestResumeCredentialsAndRestart (0.04s)
+=== RUN   TestActionCancellationDoesNotSend
+--- PASS: TestActionCancellationDoesNotSend (0.11s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestResumeLostActionResult
+--- PASS: TestResumeLostActionResult (0.02s)
+=== RUN   TestRoomPanicIsolation
+--- PASS: TestRoomPanicIsolation (0.07s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestResyncDelayChangeAndActualOutage
+--- PASS: TestResyncDelayChangeAndActualOutage (14.04s)
+=== RUN   TestSlowClientIsolatedAndCannotResume
+--- PASS: TestSlowClientIsolatedAndCannotResume (0.54s)
+=== RUN   FuzzDecode
+=== RUN   FuzzDecode/seed#0
+=== RUN   FuzzDecode/seed#1
+--- PASS: FuzzDecode (0.00s)
+    --- PASS: FuzzDecode/seed#0 (0.00s)
+    --- PASS: FuzzDecode/seed#1 (0.00s)
+PASS
+coverage: 64.5% of statements in ./...
+ok  	example.com/statesync	40.498s	coverage: 64.5% of statements in ./...
+	example.com/statesync/arena		coverage: 0.0% of statements
+	example.com/statesync/cmd/check		coverage: 0.0% of statements
+	example.com/statesync/cmd/client		coverage: 0.0% of statements
+	example.com/statesync/cmd/server		coverage: 0.0% of statements
+=== RUN   TestClockResolvesShortIntervals
+    clock_test.go:24: smallest positive clock interval: 400ns
+--- PASS: TestClockResolvesShortIntervals (0.01s)
+PASS
+coverage: 0.5% of statements in ./...
+ok  	example.com/statesync/internal/measure	1.082s	coverage: 0.5% of statements in ./...
+	example.com/statesync/internal/nettest		coverage: 0.0% of statements

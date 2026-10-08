@@ -1,0 +1,29 @@
+File: check-v2-qpc.exe
+Build ID: C:\Users\A2322\Documents\Codex\2026-09-15\new-chat-2\work\check-v2-qpc.exe2026-10-01 16:55:50.6552637 +0800 CST
+Type: cpu
+Time: 2026-10-01 16:55:50 CST
+Duration: 601.27s, Total samples = 291.64s (48.50%)
+Showing nodes accounting for 184.47s, 63.25% of 291.64s total
+Dropped 906 nodes (cum <= 1.46s)
+Showing top 20 nodes out of 161
+      flat  flat%   sum%        cum   cum%
+    85.89s 29.45% 29.45%     87.11s 29.87%  runtime.cgocall
+    14.16s  4.86% 34.31%     14.17s  4.86%  runtime.semawakeup
+    12.93s  4.43% 38.74%     12.93s  4.43%  runtime.memmove
+     8.35s  2.86% 41.60%     27.61s  9.47%  runtime.selectgo
+     8.26s  2.83% 44.43%      8.26s  2.83%  runtime.semasleep
+     5.95s  2.04% 46.48%      6.05s  2.07%  runtime.netpollQueueTimer
+     5.37s  1.84% 48.32%      5.37s  1.84%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     4.90s  1.68% 50.00%      4.90s  1.68%  runtime.runqgrab.osyield.func1
+     4.65s  1.59% 51.59%      9.13s  3.13%  runtime.sellock
+     4.61s  1.58% 53.17%     16.19s  5.55%  runtime.lock2
+     4.52s  1.55% 54.72%     10.85s  3.72%  runtime.netpoll
+     3.70s  1.27% 55.99%      3.70s  1.27%  internal/sync.(*Mutex).Lock (inline)
+     3.24s  1.11% 57.10%     19.23s  6.59%  runtime.stealWork
+     3.24s  1.11% 58.21%      3.72s  1.28%  runtime.unlock2
+     2.92s  1.00% 59.21%      2.94s  1.01%  runtime.gopark
+     2.74s  0.94% 60.15%     19.73s  6.77%  github.com/quic-go/quic-go.(*packetPacker).appendPacket
+     2.40s  0.82% 60.98%     15.02s  5.15%  example.com/statesync.(*Client).update
+     2.39s  0.82% 61.80%      5.82s  2.00%  runtime.(*waitq).dequeue (inline)
+     2.18s  0.75% 62.54%      2.18s  0.75%  runtime.lock2.osyield.func1
+     2.07s  0.71% 63.25%      4.82s  1.65%  example.com/statesync.(*Room).step

@@ -1,0 +1,29 @@
+# 更新记录
+
+库发布版本与协议版本分别管理。以下历史记录链接到当时的测试证据，不表示旧数据已经在最新源码上重新测量。
+
+## v0.2.0 — 2026-10-08
+
+- 发布公开 Go（编程语言）模块，导入路径为 `github.com/qihai-coding/go-statesync`，同步协议仍为第 2 版。
+- 完成进程内断线续接、稳定凭证、在线接管、操作结果跨连接重试、可取消的操作串行入口及响应后重新同步冷却。
+- 加固完整状态接收：提交前校验请求状态、受控角色、输入截止确认、操作进度和会话配置，异常响应不清空预测历史。
+- 提供中英文主页、接入文档、MIT（开源许可证）及三平台持续集成。当前源码验收见[发布报告](reports/release-v0.2.0/VALIDATION.md)。
+
+## 核心维护 — 2026-10-01
+
+| 修改 | 当时的验证 |
+|---|---|
+| 满容量生命周期批次按最终实体数预检 | [生命周期](reports/updates/2026-10-01-lifecycle/VALIDATION.md) |
+| 初始化及关闭不占用房间注册表锁 | [房间管理](reports/updates/2026-10-01-room-management/VALIDATION.md) |
+| 接收长度按握手与已加入阶段限制 | [报文长度](reports/updates/2026-10-01-frame-limits/VALIDATION.md) |
+| 初始化前取消与服务器关闭错误语义 | [连接生命周期](reports/updates/2026-10-01-connection-lifecycle/VALIDATION.md) |
+| 弱网概率及长期内存证据范围校验 | [验收程序](reports/updates/2026-10-01-validation/VALIDATION.md) |
+| 可靠生命周期转换及忽略快照时钟处理 | [客户端状态转换](reports/updates/2026-10-01-client-transitions/VALIDATION.md) |
+| 房间结束释放状态及队列引用 | [房间资源释放](reports/updates/2026-10-01-room-release/VALIDATION.md) |
+
+完整状态校验缺口在此期间补充了失败回归，本次发布完成修复，原始复现保留在[记录](reports/updates/2026-10-01-full-state/before.txt)。
+
+## 阶段历史
+
+- [第二阶段：核心加固与断线续接](reports/phase2/VALIDATION.md)。
+- [首版：核心库、参考客户端与弱网验证](reports/VALIDATION.md)。

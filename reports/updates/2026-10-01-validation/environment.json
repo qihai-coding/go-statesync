@@ -1,0 +1,18 @@
+{
+  "RecordedAt": "2026-10-01T17:46:14.1772928+08:00",
+  "Processor": {
+    "Name": "Intel(R) Core(TM) i9-14900HX",
+    "NumberOfCores": 24,
+    "NumberOfLogicalProcessors": 32
+  },
+  "OS": {
+    "Caption": "Microsoft Windows 11 专业版",
+    "Version": "10.0.26200",
+    "OSArchitecture": "64 位",
+    "TotalVisibleMemorySize": 16494456
+  },
+  "Go": "go version go1.26.5 windows/amd64",
+  "Workload": "8 rooms x 16 clients, 600 seconds plus recovery; resume every 30 seconds per room",
+  "Network": "localhost QUIC; no impairment for soak",
+  "Profiling": "CPU sampling enabled; tests and weak-network runs complete before soak"
+}

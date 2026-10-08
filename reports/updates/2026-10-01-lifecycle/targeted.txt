@@ -1,0 +1,122 @@
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.04s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+PASS
+ok  	example.com/statesync	1.217s

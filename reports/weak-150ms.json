@@ -1,0 +1,91 @@
+{
+  "Started": "2026-09-15T03:11:42.1061446Z",
+  "DurationSeconds": 16.0044353,
+  "GoVersion": "go1.26.5",
+  "Platform": "windows/amd64",
+  "Processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "LogicalCPUs": 32,
+  "Clients": 16,
+  "Items": 16,
+  "Profile": {
+    "RTT": 150000000,
+    "Jitter": 30000000,
+    "Loss": 0.05,
+    "Duplicate": 0.02,
+    "Reorder": 0.02
+  },
+  "Samples": [
+    {
+      "Seconds": 15.0019499,
+      "HeapBytes": 11024016,
+      "HeapObjects": 17069,
+      "Goroutines": 295,
+      "CPUSeconds": 2.953125,
+      "Room": {
+        "Ticks": 675,
+        "StepTotal": 8554000,
+        "StepP99": 600000,
+        "StepMax": 3562300,
+        "InputDrops": 0,
+        "SnapshotDrops": 0,
+        "ReliableBytes": 21944,
+        "DatagramBytes": 2483216,
+        "Players": 16,
+        "InputQueue": 0,
+        "ControlQueue": 0,
+        "ReliableQueued": 0,
+        "SnapshotQueued": 0
+      }
+    },
+    {
+      "Seconds": 16.0044353,
+      "HeapBytes": 11083656,
+      "HeapObjects": 16654,
+      "Goroutines": 295,
+      "CPUSeconds": 3.03125,
+      "Room": {
+        "Ticks": 705,
+        "StepTotal": 8554000,
+        "StepP99": 600000,
+        "StepMax": 3562300,
+        "InputDrops": 0,
+        "SnapshotDrops": 0,
+        "ReliableBytes": 21944,
+        "DatagramBytes": 2626256,
+        "Players": 16,
+        "InputQueue": 0,
+        "ControlQueue": 0,
+        "ReliableQueued": 0,
+        "SnapshotQueued": 0
+      }
+    }
+  ],
+  "Room": {
+    "Ticks": 705,
+    "StepTotal": 8554000,
+    "StepP99": 600000,
+    "StepMax": 3562300,
+    "InputDrops": 0,
+    "SnapshotDrops": 0,
+    "ReliableBytes": 21944,
+    "DatagramBytes": 2626256,
+    "Players": 16,
+    "InputQueue": 0,
+    "ControlQueue": 0,
+    "ReliableQueued": 0,
+    "SnapshotQueued": 0
+  },
+  "ProcessCPUSeconds": 3.03125,
+  "ProcessCPUPercentOneCore": 18.94006219638377,
+  "ProcessCPUPercentHost": 0.5918769436369928,
+  "AllocatedBytes": 31780632,
+  "AllocationBytesPerSecond": 1985739.0407270414,
+  "DatagramPayloadBytesPerSecond": 143000.35940662023,
+  "PerClientPayloadBytesPerSecond": 8937.522462913765,
+  "Converged": true,
+  "ConnectionsAlive": true,
+  "MemoryBounded": true,
+  "StepBudgetPassed": true,
+  "Passed": true,
+  "Failures": null
+}

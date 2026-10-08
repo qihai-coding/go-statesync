@@ -1,0 +1,3 @@
+最终静态检查通过
+最终当前平台构建通过
+go version go1.26.5 windows/amd64

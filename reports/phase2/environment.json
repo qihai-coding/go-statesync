@@ -1,0 +1,17 @@
+{
+  "PhysicalMemoryBytes": 16890322944,
+  "Go": "go version go1.26.5 windows/amd64",
+  "QuicGo": "v0.62.0",
+  "Date": "2026-10-01",
+  "OS": {
+    "Caption": "Microsoft Windows 11 专业版",
+    "Version": "10.0.26200"
+  },
+  "CPU": {
+    "Name": "Intel(R) Core(TM) i9-14900HX",
+    "NumberOfCores": 24,
+    "NumberOfLogicalProcessors": 32
+  },
+  "RaceCompiler": "llvm-mingw-20260908-ucrt-x86_64",
+  "Scope": "服务器、客户端、弱网代理合计的进程指标"
+}

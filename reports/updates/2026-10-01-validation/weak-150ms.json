@@ -1,0 +1,107 @@
+{
+  "Started": "2026-10-01T09:47:03.4656983Z",
+  "DurationSeconds": 21.0160958,
+  "GoVersion": "go1.26.5",
+  "Platform": "windows/amd64",
+  "Processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "LogicalCPUs": 32,
+  "Clients": 16,
+  "ClientsPerRoom": 16,
+  "Items": 16,
+  "Profile": {
+    "RTT": 150000000,
+    "Jitter": 30000000,
+    "Loss": 0.05,
+    "Duplicate": 0.02,
+    "Reorder": 0.02
+  },
+  "Samples": [
+    {
+      "Seconds": 20.0088763,
+      "HeapBytes": 10349744,
+      "HeapObjects": 16424,
+      "Goroutines": 295,
+      "CPUSeconds": 4.1875,
+      "Rooms": [
+        {
+          "Ticks": 832,
+          "StepTotal": 41377404,
+          "StepP99": 300000,
+          "StepMax": 299100,
+          "InputDrops": 0,
+          "SnapshotDrops": 0,
+          "ReliableBytes": 30104,
+          "DatagramBytes": 3214984,
+          "Players": 16,
+          "RetainedPlayers": 0,
+          "InputQueue": 0,
+          "ControlQueue": 0,
+          "ReliableQueued": 0,
+          "SnapshotQueued": 0
+        }
+      ]
+    },
+    {
+      "Seconds": 21.0160958,
+      "HeapBytes": 10505024,
+      "HeapObjects": 15962,
+      "Goroutines": 295,
+      "CPUSeconds": 4.359375,
+      "Rooms": [
+        {
+          "Ticks": 862,
+          "StepTotal": 43163903,
+          "StepP99": 300000,
+          "StepMax": 299100,
+          "InputDrops": 0,
+          "SnapshotDrops": 0,
+          "ReliableBytes": 30104,
+          "DatagramBytes": 3358024,
+          "Players": 16,
+          "RetainedPlayers": 0,
+          "InputQueue": 0,
+          "ControlQueue": 0,
+          "ReliableQueued": 0,
+          "SnapshotQueued": 0
+        }
+      ]
+    }
+  ],
+  "Rooms": [
+    {
+      "Name": "bench-0",
+      "Metrics": {
+        "Ticks": 862,
+        "StepTotal": 43163903,
+        "StepP99": 300000,
+        "StepMax": 299100,
+        "InputDrops": 0,
+        "SnapshotDrops": 0,
+        "ReliableBytes": 30104,
+        "DatagramBytes": 3358024,
+        "Players": 16,
+        "RetainedPlayers": 0,
+        "InputQueue": 0,
+        "ControlQueue": 0,
+        "ReliableQueued": 0,
+        "SnapshotQueued": 0
+      },
+      "Converged": true,
+      "Resumes": 6
+    }
+  ],
+  "ProcessCPUSeconds": 4.359375,
+  "ProcessCPUPercentOneCore": 20.74302973057441,
+  "ProcessCPUPercentHost": 0.6482196790804503,
+  "AllocatedBytes": 44141496,
+  "AllocationBytesPerSecond": 2100366.1393663804,
+  "DatagramPayloadBytesPerSecond": 143384.19603131045,
+  "PerClientPayloadBytesPerSecond": 8983.495402604703,
+  "Converged": true,
+  "ConnectionsAlive": true,
+  "MemoryChecked": false,
+  "MemoryBounded": false,
+  "StepBudgetPassed": true,
+  "Passed": true,
+  "Failures": null
+}

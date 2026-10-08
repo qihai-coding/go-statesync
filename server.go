@@ -1,0 +1,379 @@
+package statesync
+
+import (
+	"context"
+	"crypto/tls"
+	"errors"
+	"net"
+	"sync"
+	"sync/atomic"
+	"time"
+
+	"github.com/quic-go/quic-go"
+)
+
+const (
+	closeRoom           quic.ApplicationErrorCode = 2
+	closeBusy           quic.ApplicationErrorCode = 3
+	closeProtocol       quic.ApplicationErrorCode = 4
+	closeLeave          quic.ApplicationErrorCode = 10
+	closeTemporary      quic.ApplicationErrorCode = 11
+	closeReplaced       quic.ApplicationErrorCode = 12
+	closeResumeRejected quic.ApplicationErrorCode = 13
+)
+
+func connectionError(conn *quic.Conn, err error) error {
+	var app *quic.ApplicationError
+	if errors.As(context.Cause(conn.Context()), &app) || errors.As(err, &app) {
+		switch app.ErrorCode {
+		case closeReplaced:
+			return ErrSessionReplaced
+		case closeResumeRejected:
+			return ErrResumeRejected
+		case closeBusy, closeProtocol:
+			return ErrProtocol
+		case closeRoom, closeLeave:
+			return ErrClosed
+		}
+	}
+	return err
+}
+
+func transportConfig() *quic.Config {
+	return &quic.Config{EnableDatagrams: true, MaxIncomingStreams: 1, MaxIncomingUniStreams: -1,
+		HandshakeIdleTimeout: 3 * time.Second, MaxIdleTimeout: 10 * time.Second, KeepAlivePeriod: 2 * time.Second,
+		InitialStreamReceiveWindow: 64 * 1024, MaxStreamReceiveWindow: MaxFrame + 4,
+		InitialConnectionReceiveWindow: MaxFrame + 4, MaxConnectionReceiveWindow: 2 * MaxFrame}
+}
+
+type Server struct {
+	listener  *quic.Listener
+	cfg       Config
+	ctx       context.Context
+	cancel    context.CancelFunc
+	mu        sync.Mutex
+	rooms     map[string]*Room
+	nextID    atomic.Uint32
+	wg        sync.WaitGroup
+	closeOnce sync.Once
+	slots     chan struct{}
+}
+
+func Listen(addr string, tlsConfig *tls.Config, cfg Config) (*Server, error) {
+	if err := cfg.validate(); err != nil {
+		return nil, err
+	}
+	if tlsConfig == nil {
+		return nil, errors.New("server certificate required")
+	}
+	tc := tlsConfig.Clone()
+	tc.MinVersion = tls.VersionTLS13
+	tc.NextProtos = []string{ALPN}
+	ln, err := quic.ListenAddr(addr, tc, transportConfig())
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	s := &Server{listener: ln, cfg: cfg, ctx: ctx, cancel: cancel, rooms: make(map[string]*Room), slots: make(chan struct{}, 2048)}
+	s.wg.Add(1)
+	go s.accept()
+	return s, nil
+}
+func (s *Server) Addr() net.Addr { return s.listener.Addr() }
+func (s *Server) CreateRoom(name string, game Game) (*Room, error) {
+	if !validRoomName(name) || game == nil {
+		return nil, errors.New("invalid room name or game")
+	}
+	s.mu.Lock()
+	if s.ctx.Err() != nil {
+		s.mu.Unlock()
+		return nil, ErrClosed
+	}
+	if _, ok := s.rooms[name]; ok {
+		s.mu.Unlock()
+		return nil, errors.New("room already exists")
+	}
+	if len(s.rooms) >= 64 {
+		s.mu.Unlock()
+		return nil, errors.New("room limit reached")
+	}
+	r := newRoom(s.ctx, s.cfg, game)
+	// Reserve the name and capacity before calling user game code.
+	s.rooms[name] = r
+	s.mu.Unlock()
+	if err := r.start(); err != nil {
+		s.mu.Lock()
+		if s.rooms[name] == r {
+			delete(s.rooms, name)
+		}
+		s.mu.Unlock()
+		return nil, err
+	}
+	return r, nil
+}
+func (s *Server) CloseRoom(name string) error {
+	s.mu.Lock()
+	r, ok := s.rooms[name]
+	if ok {
+		delete(s.rooms, name)
+	}
+	s.mu.Unlock()
+	if !ok {
+		return errors.New("room not found")
+	}
+	r.Close()
+	return nil
+}
+func validRoomName(s string) bool {
+	if len(s) < 1 || len(s) > 64 {
+		return false
+	}
+	for _, c := range []byte(s) {
+		if !(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_' || c == '-') {
+			return false
+		}
+	}
+	return true
+}
+func (s *Server) Close() {
+	s.closeOnce.Do(func() {
+		s.cancel()
+		s.listener.Close()
+		s.mu.Lock()
+		rooms := s.rooms
+		s.rooms = nil
+		s.mu.Unlock()
+		for _, r := range rooms {
+			r.Close()
+		}
+		s.wg.Wait()
+	})
+}
+func (s *Server) accept() {
+	defer s.wg.Done()
+	for {
+		c, err := s.listener.Accept(s.ctx)
+		if err != nil {
+			return
+		}
+		select {
+		case s.slots <- struct{}{}:
+			s.wg.Add(1)
+			go func() { defer s.wg.Done(); defer func() { <-s.slots }(); s.handle(c) }()
+		default:
+			c.CloseWithError(1, "server full")
+		}
+	}
+}
+func (s *Server) handle(c *quic.Conn) {
+	defer c.CloseWithError(closeTemporary, "connection ended")
+	stop := context.AfterFunc(s.ctx, func() { c.CloseWithError(closeRoom, "server stopped") })
+	defer stop()
+	if !c.ConnectionState().SupportsDatagrams.Remote {
+		return
+	}
+	ctx, cancel := context.WithTimeout(c.Context(), 5*time.Second)
+	st, err := c.AcceptStream(ctx)
+	cancel()
+	if err != nil {
+		return
+	}
+	st.SetReadDeadline(time.Now().Add(5 * time.Second))
+	b, err := readFrame(st, maxJoinFrame)
+	if err != nil {
+		if errors.Is(err, ErrProtocol) {
+			c.CloseWithError(closeProtocol, "invalid handshake frame")
+		}
+		return
+	}
+	if b[1] != msgJoin && b[1] != msgResume {
+		c.CloseWithError(closeProtocol, "invalid join")
+		return
+	}
+	kind := b[1]
+	d := decode(b, kind)
+	name := string(d.bytes(64))
+	var token ResumeToken
+	copy(token[:], d.take(32))
+	if d.end() != nil || !validRoomName(name) {
+		c.CloseWithError(closeProtocol, "invalid join")
+		return
+	}
+	s.mu.Lock()
+	room := s.rooms[name]
+	s.mu.Unlock()
+	if room == nil {
+		if kind == msgResume {
+			c.CloseWithError(closeResumeRejected, "resume rejected")
+		} else {
+			c.CloseWithError(closeRoom, "room not found")
+		}
+		return
+	}
+	id := uint32(0)
+	if kind == msgJoin {
+		if token != (ResumeToken{}) {
+			c.CloseWithError(closeProtocol, "unexpected credential")
+			return
+		}
+		id = s.nextID.Add(1)
+		if id == 0 {
+			return
+		}
+	}
+	p := &peer{id: id, conn: c, stream: st, room: room, reliable: make(chan []byte, 64), snapshots: make(chan [][]byte, 1)}
+	var writers sync.WaitGroup
+	writers.Add(2)
+	go func() { defer writers.Done(); p.writeReliable() }()
+	go func() { defer writers.Done(); p.writeDatagrams() }()
+	defer func() { p.close(); writers.Wait() }()
+	reply := make(chan error, 1)
+	if !room.command(roomCommand{peer: p, kind: kind, token: token, reply: reply}) {
+		if kind == msgResume && room.ctx.Err() != nil {
+			p.kick(closeResumeRejected, "resume rejected")
+		}
+		return
+	}
+	if err := waitError(c.Context(), room.done, reply); err != nil {
+		code := closeRoom
+		if kind == msgResume {
+			code = closeResumeRejected
+		}
+		c.CloseWithError(code, "join or resume rejected")
+		return
+	}
+	st.SetReadDeadline(time.Time{})
+	var receiver sync.WaitGroup
+	receiver.Add(1)
+	go func() { defer receiver.Done(); p.readDatagrams() }()
+	defer func() { p.close(); receiver.Wait() }()
+	for {
+		b, err = readFrame(st, maxClientFrame)
+		if err != nil {
+			if errors.Is(err, ErrProtocol) {
+				p.kick(closeProtocol, "invalid reliable frame")
+			}
+			return
+		}
+		if len(b) < 2 || (b[1] != msgAction && b[1] != msgResync) {
+			p.kick(closeProtocol, "invalid message")
+			return
+		}
+		if !room.command(roomCommand{peer: p, kind: b[1], data: b}) {
+			return
+		}
+	}
+}
+
+type peer struct {
+	id        uint32
+	conn      *quic.Conn
+	stream    *quic.Stream
+	room      *Room
+	reliable  chan []byte
+	snapshots chan [][]byte
+	terminal  atomic.Bool
+}
+
+func (p *peer) close() { p.conn.CloseWithError(closeTemporary, "connection closed") }
+func (p *peer) kick(code quic.ApplicationErrorCode, reason string) {
+	p.terminal.Store(true)
+	p.conn.CloseWithError(code, reason)
+}
+func (p *peer) active() bool { return !p.terminal.Load() && p.conn.Context().Err() == nil }
+func (p *peer) resumable() bool {
+	if p.terminal.Load() {
+		return false
+	}
+	var app *quic.ApplicationError
+	if errors.As(context.Cause(p.conn.Context()), &app) {
+		return app.ErrorCode == closeTemporary
+	}
+	return true
+}
+func (p *peer) send(b []byte) bool {
+	select {
+	case <-p.conn.Context().Done():
+		return false
+	default:
+	}
+	select {
+	case p.reliable <- b:
+		return true
+	default:
+		p.kick(closeBusy, "reliable queue full")
+		return false
+	}
+}
+func (p *peer) offer(b [][]byte) {
+	select {
+	case p.snapshots <- b:
+		return
+	default:
+	}
+	select {
+	case <-p.snapshots:
+		p.room.snapshotDrops.Add(1)
+	default:
+	}
+	select {
+	case p.snapshots <- b:
+	default:
+		p.room.snapshotDrops.Add(1)
+	}
+}
+func (p *peer) writeReliable() {
+	defer p.close()
+	for {
+		select {
+		case <-p.conn.Context().Done():
+			return
+		case b := <-p.reliable:
+			p.stream.SetWriteDeadline(time.Now().Add(2 * time.Second))
+			if err := writeFrame(p.stream, b); err != nil {
+				if p.conn.Context().Err() == nil {
+					p.kick(closeBusy, "reliable write stalled")
+				}
+				return
+			}
+			p.room.reliableBytes.Add(uint64(len(b) + 4))
+		}
+	}
+}
+func (p *peer) writeDatagrams() {
+	for {
+		select {
+		case <-p.conn.Context().Done():
+			return
+		case packets := <-p.snapshots:
+			for _, b := range packets {
+				if err := p.conn.SendDatagram(b); err != nil {
+					p.close()
+					return
+				}
+				p.room.datagramBytes.Add(uint64(len(b)))
+			}
+		}
+	}
+}
+func (p *peer) readDatagrams() {
+	defer p.close()
+	for {
+		b, err := p.conn.ReceiveDatagram(p.conn.Context())
+		if err != nil {
+			return
+		}
+		if len(b) > p.room.cfg.DatagramSize {
+			p.kick(closeProtocol, "datagram oversized")
+			return
+		}
+		inputs, err := decodeInputs(b)
+		if err != nil {
+			p.kick(closeProtocol, "invalid input packet")
+			return
+		}
+		if !p.room.enqueueInputs(inputBatch{p, inputs}) {
+			return
+		}
+	}
+}

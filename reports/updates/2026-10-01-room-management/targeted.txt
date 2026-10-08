@@ -1,0 +1,102 @@
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.03s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.01s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.01s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.01s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+PASS
+ok  	example.com/statesync	1.430s

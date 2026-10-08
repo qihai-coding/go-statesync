@@ -1,0 +1,23 @@
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+    protocol_test.go:254: ignored snapshot changed state or interpolation clock
+    protocol_test.go:259: ignored snapshot invalidated a later reliable batch statesync: invalid protocol
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+    protocol_test.go:254: ignored snapshot changed state or interpolation clock
+    protocol_test.go:259: ignored snapshot invalidated a later reliable batch statesync: invalid protocol
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+    protocol_test.go:254: ignored snapshot changed state or interpolation clock
+    protocol_test.go:259: ignored snapshot invalidated a later reliable batch statesync: invalid protocol
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+    protocol_test.go:254: ignored snapshot changed state or interpolation clock
+    protocol_test.go:259: ignored snapshot invalidated a later reliable batch statesync: invalid protocol
+--- FAIL: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- FAIL: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- FAIL: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- FAIL: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- FAIL: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+FAIL
+FAIL	example.com/statesync	0.021s
+FAIL

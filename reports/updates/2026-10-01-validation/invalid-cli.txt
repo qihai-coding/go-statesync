@@ -1,0 +1,3 @@
+-loss NaN: exit=1; invalid impairment profile; no report created
+-duplicate NaN: exit=1; invalid impairment profile; no report created
+-reorder NaN: exit=1; invalid impairment profile; no report created

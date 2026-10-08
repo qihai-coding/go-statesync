@@ -1,0 +1,32 @@
+=== RUN   TestFullStateRejectsInvalidResync
+=== RUN   TestFullStateRejectsInvalidResync/unsolicited
+=== RUN   TestFullStateRejectsInvalidResync/controlled_ID
+=== RUN   TestFullStateRejectsInvalidResync/controlled_generation
+=== RUN   TestFullStateRejectsInvalidResync/ack_behind_cutoff
+=== RUN   TestFullStateRejectsInvalidResync/ack_ahead_of_cutoff
+=== RUN   TestFullStateRejectsInvalidResync/action_rollback
+=== RUN   TestFullStateRejectsInvalidResync/tick_rate
+=== RUN   TestFullStateRejectsInvalidResync/snapshot_rate
+=== RUN   TestFullStateRejectsInvalidResync/grace_period
+=== RUN   TestFullStateRejectsInvalidResync/invalid_state
+--- PASS: TestFullStateRejectsInvalidResync (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/unsolicited (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/controlled_ID (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/controlled_generation (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/ack_behind_cutoff (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/ack_ahead_of_cutoff (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/action_rollback (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/tick_rate (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/snapshot_rate (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/grace_period (0.00s)
+    --- PASS: TestFullStateRejectsInvalidResync/invalid_state (0.00s)
+=== RUN   TestFullStateRestoresResyncAndFreshConnection
+=== RUN   TestFullStateRestoresResyncAndFreshConnection/resync
+=== RUN   TestFullStateRestoresResyncAndFreshConnection/fresh_connection
+--- PASS: TestFullStateRestoresResyncAndFreshConnection (0.00s)
+    --- PASS: TestFullStateRestoresResyncAndFreshConnection/resync (0.00s)
+    --- PASS: TestFullStateRestoresResyncAndFreshConnection/fresh_connection (0.00s)
+=== RUN   TestResyncCooldownStartsAtResponse
+--- PASS: TestResyncCooldownStartsAtResponse (0.00s)
+PASS
+ok  	github.com/qihai-coding/go-statesync	0.572s

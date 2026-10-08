@@ -1,0 +1,69 @@
+{
+  "Started": "2026-09-15T03:12:05.649764Z",
+  "DurationSeconds": 16.0014728,
+  "GoVersion": "go1.26.5",
+  "Platform": "windows/amd64",
+  "Processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "LogicalCPUs": 32,
+  "Clients": 16,
+  "Items": 16,
+  "Profile": {
+    "RTT": 300000000,
+    "Jitter": 30000000,
+    "Loss": 0.05,
+    "Duplicate": 0.02,
+    "Reorder": 0.02
+  },
+  "Samples": [
+    {
+      "Seconds": 16.0014728,
+      "HeapBytes": 11139416,
+      "HeapObjects": 16854,
+      "Goroutines": 295,
+      "CPUSeconds": 3.59375,
+      "Room": {
+        "Ticks": 866,
+        "StepTotal": 10395700,
+        "StepP99": 400000,
+        "StepMax": 5133100,
+        "InputDrops": 0,
+        "SnapshotDrops": 0,
+        "ReliableBytes": 21944,
+        "DatagramBytes": 2825432,
+        "Players": 16,
+        "InputQueue": 0,
+        "ControlQueue": 0,
+        "ReliableQueued": 0,
+        "SnapshotQueued": 0
+      }
+    }
+  ],
+  "Room": {
+    "Ticks": 866,
+    "StepTotal": 10395700,
+    "StepP99": 400000,
+    "StepMax": 5133100,
+    "InputDrops": 0,
+    "SnapshotDrops": 0,
+    "ReliableBytes": 21944,
+    "DatagramBytes": 2825432,
+    "Players": 16,
+    "InputQueue": 0,
+    "ControlQueue": 0,
+    "ReliableQueued": 0,
+    "SnapshotQueued": 0
+  },
+  "ProcessCPUSeconds": 3.59375,
+  "ProcessCPUPercentOneCore": 22.45887016100168,
+  "ProcessCPUPercentHost": 0.7018396925313025,
+  "AllocatedBytes": 31802792,
+  "AllocationBytesPerSecond": 1987491.5514026936,
+  "DatagramPayloadBytesPerSecond": 143026.83437989536,
+  "PerClientPayloadBytesPerSecond": 8939.17714874346,
+  "Converged": true,
+  "ConnectionsAlive": true,
+  "MemoryBounded": true,
+  "StepBudgetPassed": true,
+  "Passed": true,
+  "Failures": null
+}

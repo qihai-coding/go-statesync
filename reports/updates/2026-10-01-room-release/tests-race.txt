@@ -1,0 +1,294 @@
+=== RUN   TestAtomicLifecycleBatch
+--- PASS: TestAtomicLifecycleBatch (0.00s)
+=== RUN   TestSnapshotQueueReplacesOldBatch
+--- PASS: TestSnapshotQueueReplacesOldBatch (0.00s)
+=== RUN   TestOldConnectionMessagesCannotMutateSession
+--- PASS: TestOldConnectionMessagesCannotMutateSession (0.00s)
+=== RUN   TestResyncCooldownStartsAtResponse
+--- PASS: TestResyncCooldownStartsAtResponse (0.00s)
+=== RUN   TestClosedRoomReportsNormalClosure
+--- PASS: TestClosedRoomReportsNormalClosure (0.00s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestProtocolGoldenAndBounds
+--- PASS: TestProtocolGoldenAndBounds (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestSessionWireLayout
+--- PASS: TestSessionWireLayout (0.00s)
+=== RUN   TestIndependentSnapshotChunks
+--- PASS: TestIndependentSnapshotChunks (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestInterpolationHoldsAtEdges
+--- PASS: TestInterpolationHoldsAtEdges (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.04s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+--- PASS: TestDialCancellationWhileAwaitingFullState (0.65s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cancel (0.03s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/join/cause (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.01s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- PASS: TestDialCancellationWhileAwaitingFullState/resume/cause (0.01s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+=== RUN   TestDialCancellationDuringInitialization/resume
+--- PASS: TestDialCancellationDuringInitialization (0.02s)
+    --- PASS: TestDialCancellationDuringInitialization/join (0.01s)
+    --- PASS: TestDialCancellationDuringInitialization/resume (0.01s)
+=== RUN   TestRoomsLifecycleAndPickup
+--- PASS: TestRoomsLifecycleAndPickup (0.05s)
+=== RUN   TestCapacityAndCertificateVerification
+--- PASS: TestCapacityAndCertificateVerification (0.09s)
+=== RUN   TestWeakNetworkConverges
+=== RUN   TestWeakNetworkConverges/0s
+=== RUN   TestWeakNetworkConverges/150ms
+=== RUN   TestWeakNetworkConverges/300ms
+--- PASS: TestWeakNetworkConverges (15.16s)
+    --- PASS: TestWeakNetworkConverges/0s (4.17s)
+    --- PASS: TestWeakNetworkConverges/150ms (4.88s)
+    --- PASS: TestWeakNetworkConverges/300ms (6.11s)
+=== RUN   TestHistoryOverflowResynchronizes
+--- PASS: TestHistoryOverflowResynchronizes (0.02s)
+=== RUN   TestInvalidInputRejectedAndSpeedBounded
+--- PASS: TestInvalidInputRejectedAndSpeedBounded (0.27s)
+=== RUN   TestResumeWeakNetworkMatrix
+=== RUN   TestResumeWeakNetworkMatrix/0s
+=== RUN   TestResumeWeakNetworkMatrix/150ms
+=== RUN   TestResumeWeakNetworkMatrix/300ms
+--- PASS: TestResumeWeakNetworkMatrix (7.79s)
+    --- PASS: TestResumeWeakNetworkMatrix/0s (1.79s)
+    --- PASS: TestResumeWeakNetworkMatrix/150ms (2.92s)
+    --- PASS: TestResumeWeakNetworkMatrix/300ms (3.08s)
+=== RUN   TestResumeTakeoverAndOperationReplay
+--- PASS: TestResumeTakeoverAndOperationReplay (0.07s)
+=== RUN   TestClosedRoomRejectsResume
+--- PASS: TestClosedRoomRejectsResume (0.01s)
+=== RUN   TestResumeConcurrentTakeovers
+--- PASS: TestResumeConcurrentTakeovers (0.01s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.02s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.02s)
+=== RUN   TestResumeExpiryCapacityAndLeave
+--- PASS: TestResumeExpiryCapacityAndLeave (0.47s)
+=== RUN   TestResumeCredentialsAndRestart
+--- PASS: TestResumeCredentialsAndRestart (0.03s)
+=== RUN   TestActionCancellationDoesNotSend
+--- PASS: TestActionCancellationDoesNotSend (0.11s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestResumeLostActionResult
+--- PASS: TestResumeLostActionResult (0.02s)
+=== RUN   TestRoomPanicIsolation
+--- PASS: TestRoomPanicIsolation (0.07s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestResyncDelayChangeAndActualOutage
+--- PASS: TestResyncDelayChangeAndActualOutage (14.04s)
+=== RUN   TestSlowClientIsolatedAndCannotResume
+--- PASS: TestSlowClientIsolatedAndCannotResume (0.54s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.07s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.01s)
+=== RUN   TestRoomInitializationDoesNotBlockOtherJoins
+--- PASS: TestRoomInitializationDoesNotBlockOtherJoins (0.01s)
+=== RUN   TestPendingRoomReservesNameAndCapacity
+--- PASS: TestPendingRoomReservesNameAndCapacity (0.00s)
+=== RUN   TestCanceledInitializationCannotDeleteReplacement
+--- PASS: TestCanceledInitializationCannotDeleteReplacement (0.01s)
+=== RUN   TestServerCloseWaitsForPendingInitialization
+--- PASS: TestServerCloseWaitsForPendingInitialization (0.01s)
+=== RUN   TestServerCloseAllowsManagementFromCleanup
+--- PASS: TestServerCloseAllowsManagementFromCleanup (0.01s)
+=== RUN   TestServerShutdownReportsTerminalError
+--- PASS: TestServerShutdownReportsTerminalError (0.01s)
+=== RUN   FuzzLifecyclePreflight
+=== RUN   FuzzLifecyclePreflight/seed#0
+=== RUN   FuzzLifecyclePreflight/seed#1
+=== RUN   FuzzLifecyclePreflight/seed#2
+=== RUN   FuzzLifecyclePreflight/seed#3
+--- PASS: FuzzLifecyclePreflight (0.00s)
+    --- PASS: FuzzLifecyclePreflight/seed#0 (0.00s)
+    --- PASS: FuzzLifecyclePreflight/seed#1 (0.00s)
+    --- PASS: FuzzLifecyclePreflight/seed#2 (0.00s)
+    --- PASS: FuzzLifecyclePreflight/seed#3 (0.00s)
+=== RUN   FuzzDecode
+=== RUN   FuzzDecode/seed#0
+=== RUN   FuzzDecode/seed#1
+--- PASS: FuzzDecode (0.00s)
+    --- PASS: FuzzDecode/seed#0 (0.00s)
+    --- PASS: FuzzDecode/seed#1 (0.00s)
+=== RUN   FuzzReadFrame
+=== RUN   FuzzReadFrame/seed#0
+=== RUN   FuzzReadFrame/seed#1
+=== RUN   FuzzReadFrame/seed#2
+=== RUN   FuzzReadFrame/seed#3
+--- PASS: FuzzReadFrame (0.00s)
+    --- PASS: FuzzReadFrame/seed#0 (0.00s)
+    --- PASS: FuzzReadFrame/seed#1 (0.00s)
+    --- PASS: FuzzReadFrame/seed#2 (0.00s)
+    --- PASS: FuzzReadFrame/seed#3 (0.00s)
+PASS
+ok  	example.com/statesync	40.908s
+?   	example.com/statesync/arena	[no test files]
+=== RUN   TestShortRunDoesNotClaimMemoryStability
+2 秒：在线=1，保留=0，堆=0.96 MiB（兆二进制字节），最慢房间第99百分位=200µs
+--- PASS: TestShortRunDoesNotClaimMemoryStability (2.03s)
+=== RUN   TestRunRejectsNonFiniteProfile
+--- PASS: TestRunRejectsNonFiniteProfile (0.00s)
+=== RUN   TestMemoryEvidenceAndThresholds
+=== RUN   TestMemoryEvidenceAndThresholds/no_samples
+=== RUN   TestMemoryEvidenceAndThresholds/two_samples
+=== RUN   TestMemoryEvidenceAndThresholds/short_run
+=== RUN   TestMemoryEvidenceAndThresholds/early_baseline
+=== RUN   TestMemoryEvidenceAndThresholds/missing_endpoint
+=== RUN   TestMemoryEvidenceAndThresholds/reversed_time
+=== RUN   TestMemoryEvidenceAndThresholds/exact_limits
+=== RUN   TestMemoryEvidenceAndThresholds/heap_growth
+=== RUN   TestMemoryEvidenceAndThresholds/task_growth
+--- PASS: TestMemoryEvidenceAndThresholds (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/no_samples (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/two_samples (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/short_run (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/early_baseline (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/missing_endpoint (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/reversed_time (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/exact_limits (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/heap_growth (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/task_growth (0.00s)
+PASS
+ok  	example.com/statesync/cmd/check	3.094s
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/temporary
+=== RUN   TestReconnectDistinguishesShutdownFromDisconnect/shutdown
+--- PASS: TestReconnectDistinguishesShutdownFromDisconnect (0.29s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/temporary (0.28s)
+    --- PASS: TestReconnectDistinguishesShutdownFromDisconnect/shutdown (0.01s)
+PASS
+ok  	example.com/statesync/cmd/client	1.337s
+?   	example.com/statesync/cmd/server	[no test files]
+=== RUN   TestClockResolvesShortIntervals
+    clock_test.go:24: smallest positive clock interval: 200ns
+--- PASS: TestClockResolvesShortIntervals (0.00s)
+PASS
+ok  	example.com/statesync/internal/measure	1.043s
+=== RUN   TestInvalidProbabilitiesRejected
+=== RUN   TestInvalidProbabilitiesRejected/loss/NaN
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/NaN
+=== RUN   TestInvalidProbabilitiesRejected/reorder/NaN
+=== RUN   TestInvalidProbabilitiesRejected/loss/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/reorder/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/loss/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/reorder/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/loss/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/reorder/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/loss/1.01
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/1.01
+=== RUN   TestInvalidProbabilitiesRejected/reorder/1.01
+--- PASS: TestInvalidProbabilitiesRejected (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/NaN (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/NaN (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/NaN (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/1.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/1.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/1.01 (0.00s)
+=== RUN   TestProfileBoundaryValues
+--- PASS: TestProfileBoundaryValues (0.00s)
+PASS
+ok  	example.com/statesync/internal/nettest	1.043s

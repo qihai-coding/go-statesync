@@ -1,0 +1,122 @@
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.04s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.04s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.04s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.04s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.04s)
+=== RUN   TestRoomReleaseAfterInitializationFailure
+=== RUN   TestRoomReleaseAfterInitializationFailure/invalid_entity
+=== RUN   TestRoomReleaseAfterInitializationFailure/panic
+--- PASS: TestRoomReleaseAfterInitializationFailure (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/invalid_entity (0.00s)
+    --- PASS: TestRoomReleaseAfterInitializationFailure/panic (0.00s)
+=== RUN   TestRoomReleaseWithPendingMessages
+=== RUN   TestRoomReleaseWithPendingMessages/close
+=== RUN   TestRoomReleaseWithPendingMessages/panic
+--- PASS: TestRoomReleaseWithPendingMessages (0.07s)
+    --- PASS: TestRoomReleaseWithPendingMessages/close (0.03s)
+    --- PASS: TestRoomReleaseWithPendingMessages/panic (0.03s)
+PASS
+ok  	example.com/statesync	1.739s

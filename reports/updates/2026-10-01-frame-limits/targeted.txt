@@ -1,0 +1,102 @@
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.07s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.16s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.07s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.16s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.08s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.15s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.07s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+=== RUN   TestFrameDirectionalLimits
+--- PASS: TestFrameDirectionalLimits (0.00s)
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/handshake
+=== RUN   TestServerRejectsOversizedRequestsFromPrefix/command
+--- PASS: TestServerRejectsOversizedRequestsFromPrefix (0.14s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/handshake (0.08s)
+    --- PASS: TestServerRejectsOversizedRequestsFromPrefix/command (0.07s)
+=== RUN   TestLargestLegalClientFrames
+--- PASS: TestLargestLegalClientFrames (0.00s)
+PASS
+ok  	example.com/statesync	1.574s

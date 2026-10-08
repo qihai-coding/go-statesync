@@ -1,0 +1,39 @@
+File: check.exe
+Build ID: C:\Users\A2322\Documents\Codex\2026-09-15\new-chat-2\work\check.exe2026-09-15 11:08:24.3898579 +0800 CST
+Type: cpu
+Time: 2026-09-15 11:08:24 CST
+Duration: 601.05s, Total samples = 50.30s ( 8.37%)
+Showing nodes accounting for 33.29s, 66.18% of 50.30s total
+Dropped 572 nodes (cum <= 0.25s)
+Showing top 30 nodes out of 143
+      flat  flat%   sum%        cum   cum%
+    11.71s 23.28% 23.28%     11.84s 23.54%  runtime.cgocall
+     6.24s 12.41% 35.69%      6.24s 12.41%  runtime.semawakeup
+     1.39s  2.76% 38.45%      1.39s  2.76%  runtime.memmove
+     1.21s  2.41% 40.85%      4.05s  8.05%  runtime.selectgo
+     1.01s  2.01% 42.86%      1.01s  2.01%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.84s  1.67% 44.53%      0.85s  1.69%  runtime.netpollQueueTimer
+     0.82s  1.63% 46.16%      1.97s  3.92%  runtime.lock2
+     0.82s  1.63% 47.79%      1.72s  3.42%  runtime.netpoll
+     0.82s  1.63% 49.42%      0.82s  1.63%  runtime.runqgrab.osyield.func1
+     0.71s  1.41% 50.83%      0.71s  1.41%  runtime.semasleep
+     0.69s  1.37% 52.21%      1.48s  2.94%  runtime.(*waitq).dequeue (inline)
+     0.68s  1.35% 53.56%      5.99s 11.91%  runtime.stealWork
+     0.62s  1.23% 54.79%      1.08s  2.15%  runtime.sellock
+     0.55s  1.09% 55.88%      0.55s  1.09%  runtime.gopark
+     0.54s  1.07% 56.96%      0.64s  1.27%  runtime.unlock2
+     0.45s  0.89% 57.85%      2.98s  5.92%  github.com/quic-go/quic-go.(*packetPacker).appendPacket
+     0.38s  0.76% 58.61%      0.38s  0.76%  internal/sync.(*Mutex).Lock (inline)
+     0.36s  0.72% 59.32%      1.03s  2.05%  example.com/statesync.(*Room).step
+     0.34s  0.68% 60.00%     10.65s 21.17%  github.com/quic-go/quic-go.(*Conn).run
+     0.34s  0.68% 60.68%      0.62s  1.23%  runtime.casgstatus
+     0.34s  0.68% 61.35%      2.68s  5.33%  runtime.chansend
+     0.33s  0.66% 62.01%      0.33s  0.66%  runtime.lock2.osyield.func1
+     0.30s   0.6% 62.60%      0.37s  0.74%  runtime.(*timers).siftDown
+     0.29s  0.58% 63.18%      0.52s  1.03%  github.com/quic-go/quic-go.(*framer).HasData
+     0.28s  0.56% 63.74%      0.28s  0.56%  runtime.nextFreeFast (inline)
+     0.27s  0.54% 64.27%     17.73s 35.25%  runtime.schedule
+     0.26s  0.52% 64.79%      0.49s  0.97%  runtime.execute
+     0.26s  0.52% 65.31%     10.58s 21.03%  runtime.findRunnable
+     0.23s  0.46% 65.77%      1.24s  2.47%  example.com/statesync.(*Client).SubmitInput
+     0.21s  0.42% 66.18%      1.55s  3.08%  example.com/statesync.(*Client).update

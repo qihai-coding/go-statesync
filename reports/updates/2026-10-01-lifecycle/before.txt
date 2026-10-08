@@ -1,0 +1,14 @@
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+    hardening_test.go:105: client rejected a server-valid replacement statesync: invalid protocol
+--- FAIL: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+    hardening_test.go:128: invalid batch published partial state
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+    hardening_test.go:128: invalid batch published partial state
+--- FAIL: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- FAIL: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- FAIL: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+FAIL
+FAIL	example.com/statesync	0.025s
+FAIL

@@ -1,0 +1,17 @@
+../../work/check-v2-qpc.exe: go1.26.5
+	path	example.com/statesync/cmd/check
+	mod	example.com/statesync	(devel)	
+	dep	github.com/quic-go/quic-go	v0.62.0	h1:ZHDjCk5OacATwGvs8PWE97CTvX7AqZiVoW7++ZOXTf8=
+	dep	golang.org/x/crypto	v0.54.0	h1:YLIA59K4fiNzHzjnZt2tUJQjQtUWfWbeHBqKtk3eScw=
+	dep	golang.org/x/sys	v0.47.0	h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=0
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+
+Algorithm : SHA256
+Hash      : 93818473842E33C1262BE3534782E63E834BF1C25080DAF8B4BDE8638F24019C
+Path      : C:\Users\A2322\Documents\Codex\2026-09-15\new-chat-2\work\check-v2-qpc.exe
+

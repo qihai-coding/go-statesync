@@ -1,0 +1,37 @@
+=== RUN   TestDialCancellationWhileAwaitingFullState
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cancel
+    client_lifecycle_test.go:88: wanted context canceled, got Application error 0xb (local): join canceled
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/deadline
+    client_lifecycle_test.go:88: wanted context deadline exceeded, got Application error 0xb (local): join canceled
+=== RUN   TestDialCancellationWhileAwaitingFullState/join/cause
+    client_lifecycle_test.go:88: wanted business canceled connection, got Application error 0xb (local): join canceled
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cancel
+    client_lifecycle_test.go:88: wanted context canceled, got Application error 0xb (local): join canceled
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/deadline
+    client_lifecycle_test.go:88: wanted context deadline exceeded, got Application error 0xb (local): join canceled
+=== RUN   TestDialCancellationWhileAwaitingFullState/resume/cause
+    client_lifecycle_test.go:88: wanted business canceled connection, got Application error 0xb (local): join canceled
+--- FAIL: TestDialCancellationWhileAwaitingFullState (0.64s)
+    --- FAIL: TestDialCancellationWhileAwaitingFullState/join/cancel (0.02s)
+    --- FAIL: TestDialCancellationWhileAwaitingFullState/join/deadline (0.30s)
+    --- FAIL: TestDialCancellationWhileAwaitingFullState/join/cause (0.00s)
+    --- FAIL: TestDialCancellationWhileAwaitingFullState/resume/cancel (0.00s)
+    --- FAIL: TestDialCancellationWhileAwaitingFullState/resume/deadline (0.30s)
+    --- FAIL: TestDialCancellationWhileAwaitingFullState/resume/cause (0.00s)
+=== RUN   TestDialCancellationDuringInitialization
+=== RUN   TestDialCancellationDuringInitialization/join
+    client_lifecycle_test.go:126: canceled initialization returned a client
+    client_lifecycle_test.go:129: canceled initialization returned <nil>
+=== RUN   TestDialCancellationDuringInitialization/resume
+    client_lifecycle_test.go:126: canceled initialization returned a client
+    client_lifecycle_test.go:129: canceled initialization returned <nil>
+--- FAIL: TestDialCancellationDuringInitialization (0.01s)
+    --- FAIL: TestDialCancellationDuringInitialization/join (0.00s)
+    --- FAIL: TestDialCancellationDuringInitialization/resume (0.01s)
+=== RUN   TestServerShutdownReportsTerminalError
+    server_lifecycle_test.go:245: server shutdown is not terminal: Application error 0x0 (remote): server stopped
+    server_lifecycle_test.go:250: pending operation lost shutdown reason: Application error 0x0 (remote): server stopped
+--- FAIL: TestServerShutdownReportsTerminalError (0.00s)
+FAIL
+FAIL	example.com/statesync	0.684s
+FAIL

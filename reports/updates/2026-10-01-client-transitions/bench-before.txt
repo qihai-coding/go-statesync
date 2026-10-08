@@ -1,0 +1,12 @@
+goos: windows
+goarch: amd64
+pkg: example.com/statesync
+cpu: Intel(R) Core(TM) i9-14900HX
+BenchmarkLifecycleBatchApply/16-32 	 2199368	       163.0 ns/op	     112 B/op	       2 allocs/op
+BenchmarkLifecycleBatchApply/16-32 	 2233720	       172.7 ns/op	     112 B/op	       2 allocs/op
+BenchmarkLifecycleBatchApply/16-32 	 2260124	       162.6 ns/op	     112 B/op	       2 allocs/op
+BenchmarkLifecycleBatchApply/256-32         	 2236042	       161.0 ns/op	     112 B/op	       2 allocs/op
+BenchmarkLifecycleBatchApply/256-32         	 2083342	       166.3 ns/op	     112 B/op	       2 allocs/op
+BenchmarkLifecycleBatchApply/256-32         	 2154010	       164.6 ns/op	     112 B/op	       2 allocs/op
+PASS
+ok  	example.com/statesync	2.200s

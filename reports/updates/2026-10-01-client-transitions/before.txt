@@ -1,0 +1,66 @@
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+    hardening_test.go:200: invalid lifecycle transition accepted <nil>
+    hardening_test.go:203: invalid batch changed previously accepted state
+--- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- FAIL: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+FAIL
+FAIL	example.com/statesync	0.021s
+FAIL

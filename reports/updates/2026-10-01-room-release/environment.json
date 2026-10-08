@@ -1,0 +1,20 @@
+{
+  "Captured": "2026-10-01T18:19:22.4817363+08:00",
+  "CPU": {
+    "Name": "Intel(R) Core(TM) i9-14900HX",
+    "NumberOfCores": 24,
+    "NumberOfLogicalProcessors": 32
+  },
+  "OS": {
+    "Caption": "Microsoft Windows 11 专业版",
+    "Version": "10.0.26200",
+    "OSArchitecture": "64 位"
+  },
+  "Go": "go version go1.26.5 windows/amd64",
+  "Toolchain": [
+    "windows",
+    "amd64",
+    "0"
+  ],
+  "Module": "module example.com/statesync\n\ngo 1.26.0\n\nrequire github.com/quic-go/quic-go v0.62.0\n\nrequire (\n\tgolang.org/x/crypto v0.54.0 // indirect\n\tgolang.org/x/net v0.56.0 // indirect\n\tgolang.org/x/sys v0.47.0 // indirect\n)\n"
+}

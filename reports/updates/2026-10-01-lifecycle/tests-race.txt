@@ -1,0 +1,104 @@
+=== RUN   TestAtomicLifecycleBatch
+--- PASS: TestAtomicLifecycleBatch (0.00s)
+=== RUN   TestSnapshotQueueReplacesOldBatch
+--- PASS: TestSnapshotQueueReplacesOldBatch (0.00s)
+=== RUN   TestOldConnectionMessagesCannotMutateSession
+--- PASS: TestOldConnectionMessagesCannotMutateSession (0.00s)
+=== RUN   TestResyncCooldownStartsAtResponse
+--- PASS: TestResyncCooldownStartsAtResponse (0.00s)
+=== RUN   TestClosedRoomReportsNormalClosure
+--- PASS: TestClosedRoomReportsNormalClosure (0.00s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestProtocolGoldenAndBounds
+--- PASS: TestProtocolGoldenAndBounds (0.00s)
+=== RUN   TestSessionWireLayout
+--- PASS: TestSessionWireLayout (0.00s)
+=== RUN   TestIndependentSnapshotChunks
+--- PASS: TestIndependentSnapshotChunks (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestInterpolationHoldsAtEdges
+--- PASS: TestInterpolationHoldsAtEdges (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestRoomsLifecycleAndPickup
+--- PASS: TestRoomsLifecycleAndPickup (0.08s)
+=== RUN   TestCapacityAndCertificateVerification
+--- PASS: TestCapacityAndCertificateVerification (0.12s)
+=== RUN   TestWeakNetworkConverges
+=== RUN   TestWeakNetworkConverges/0s
+=== RUN   TestWeakNetworkConverges/150ms
+=== RUN   TestWeakNetworkConverges/300ms
+--- PASS: TestWeakNetworkConverges (15.15s)
+    --- PASS: TestWeakNetworkConverges/0s (4.17s)
+    --- PASS: TestWeakNetworkConverges/150ms (4.87s)
+    --- PASS: TestWeakNetworkConverges/300ms (6.11s)
+=== RUN   TestHistoryOverflowResynchronizes
+--- PASS: TestHistoryOverflowResynchronizes (0.02s)
+=== RUN   TestInvalidInputRejectedAndSpeedBounded
+--- PASS: TestInvalidInputRejectedAndSpeedBounded (0.28s)
+=== RUN   TestResumeWeakNetworkMatrix
+=== RUN   TestResumeWeakNetworkMatrix/0s
+=== RUN   TestResumeWeakNetworkMatrix/150ms
+=== RUN   TestResumeWeakNetworkMatrix/300ms
+--- PASS: TestResumeWeakNetworkMatrix (7.83s)
+    --- PASS: TestResumeWeakNetworkMatrix/0s (1.78s)
+    --- PASS: TestResumeWeakNetworkMatrix/150ms (2.93s)
+    --- PASS: TestResumeWeakNetworkMatrix/300ms (3.11s)
+=== RUN   TestResumeTakeoverAndOperationReplay
+--- PASS: TestResumeTakeoverAndOperationReplay (0.08s)
+=== RUN   TestClosedRoomRejectsResume
+--- PASS: TestClosedRoomRejectsResume (0.01s)
+=== RUN   TestResumeConcurrentTakeovers
+--- PASS: TestResumeConcurrentTakeovers (0.01s)
+=== RUN   TestRoomShutdownCleansSessionsOnce
+=== RUN   TestRoomShutdownCleansSessionsOnce/normal
+=== RUN   TestRoomShutdownCleansSessionsOnce/cleanup_panic
+--- PASS: TestRoomShutdownCleansSessionsOnce (0.05s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/normal (0.03s)
+    --- PASS: TestRoomShutdownCleansSessionsOnce/cleanup_panic (0.03s)
+=== RUN   TestResumeExpiryCapacityAndLeave
+--- PASS: TestResumeExpiryCapacityAndLeave (0.46s)
+=== RUN   TestResumeCredentialsAndRestart
+--- PASS: TestResumeCredentialsAndRestart (0.03s)
+=== RUN   TestActionCancellationDoesNotSend
+--- PASS: TestActionCancellationDoesNotSend (0.11s)
+=== RUN   TestConflictingRetryCannotConsumeLateReply
+--- PASS: TestConflictingRetryCannotConsumeLateReply (0.06s)
+=== RUN   TestResumeLostActionResult
+--- PASS: TestResumeLostActionResult (0.02s)
+=== RUN   TestRoomPanicIsolation
+--- PASS: TestRoomPanicIsolation (0.07s)
+=== RUN   TestInvalidLifecycleStopsOnlyItsRoom
+--- PASS: TestInvalidLifecycleStopsOnlyItsRoom (0.07s)
+=== RUN   TestResyncDelayChangeAndActualOutage
+--- PASS: TestResyncDelayChangeAndActualOutage (14.04s)
+=== RUN   TestSlowClientIsolatedAndCannotResume
+--- PASS: TestSlowClientIsolatedAndCannotResume (0.54s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   FuzzDecode
+=== RUN   FuzzDecode/seed#0
+=== RUN   FuzzDecode/seed#1
+--- PASS: FuzzDecode (0.00s)
+    --- PASS: FuzzDecode/seed#0 (0.00s)
+    --- PASS: FuzzDecode/seed#1 (0.00s)
+PASS
+ok  	example.com/statesync	40.087s
+?   	example.com/statesync/arena	[no test files]
+?   	example.com/statesync/cmd/check	[no test files]
+?   	example.com/statesync/cmd/client	[no test files]
+?   	example.com/statesync/cmd/server	[no test files]
+=== RUN   TestClockResolvesShortIntervals
+    clock_test.go:24: smallest positive clock interval: 200ns
+--- PASS: TestClockResolvesShortIntervals (0.00s)
+PASS
+ok  	example.com/statesync/internal/measure	1.041s
+?   	example.com/statesync/internal/nettest	[no test files]

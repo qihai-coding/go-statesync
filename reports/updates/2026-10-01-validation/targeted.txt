@@ -1,0 +1,63 @@
+=== RUN   TestInvalidProbabilitiesRejected
+=== RUN   TestInvalidProbabilitiesRejected/loss/NaN
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/NaN
+=== RUN   TestInvalidProbabilitiesRejected/reorder/NaN
+=== RUN   TestInvalidProbabilitiesRejected/loss/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/reorder/+Inf
+=== RUN   TestInvalidProbabilitiesRejected/loss/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/reorder/-Inf
+=== RUN   TestInvalidProbabilitiesRejected/loss/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/reorder/-0.01
+=== RUN   TestInvalidProbabilitiesRejected/loss/1.01
+=== RUN   TestInvalidProbabilitiesRejected/duplicate/1.01
+=== RUN   TestInvalidProbabilitiesRejected/reorder/1.01
+--- PASS: TestInvalidProbabilitiesRejected (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/NaN (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/NaN (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/NaN (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/+Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/-Inf (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/-0.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/loss/1.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/duplicate/1.01 (0.00s)
+    --- PASS: TestInvalidProbabilitiesRejected/reorder/1.01 (0.00s)
+=== RUN   TestProfileBoundaryValues
+--- PASS: TestProfileBoundaryValues (0.00s)
+PASS
+ok  	example.com/statesync/internal/nettest	1.039s
+=== RUN   TestShortRunDoesNotClaimMemoryStability
+2 秒：在线=1，保留=0，堆=0.97 MiB（兆二进制字节），最慢房间第99百分位=400µs
+--- PASS: TestShortRunDoesNotClaimMemoryStability (2.03s)
+=== RUN   TestRunRejectsNonFiniteProfile
+--- PASS: TestRunRejectsNonFiniteProfile (0.00s)
+=== RUN   TestMemoryEvidenceAndThresholds
+=== RUN   TestMemoryEvidenceAndThresholds/no_samples
+=== RUN   TestMemoryEvidenceAndThresholds/two_samples
+=== RUN   TestMemoryEvidenceAndThresholds/short_run
+=== RUN   TestMemoryEvidenceAndThresholds/early_baseline
+=== RUN   TestMemoryEvidenceAndThresholds/missing_endpoint
+=== RUN   TestMemoryEvidenceAndThresholds/reversed_time
+=== RUN   TestMemoryEvidenceAndThresholds/exact_limits
+=== RUN   TestMemoryEvidenceAndThresholds/heap_growth
+=== RUN   TestMemoryEvidenceAndThresholds/task_growth
+--- PASS: TestMemoryEvidenceAndThresholds (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/no_samples (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/two_samples (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/short_run (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/early_baseline (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/missing_endpoint (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/reversed_time (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/exact_limits (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/heap_growth (0.00s)
+    --- PASS: TestMemoryEvidenceAndThresholds/task_growth (0.00s)
+PASS
+ok  	example.com/statesync/cmd/check	3.079s

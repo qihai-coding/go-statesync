@@ -1,0 +1,482 @@
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.04s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+=== RUN   TestLifecycleBatchUsesFinalEntityCount
+--- PASS: TestLifecycleBatchUsesFinalEntityCount (0.00s)
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity
+=== RUN   TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec
+--- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/capacity (0.00s)
+    --- PASS: TestLifecycleBatchPreflightDoesNotPublishPartialState/state_codec (0.00s)
+=== RUN   TestLifecycleBatchTracksRepeatedIDs
+--- PASS: TestLifecycleBatchTracksRepeatedIDs (0.00s)
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick
+=== RUN   TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow
+--- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/generation_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/owner_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/dynamic_mutation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/missing_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/wrong_deletion_generation (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/same_generation_reuse (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_deletion (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_replacement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/local_owner_change (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/extra_controlled_entity (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/future_acknowledgement (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/in-batch_acknowledgement_rollback (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/stale_tick (0.00s)
+    --- PASS: TestLifecycleBatchRejectsInvalidTransitionsAtomically/revision_overflow (0.00s)
+=== RUN   TestLifecycleBatchAllowsRemoteGenerationAdvance
+--- PASS: TestLifecycleBatchAllowsRemoteGenerationAdvance (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestFullRoomLifecycleReplacementOverQUIC
+--- PASS: TestFullRoomLifecycleReplacementOverQUIC (0.01s)
+PASS
+ok  	example.com/statesync	1.227s

@@ -1,0 +1,82 @@
+{
+  "Started": "2026-10-08T08:38:56.1348509Z",
+  "DurationSeconds": 21.0018417,
+  "GoVersion": "go1.26.5",
+  "Platform": "windows/amd64",
+  "Processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "LogicalCPUs": 32,
+  "Clients": 16,
+  "ClientsPerRoom": 16,
+  "Items": 16,
+  "Profile": {
+    "RTT": 300000000,
+    "Jitter": 30000000,
+    "Loss": 0.05,
+    "Duplicate": 0.02,
+    "Reorder": 0.02
+  },
+  "Samples": [
+    {
+      "Seconds": 21.0018417,
+      "HeapBytes": 10538040,
+      "HeapObjects": 16373,
+      "Goroutines": 295,
+      "CPUSeconds": 4.015625,
+      "Rooms": [
+        {
+          "Ticks": 1023,
+          "StepTotal": 46646212,
+          "StepP99": 300000,
+          "StepMax": 545499,
+          "InputDrops": 0,
+          "SnapshotDrops": 0,
+          "ReliableBytes": 30104,
+          "DatagramBytes": 3558624,
+          "Players": 16,
+          "RetainedPlayers": 0,
+          "InputQueue": 0,
+          "ControlQueue": 0,
+          "ReliableQueued": 0,
+          "SnapshotQueued": 0
+        }
+      ]
+    }
+  ],
+  "Rooms": [
+    {
+      "Name": "bench-0",
+      "Metrics": {
+        "Ticks": 1023,
+        "StepTotal": 46646212,
+        "StepP99": 300000,
+        "StepMax": 545499,
+        "InputDrops": 0,
+        "SnapshotDrops": 0,
+        "ReliableBytes": 30104,
+        "DatagramBytes": 3558624,
+        "Players": 16,
+        "RetainedPlayers": 0,
+        "InputQueue": 0,
+        "ControlQueue": 0,
+        "ReliableQueued": 0,
+        "SnapshotQueued": 0
+      },
+      "Converged": true,
+      "Resumes": 6
+    }
+  ],
+  "ProcessCPUSeconds": 4.015625,
+  "ProcessCPUPercentOneCore": 19.120346955095847,
+  "ProcessCPUPercentHost": 0.5975108423467452,
+  "AllocatedBytes": 44137512,
+  "AllocationBytesPerSecond": 2101601.975221059,
+  "DatagramPayloadBytesPerSecond": 143027.45649206566,
+  "PerClientPayloadBytesPerSecond": 8961.214101523296,
+  "Converged": true,
+  "ConnectionsAlive": true,
+  "MemoryChecked": false,
+  "MemoryBounded": false,
+  "StepBudgetPassed": true,
+  "Passed": true,
+  "Failures": null
+}

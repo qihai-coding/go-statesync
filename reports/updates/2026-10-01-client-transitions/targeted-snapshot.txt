@@ -1,0 +1,162 @@
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+=== RUN   TestReconciliationAndLifecycle
+--- PASS: TestReconciliationAndLifecycle (0.00s)
+=== RUN   TestSnapshotDuplicatesAndReordering
+--- PASS: TestSnapshotDuplicatesAndReordering (0.00s)
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/old_generation
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity
+=== RUN   TestIgnoredSnapshotDoesNotAdvanceClock/static_entity
+--- PASS: TestIgnoredSnapshotDoesNotAdvanceClock (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/old_generation (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/wrong_owner (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/unknown_entity (0.00s)
+    --- PASS: TestIgnoredSnapshotDoesNotAdvanceClock/static_entity (0.00s)
+=== RUN   TestMixedSnapshotAdvancesFromAcceptedRecord
+--- PASS: TestMixedSnapshotAdvancesFromAcceptedRecord (0.00s)
+PASS
+ok  	example.com/statesync	1.119s

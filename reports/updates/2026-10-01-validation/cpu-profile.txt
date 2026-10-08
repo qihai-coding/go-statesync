@@ -1,0 +1,29 @@
+File: check-validation.exe
+Build ID: C:\Users\A2322\Documents\Codex\2026-09-15\new-chat-2\work\check-validation.exe2026-10-01 17:46:17.6384899 +0800 CST
+Type: cpu
+Time: 2026-10-01 17:48:06 CST
+Duration: 601.30s, Total samples = 399.76s (66.48%)
+Showing nodes accounting for 254.50s, 63.66% of 399.76s total
+Dropped 994 nodes (cum <= 2s)
+Showing top 20 nodes out of 168
+      flat  flat%   sum%        cum   cum%
+   123.84s 30.98% 30.98%    125.55s 31.41%  runtime.cgocall
+    16.77s  4.20% 35.17%     16.77s  4.20%  runtime.semasleep
+    16.61s  4.15% 39.33%     16.61s  4.15%  runtime.memmove
+    13.02s  3.26% 42.59%     13.02s  3.26%  runtime.runqgrab.osyield.func1
+    12.06s  3.02% 45.60%     12.06s  3.02%  runtime.lock2.osyield.func1
+    10.80s  2.70% 48.30%     10.83s  2.71%  runtime.semawakeup
+     8.95s  2.24% 50.54%     33.21s  8.31%  runtime.selectgo
+     6.76s  1.69% 52.23%     35.90s  8.98%  runtime.lock2
+     6.37s  1.59% 53.83%     10.08s  2.52%  runtime.netpoll
+     5.11s  1.28% 55.11%      5.11s  1.28%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     5.07s  1.27% 56.37%     11.85s  2.96%  runtime.sellock
+     4.28s  1.07% 57.44%      4.29s  1.07%  internal/sync.(*Mutex).Lock (inline)
+     4.09s  1.02% 58.47%      4.70s  1.18%  runtime.unlock2
+     3.65s  0.91% 59.38%     23.98s  6.00%  github.com/quic-go/quic-go.(*packetPacker).appendPacket
+     3.39s  0.85% 60.23%      3.39s  0.85%  runtime.netpollQueueTimer
+     2.98s  0.75% 60.97%      6.33s  1.58%  runtime.(*waitq).dequeue (inline)
+     2.94s  0.74% 61.71%      3.01s  0.75%  runtime.gopark
+     2.78s   0.7% 62.40%     10.73s  2.68%  runtime.chansend
+     2.52s  0.63% 63.04%     18.94s  4.74%  example.com/statesync.(*Client).update
+     2.51s  0.63% 63.66%      5.41s  1.35%  example.com/statesync.(*Room).step
