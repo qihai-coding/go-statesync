@@ -1,0 +1,2 @@
+go vet ./... and go build ./... passed
+gofmt -l .: clean

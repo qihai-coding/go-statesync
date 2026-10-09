@@ -1,0 +1,7 @@
+ok  	github.com/qihai-coding/go-statesync	40.177s
+?   	github.com/qihai-coding/go-statesync/arena	[no test files]
+ok  	github.com/qihai-coding/go-statesync/cmd/check	8.076s
+ok  	github.com/qihai-coding/go-statesync/cmd/client	0.855s
+?   	github.com/qihai-coding/go-statesync/cmd/server	[no test files]
+ok  	github.com/qihai-coding/go-statesync/internal/measure	0.298s
+ok  	github.com/qihai-coding/go-statesync/internal/nettest	0.319s

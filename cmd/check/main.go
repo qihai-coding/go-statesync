@@ -2,18 +2,17 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"runtime/pprof"
-	"sync"
-	"sync/atomic"
+	"syscall"
 	"time"
 
 	syncnet "github.com/qihai-coding/go-statesync"
@@ -27,6 +26,7 @@ type Sample struct {
 	HeapBytes, HeapObjects uint64
 	Goroutines             int
 	CPUSeconds             float64
+	AllocatedBytes         uint64
 	Rooms                  []syncnet.Metrics
 }
 type RoomReport struct {
@@ -36,6 +36,8 @@ type RoomReport struct {
 	Resumes   uint64
 }
 type Report struct {
+	Mode                                                                                    string
+	ServerProcess, LoadProcess                                                              *processReport `json:",omitempty"`
 	Started                                                                                 time.Time
 	DurationSeconds                                                                         float64
 	GoVersion, Platform, Processor                                                          string
@@ -49,19 +51,20 @@ type Report struct {
 	Converged, ConnectionsAlive, MemoryChecked, MemoryBounded, StepBudgetPassed, Passed     bool
 	Failures                                                                                []string
 }
-type bot struct {
-	room    int
-	current atomic.Pointer[syncnet.Client]
-	proxy   atomic.Pointer[nettest.Proxy]
-	resumes atomic.Uint64
-}
 
 func main() {
+	if role := os.Getenv(workerEnv); role != "" {
+		if err := workerMain(role); err != nil {
+			fatal(err)
+		}
+		return
+	}
 	duration := flag.Duration("duration", 10*time.Minute, "持续运行时间")
 	count := flag.Int("clients", 16, "每房间客户端数量")
 	roomCount := flag.Int("rooms", 1, "房间数量")
 	resumeEvery := flag.Duration("resume-every", 0, "每房间轮换一个客户端续接的间隔，0 为关闭")
-	reportPath := flag.String("report", "reports/phase2/soak.json", "结果文件")
+	reportPath := flag.String("report", "reports/local/soak.json", "结果文件")
+	isolate := flag.Bool("isolate", false, "分开运行服务器与客户端进程")
 	cpuProfile := flag.String("cpuprofile", "", "可选的处理器采样文件")
 	rtt := flag.Duration("rtt", 0, "往返延迟")
 	jitter := flag.Duration("jitter", 0, "单向抖动幅度")
@@ -73,7 +76,7 @@ func main() {
 		fatal(errors.New("时间至少一秒；每房间 1..16 人；房间 1..64；续接间隔非负"))
 	}
 	var stopProfile func()
-	if *cpuProfile != "" {
+	if *cpuProfile != "" && !*isolate {
 		f, err := os.Create(*cpuProfile)
 		if err != nil {
 			fatal(err)
@@ -84,12 +87,22 @@ func main() {
 		}
 		stopProfile = func() { pprof.StopCPUProfile(); f.Close() }
 	}
-	report, err := run(*duration, *count, *roomCount, *resumeEvery, nettest.Profile{RTT: *rtt, Jitter: *jitter, Loss: *loss, Duplicate: *duplicate, Reorder: *reorder})
+	profile := nettest.Profile{RTT: *rtt, Jitter: *jitter, Loss: *loss, Duplicate: *duplicate, Reorder: *reorder}
+	var report Report
+	var err error
+	if *isolate {
+		ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		report, err = runIsolated(ctx, isolatedOptions{*duration, *resumeEvery, *count, *roomCount, profile, *cpuProfile})
+		cancel()
+	} else {
+		report, err = run(*duration, *count, *roomCount, *resumeEvery, profile)
+	}
 	if stopProfile != nil {
 		stopProfile()
 	}
 	if err != nil {
-		fatal(err)
+		report.Passed = false
+		report.Failures = append(report.Failures, err.Error())
 	}
 	if err = os.MkdirAll(filepath.Dir(*reportPath), 0755); err != nil {
 		fatal(err)
@@ -115,7 +128,7 @@ func run(duration time.Duration, count, roomCount int, resumeEvery time.Duration
 	if err := profile.Validate(); err != nil {
 		return Report{}, err
 	}
-	out := Report{Started: time.Now().UTC(), GoVersion: runtime.Version(), Platform: runtime.GOOS + "/" + runtime.GOARCH,
+	out := Report{Mode: "in-process", Started: time.Now().UTC(), GoVersion: runtime.Version(), Platform: runtime.GOOS + "/" + runtime.GOARCH,
 		Processor: os.Getenv("PROCESSOR_IDENTIFIER"), LogicalCPUs: runtime.NumCPU(), Clients: count * roomCount, ClientsPerRoom: count, Items: 16 * roomCount, Profile: profile}
 	cert, pem, err := syncnet.LocalCertificate()
 	if err != nil {
@@ -140,104 +153,16 @@ func run(duration time.Duration, count, roomCount int, resumeEvery time.Duration
 		}
 		out.Rooms[i].Name = name
 	}
-	bots := make([]*bot, 0, count*roomCount)
-	defer func() {
-		for _, b := range bots {
-			if c := b.current.Load(); c != nil {
-				c.Close()
-			}
-			if p := b.proxy.Load(); p != nil {
-				p.Close()
-			}
-		}
-	}()
-	var stopped, failed atomic.Bool
-	connect := func(b *bot, token syncnet.ResumeToken, seed int64) (*syncnet.Client, error) {
-		addr := server.Addr().String()
-		if profile != (nettest.Profile{}) {
-			if old := b.proxy.Swap(nil); old != nil {
-				old.Close()
-			}
-			p, err := nettest.New(addr, seed, profile)
-			if err != nil {
-				return nil, err
-			}
-			b.proxy.Store(p)
-			if stopped.Load() {
-				p.Set(nettest.Profile{})
-			}
-			addr = p.Addr()
-		}
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		if token == (syncnet.ResumeToken{}) {
-			return syncnet.Dial(ctx, addr, out.Rooms[b.room].Name, tc, arena.Model{})
-		}
-		return syncnet.DialResume(ctx, addr, out.Rooms[b.room].Name, tc, arena.Model{}, token)
+	names := make([]string, len(rooms))
+	for i := range rooms {
+		names[i] = out.Rooms[i].Name
 	}
-	for i := 0; i < count*roomCount; i++ {
-		b := &bot{room: i / count}
-		bots = append(bots, b)
-		c, err := connect(b, syncnet.ResumeToken{}, int64(100+i))
-		if err != nil {
-			return out, err
-		}
-		b.current.Store(c)
+	load, err := newLoad(context.Background(), server.Addr().String(), names, tc, count, resumeEvery, profile)
+	if err != nil {
+		return out, err
 	}
-	ctx, cancel := context.WithCancel(context.Background())
-	var wg sync.WaitGroup
-	workloadStarted := time.Now()
-	for i, b := range bots {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			c := b.current.Load()
-			player := c.Player()
-			ticker := time.NewTicker(time.Second / time.Duration(c.TickRate()))
-			defer ticker.Stop()
-			nextResume := workloadStarted.Add(resumeEvery * time.Duration(i%count+1))
-			step := i * 7
-			zero := arena.Move(0, 0)
-			moves := [][]byte{arena.Move(1, 0), arena.Move(0, 1), arena.Move(-1, 0), arena.Move(0, -1)}
-			for {
-				select {
-				case <-ctx.Done():
-					return
-				case <-c.Done():
-					failed.Store(true)
-					return
-				case now := <-ticker.C:
-					if !stopped.Load() && resumeEvery > 0 && !now.Before(nextResume) {
-						token := c.ResumeToken()
-						c.Disconnect()
-						next, err := connect(b, token, int64(1000+i)+int64(b.resumes.Load())*10000)
-						if err != nil {
-							failed.Store(true)
-							return
-						}
-						c = next
-						b.current.Store(c)
-						if c.Player() != player {
-							failed.Store(true)
-							return
-						}
-						b.resumes.Add(1)
-						nextResume = nextResume.Add(resumeEvery * time.Duration(count))
-					}
-					input := zero
-					if !stopped.Load() {
-						input = moves[(step/60)%4]
-					}
-					step++
-					if err := c.SubmitInput(input); err != nil && !errors.Is(err, syncnet.ErrBusy) {
-						failed.Store(true)
-						return
-					}
-				}
-			}
-		}()
-	}
-	defer func() { cancel(); wg.Wait() }()
+	defer load.close()
+	load.start(time.Now())
 	runtime.GC()
 	var before runtime.MemStats
 	runtime.ReadMemStats(&before)
@@ -266,7 +191,7 @@ func run(duration time.Duration, count, roomCount int, resumeEvery time.Duration
 		if err != nil {
 			return err
 		}
-		s := Sample{Seconds: time.Since(start).Seconds(), HeapBytes: m.HeapAlloc, HeapObjects: m.HeapObjects, Goroutines: runtime.NumGoroutine(), CPUSeconds: cpu - cpuBefore, Rooms: make([]syncnet.Metrics, roomCount)}
+		s := Sample{Seconds: time.Since(start).Seconds(), HeapBytes: m.HeapAlloc, HeapObjects: m.HeapObjects, Goroutines: runtime.NumGoroutine(), CPUSeconds: cpu - cpuBefore, AllocatedBytes: m.TotalAlloc - before.TotalAlloc, Rooms: make([]syncnet.Metrics, roomCount)}
 		players, retained := 0, 0
 		p99 := time.Duration(0)
 		for i, r := range rooms {
@@ -297,15 +222,11 @@ running:
 			break running
 		}
 	}
-	stopped.Store(true)
-	for _, b := range bots {
-		if p := b.proxy.Load(); p != nil {
-			p.Set(nettest.Profile{})
-		}
-	}
+	load.recoverNetwork()
 	time.Sleep(time.Second)
 	out.Converged = true
-	out.ConnectionsAlive = !failed.Load()
+	states := load.states()
+	out.ConnectionsAlive = true
 	out.StepBudgetPassed = true
 	var datagrams, reliable uint64
 	for i, r := range rooms {
@@ -324,29 +245,10 @@ running:
 		}
 		datagrams += m.DatagramBytes - base[i].DatagramBytes
 		reliable += m.ReliableBytes - base[i].ReliableBytes
-		for _, b := range bots[i*count : (i+1)*count] {
-			c := b.current.Load()
-			rr.Resumes += b.resumes.Load()
-			v := c.Authoritative()
-			if len(v.Entities) != len(view.Entities) {
-				rr.Converged = false
-			}
-			byID := make(map[uint32]syncnet.Entity, len(v.Entities))
-			for _, e := range v.Entities {
-				byID[e.ID] = e
-			}
-			for _, e := range view.Entities {
-				got, ok := byID[e.ID]
-				if !ok || got.Owner != e.Owner || got.Generation != e.Generation || !bytes.Equal(got.State, e.State) {
-					rr.Converged = false
-				}
-				if e.Owner == c.Player() {
-					predicted, ok := c.Sample(e.ID, time.Now())
-					if !ok || !bytes.Equal(predicted, e.State) {
-						rr.Converged = false
-					}
-				}
-			}
+		for _, state := range states[i*count : (i+1)*count] {
+			rr.Resumes += state.Resumes
+			rr.Converged = rr.Converged && converged(view, state)
+			out.ConnectionsAlive = out.ConnectionsAlive && state.Alive
 		}
 		if !rr.Converged {
 			out.Converged = false
@@ -370,6 +272,11 @@ running:
 	out.DatagramPayloadBytesPerSecond = float64(datagrams) / out.DurationSeconds
 	out.PerClientPayloadBytesPerSecond = float64(datagrams+reliable) / out.DurationSeconds / float64(out.Clients)
 	out.MemoryChecked, out.MemoryBounded = checkMemory(duration, out.Samples, roomCount)
+	assess(&out, duration)
+	return out, nil
+}
+
+func assess(out *Report, duration time.Duration) {
 	if !out.Converged {
 		out.Failures = append(out.Failures, "网络恢复一秒后状态未收敛")
 	}
@@ -385,7 +292,6 @@ running:
 		out.Failures = append(out.Failures, "内存或协程增长超出阈值")
 	}
 	out.Passed = len(out.Failures) == 0
-	return out, nil
 }
 
 func checkMemory(duration time.Duration, samples []Sample, roomCount int) (checked, bounded bool) {

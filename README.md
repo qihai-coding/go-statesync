@@ -7,11 +7,11 @@
 [![License（许可证）](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Protocol（协议）](https://img.shields.io/badge/Protocol-v2-5268e8)](PROTOCOL.md)
 
-[English](README.en.md) · [接入指南](docs/INTEGRATION.md) · [协议](PROTOCOL.md) · [断线续接](RESUME.md) · [验收报告](reports/release-v0.2.0/VALIDATION.md)
+[English](README.en.md) · [接入指南](docs/INTEGRATION.md) · [协议](PROTOCOL.md) · [断线续接](RESUME.md) · [验收报告](reports/release-v0.2.1/VALIDATION.md)
 
 面向每房间最多 16 人的合作游戏与实时交互应用。核心库独立于游戏引擎，提供独立服务器、无界面参考客户端、二维移动与拾取示例，以及真实加密连接上的弱网测试。
 
-当前发布 **v0.2.0**，使用第 2 版同步协议。库版本与协议版本分别管理；客户端与服务器需要使用相同协议。
+当前发布 **v0.2.1**，使用第 2 版同步协议。库版本与协议版本分别管理；客户端与服务器需要使用相同协议。
 
 ## 核心能力
 
@@ -80,7 +80,7 @@ go run ./cmd/client -room beta -pickup 1 -x 1 -duration 8s -disconnect-after 2s
 ## 作为库使用
 
 ```sh
-go get github.com/qihai-coding/go-statesync@v0.2.0
+go get github.com/qihai-coding/go-statesync@v0.2.1
 ```
 
 实现 `Game`（服务端游戏接口）和 `Model`（客户端预测及编码接口），为每个房间创建独立游戏实例。可先查看[二维示例](arena/arena.go)，再按[接入指南](docs/INTEGRATION.md#接入自己的游戏)替换游戏规则。
@@ -105,12 +105,12 @@ client = next
 go test -count=1 ./...
 go vet ./...
 go test -race -count=1 ./...
-go run ./cmd/check -rooms 8 -clients 16 -duration 10m -resume-every 30s -report soak.json
+go run ./cmd/check -isolate -rooms 8 -clients 16 -duration 10m -resume-every 30s -report soak.json
 ```
 
-竞态检测需要兼容的 C（编程语言）编译器。[持续集成](https://github.com/qihai-coding/go-statesync/actions/workflows/ci.yml)在三种桌面系统上执行原生测试和构建，另在 Linux（开源操作系统）执行竞态检测与四类模糊测试。
+竞态检测需要兼容的 C（编程语言）编译器。[持续集成](https://github.com/qihai-coding/go-statesync/actions/workflows/ci.yml)在三种桌面系统上执行原生测试和构建，另在 Linux（开源操作系统）执行竞态检测与五类模糊测试。
 
-[本次发布验收](reports/release-v0.2.0/VALIDATION.md)记录 8 房间 × 16 人十分钟负载、三档弱网、周期续接、资源及每客户端带宽。性能数据来自指定环境实测，房间单步目标为第 99 百分位低于 10 毫秒；不等于每一步都有硬性十毫秒上限。处理器与内存数据包含同进程的服务器和参考客户端，带宽为应用负载口径。
+[本次发布验收](reports/release-v0.2.1/VALIDATION.md)记录 8 房间 × 16 人十分钟负载、三档弱网、周期续接、资源及每客户端带宽。性能数据来自指定环境实测，房间单步目标为第 99 百分位低于 10 毫秒；不等于每一步都有硬性十毫秒上限。本版分别记录服务器和客户端／代理进程的资源，总量不含协调父进程；带宽为应用负载口径。测量方法与证据边界见[独立性能测量](docs/MEASUREMENT.md)。
 
 ## 接入范围
 
@@ -125,6 +125,7 @@ go run ./cmd/check -rooms 8 -clients 16 -duration 10m -resume-every 30s -report 
 |---|---|
 | [接入指南](docs/INTEGRATION.md) | 配置、游戏接口、预测模型、计时与验证口径 |
 | [同步协议](PROTOCOL.md) | 字节布局、生命周期、输入确认与固定报文样例 |
+| [独立性能测量](docs/MEASUREMENT.md) | 分进程运行、资源字段、收敛采样和证据边界 |
 | [断线续接](RESUME.md) | 会话、接管、取消、操作重试与故障处理 |
 | [验收报告索引](reports/README.md) | 当前发布与历史验证证据 |
 | [更新记录](CHANGELOG.md) | 版本变化与核心加固记录 |

@@ -7,11 +7,11 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/Protocol-v2-5268e8)](PROTOCOL.md)
 
-[中文](README.md) · [Integration guide](docs/INTEGRATION.md) · [Protocol](PROTOCOL.md) · [Session resume](RESUME.md) · [Validation](reports/release-v0.2.0/VALIDATION.md)
+[中文](README.md) · [Integration guide](docs/INTEGRATION.md) · [Protocol](PROTOCOL.md) · [Session resume](RESUME.md) · [Validation](reports/release-v0.2.1/VALIDATION.md)
 
 An engine-independent core for rooms of up to 16 players, with a standalone server, headless reference client, a 2D movement and pickup example, and weak-network tests over real encrypted connections. Detailed technical documents are currently in Chinese.
 
-Release **v0.2.0** uses **wire protocol v2**. Library and protocol versions are separate; clients and servers must use the same wire protocol.
+Release **v0.2.1** uses **wire protocol v2**. Library and protocol versions are separate; clients and servers must use the same wire protocol.
 
 ## Features
 
@@ -58,7 +58,7 @@ The local certificate lasts 24 hours, and generation does not overwrite existing
 ## Use as a library
 
 ```sh
-go get github.com/qihai-coding/go-statesync@v0.2.0
+go get github.com/qihai-coding/go-statesync@v0.2.1
 ```
 
 Implement `Game` for server simulation and `Model` for prediction and codecs, using an independent game instance per room. Start with the [2D example](arena/arena.go), then follow the [integration guide](docs/INTEGRATION.md).
@@ -83,12 +83,12 @@ Never log resume credentials. Retry an unconfirmed action with its original ID a
 go test -count=1 ./...
 go vet ./...
 go test -race -count=1 ./...
-go run ./cmd/check -rooms 8 -clients 16 -duration 10m -resume-every 30s -report soak.json
+go run ./cmd/check -isolate -rooms 8 -clients 16 -duration 10m -resume-every 30s -report soak.json
 ```
 
-Race detection requires a compatible C compiler. [CI](https://github.com/qihai-coding/go-statesync/actions/workflows/ci.yml) runs native tests and builds on Windows, Linux, and macOS, with race detection and four fuzz targets on Linux.
+Race detection requires a compatible C compiler. [CI](https://github.com/qihai-coding/go-statesync/actions/workflows/ci.yml) runs native tests and builds on Windows, Linux, and macOS, with race detection and five fuzz targets on Linux.
 
-[Release validation](reports/release-v0.2.0/VALIDATION.md) records the 8-room, 128-client, ten-minute workload, three weak-network profiles, resume, resources, and application payload bandwidth. The room-step target is **p99 below 10 ms**, not a hard bound on every step. CPU and memory measurements include both the server and reference clients in one process; reported bandwidth excludes transport overhead.
+[Release validation](reports/release-v0.2.1/VALIDATION.md) records the 8-room, 128-client, ten-minute workload, three weak-network profiles, resume, resources, and application payload bandwidth. The room-step target is **p99 below 10 ms**, not a hard bound on every step. This release measures the server and client/proxy processes separately. Aggregate resource fields exclude the coordinator; bandwidth excludes transport overhead. See [measurement methodology](docs/MEASUREMENT.md) for sampling and evidence boundaries.
 
 ## Boundaries
 
@@ -101,6 +101,7 @@ Race detection requires a compatible C compiler. [CI](https://github.com/qihai-c
 
 - [Integration guide](docs/INTEGRATION.md)
 - [Protocol and golden packets](PROTOCOL.md)
+- [Isolated measurement](docs/MEASUREMENT.md)
 - [Session resume](RESUME.md)
 - [Validation report index](reports/README.md)
 - [Changelog](CHANGELOG.md)

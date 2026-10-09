@@ -1,0 +1,1 @@
+Verified 128 historical report files byte-for-byte against v0.2.0; only reports/README.md navigation index excluded.

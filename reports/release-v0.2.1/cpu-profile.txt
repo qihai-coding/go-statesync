@@ -1,0 +1,24 @@
+File: statesync-check.exe
+Build ID: C:\Users\A2322\Documents\Codex\2026-09-15\new-chat-2\work\release-v0.2.1\statesync-check.exe2026-10-09 09:00:46.8054913 +0800 CST
+Type: cpu
+Time: 2026-10-09 09:04:39 CST
+Duration: 601.47s, Total samples = 677.93s (112.71%)
+Showing nodes accounting for 629.81s, 92.90% of 677.93s total
+Dropped 795 nodes (cum <= 3.39s)
+Showing top 15 nodes out of 62
+      flat  flat%   sum%        cum   cum%
+   617.25s 91.05% 91.05%    617.70s 91.12%  runtime.cgocall
+     3.38s   0.5% 91.55%      6.96s  1.03%  github.com/qihai-coding/go-statesync.(*Room).step
+     3.01s  0.44% 91.99%      9.26s  1.37%  runtime.selectgo
+     2.15s  0.32% 92.31%      4.23s  0.62%  runtime.lock2
+     0.91s  0.13% 92.44%      5.38s  0.79%  github.com/quic-go/quic-go.(*packetPacker).appendPacket
+     0.78s  0.12% 92.56%      3.88s  0.57%  runtime.chansend
+     0.46s 0.068% 92.63%      3.60s  0.53%  runtime.stealWork
+     0.36s 0.053% 92.68%     22.77s  3.36%  github.com/quic-go/quic-go.(*Conn).run
+     0.30s 0.044% 92.72%     11.80s  1.74%  runtime.schedule
+     0.25s 0.037% 92.76%     34.17s  5.04%  net.(*UDPConn).writeTo
+     0.23s 0.034% 92.79%      6.77s     1%  github.com/quic-go/quic-go.(*Conn).handlePackets
+     0.20s  0.03% 92.82%      9.16s  1.35%  runtime.findRunnable
+     0.19s 0.028% 92.85%     34.49s  5.09%  github.com/quic-go/quic-go.(*sconn).Write
+     0.17s 0.025% 92.88%      5.68s  0.84%  github.com/quic-go/quic-go.(*Conn).handleShortHeaderPacket
+     0.17s 0.025% 92.90%    618.93s 91.30%  internal/poll.(*FD).execIO

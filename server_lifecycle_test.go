@@ -19,6 +19,30 @@ type gatedInitialization struct {
 	release chan struct{}
 }
 
+func TestEndedRoomConnectionErrors(t *testing.T) {
+	f := setup(t)
+	c := connect(t, f, f.s.Addr().String(), "alpha")
+	token := c.ResumeToken()
+	f.r.Close()
+	<-f.r.Done()
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	joined, err := syncnet.Dial(ctx, f.s.Addr().String(), "alpha", f.tls, arena.Model{})
+	if joined != nil {
+		joined.Close()
+	}
+	if !errors.Is(err, syncnet.ErrClosed) {
+		t.Errorf("joining ended room should be terminal: %v", err)
+	}
+	resumed, err := syncnet.DialResume(ctx, f.s.Addr().String(), "alpha", f.tls, arena.Model{}, token)
+	if resumed != nil {
+		resumed.Close()
+	}
+	if !errors.Is(err, syncnet.ErrResumeRejected) {
+		t.Errorf("ended room accepted resume or returned temporary error: %v", err)
+	}
+}
+
 func (g *gatedInitialization) Entities() []syncnet.Entity {
 	g.once.Do(func() {
 		close(g.entered)

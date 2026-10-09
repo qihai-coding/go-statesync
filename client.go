@@ -468,6 +468,9 @@ func (c *Client) update(e Entity, tick uint64, force bool) error {
 	if t != nil && !force && (tick <= t.tick || e.Generation != t.entity.Generation) {
 		return nil
 	}
+	if e.ID == c.local && (e.Ack > c.sequence || t != nil && e.Ack < t.entity.Ack) {
+		return ErrProtocol
+	}
 	if c.model.ValidateState(e.State) != nil {
 		return ErrProtocol
 	}

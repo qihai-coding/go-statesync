@@ -1,0 +1,22 @@
+C:\Users\A2322\Documents\Codex\2026-09-15\new-chat-2\work\release-v0.2.1\statesync-check.exe: go1.26.5
+	path	github.com/qihai-coding/go-statesync/cmd/check
+	mod	github.com/qihai-coding/go-statesync	v0.2.0+dirty	
+	dep	github.com/quic-go/quic-go	v0.62.0	h1:ZHDjCk5OacATwGvs8PWE97CTvX7AqZiVoW7++ZOXTf8=
+	dep	golang.org/x/crypto	v0.54.0	h1:YLIA59K4fiNzHzjnZt2tUJQjQtUWfWbeHBqKtk3eScw=
+	dep	golang.org/x/sys	v0.47.0	h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=0
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=be5428586bc89216cb7370369ea46ee3f317904a
+	build	vcs.time=2026-10-08T08:53:36Z
+	build	vcs.modified=true
+
+Algorithm : SHA256
+Hash      : AD424C1FDC743F9DC380FBB31D00F3C6D1FE49973E6D3DD792DA9BDAE764AD3A
+Path      : C:\Users\A2322\Documents\Codex\2026-09-15\new-chat-2\work\release-v0.2.1\statesync-check.exe
+
+

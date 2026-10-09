@@ -1,0 +1,13 @@
+{
+  "Recorded": "2026-10-09T09:00:43.3261595+08:00",
+  "Go": "go version go1.26.5 windows/amd64",
+  "Processor": "Intel(R) Core(TM) i9-14900HX",
+  "Cores": 24,
+  "LogicalProcessors": 32,
+  "OS": "Microsoft Windows 11 专业版",
+  "OSVersion": "10.0.26200",
+  "VisibleMemoryKiB": 16494456,
+  "Protocol": 2,
+  "Transport": "quic-go v0.62.0",
+  "CGO_ENABLED": "0"
+}

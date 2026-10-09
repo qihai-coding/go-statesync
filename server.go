@@ -229,8 +229,12 @@ func (s *Server) handle(c *quic.Conn) {
 	defer func() { p.close(); writers.Wait() }()
 	reply := make(chan error, 1)
 	if !room.command(roomCommand{peer: p, kind: kind, token: token, reply: reply}) {
-		if kind == msgResume && room.ctx.Err() != nil {
-			p.kick(closeResumeRejected, "resume rejected")
+		if room.ctx.Err() != nil {
+			code := closeRoom
+			if kind == msgResume {
+				code = closeResumeRejected
+			}
+			p.kick(code, "room ended")
 		}
 		return
 	}
@@ -260,6 +264,9 @@ func (s *Server) handle(c *quic.Conn) {
 			return
 		}
 		if !room.command(roomCommand{peer: p, kind: b[1], data: b}) {
+			if room.ctx.Err() != nil {
+				p.kick(closeRoom, "room ended")
+			}
 			return
 		}
 	}

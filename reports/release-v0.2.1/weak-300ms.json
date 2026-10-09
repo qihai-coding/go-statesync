@@ -1,0 +1,149 @@
+{
+  "Mode": "isolated",
+  "ServerProcess": {
+    "PID": 36600,
+    "Started": "2026-10-09T09:04:07.9458935+08:00",
+    "CapturedAt": "2026-10-09T09:04:28.9468245+08:00",
+    "DurationSeconds": 21.0025935,
+    "Samples": [
+      {
+        "Seconds": 21.0025935,
+        "HeapBytes": 1873648,
+        "HeapObjects": 5971,
+        "Goroutines": 103,
+        "CPUSeconds": 1.34375,
+        "AllocatedBytes": 11198528,
+        "Rooms": [
+          {
+            "Ticks": 1029,
+            "StepTotal": 50622203,
+            "StepP99": 200000,
+            "StepMax": 379400,
+            "InputDrops": 0,
+            "SnapshotDrops": 0,
+            "ReliableBytes": 30104,
+            "DatagramBytes": 3582392,
+            "Players": 16,
+            "RetainedPlayers": 0,
+            "InputQueue": 0,
+            "ControlQueue": 0,
+            "ReliableQueued": 0,
+            "SnapshotQueued": 0
+          }
+        ]
+      }
+    ],
+    "ProcessCPUSeconds": 1.34375,
+    "ProcessCPUPercentOneCore": 6.398019368417525,
+    "ProcessCPUPercentHost": 0.19993810526304764,
+    "AllocationBytesPerSecond": 533197.3882177932,
+    "AllocatedBytes": 11198528,
+    "MemoryChecked": false,
+    "MemoryBounded": false
+  },
+  "LoadProcess": {
+    "PID": 33256,
+    "Started": "2026-10-09T09:04:07.9458935+08:00",
+    "CapturedAt": "2026-10-09T09:04:28.9468245+08:00",
+    "DurationSeconds": 21.003243,
+    "Samples": [
+      {
+        "Seconds": 21.003243,
+        "HeapBytes": 9510392,
+        "HeapObjects": 12365,
+        "Goroutines": 193,
+        "CPUSeconds": 3.53125,
+        "AllocatedBytes": 32965696,
+        "Rooms": null
+      }
+    ],
+    "ProcessCPUSeconds": 3.53125,
+    "ProcessCPUPercentOneCore": 16.81287980146685,
+    "ProcessCPUPercentHost": 0.525402493795839,
+    "AllocationBytesPerSecond": 1569552.6638433882,
+    "AllocatedBytes": 32965696,
+    "MemoryChecked": false,
+    "MemoryBounded": false
+  },
+  "Started": "2026-10-09T01:03:54.6038655Z",
+  "DurationSeconds": 21.003243,
+  "GoVersion": "go1.26.5",
+  "Platform": "windows/amd64",
+  "Processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "LogicalCPUs": 32,
+  "Clients": 16,
+  "ClientsPerRoom": 16,
+  "Items": 16,
+  "Profile": {
+    "RTT": 300000000,
+    "Jitter": 30000000,
+    "Loss": 0.05,
+    "Duplicate": 0.02,
+    "Reorder": 0.02
+  },
+  "Samples": [
+    {
+      "Seconds": 21.0025935,
+      "HeapBytes": 11384040,
+      "HeapObjects": 18336,
+      "Goroutines": 296,
+      "CPUSeconds": 4.875,
+      "AllocatedBytes": 44164224,
+      "Rooms": [
+        {
+          "Ticks": 1029,
+          "StepTotal": 50622203,
+          "StepP99": 200000,
+          "StepMax": 379400,
+          "InputDrops": 0,
+          "SnapshotDrops": 0,
+          "ReliableBytes": 30104,
+          "DatagramBytes": 3582392,
+          "Players": 16,
+          "RetainedPlayers": 0,
+          "InputQueue": 0,
+          "ControlQueue": 0,
+          "ReliableQueued": 0,
+          "SnapshotQueued": 0
+        }
+      ]
+    }
+  ],
+  "Rooms": [
+    {
+      "Name": "bench-0",
+      "Metrics": {
+        "Ticks": 1029,
+        "StepTotal": 50622203,
+        "StepP99": 200000,
+        "StepMax": 379400,
+        "InputDrops": 0,
+        "SnapshotDrops": 0,
+        "ReliableBytes": 30104,
+        "DatagramBytes": 3582392,
+        "Players": 16,
+        "RetainedPlayers": 0,
+        "InputQueue": 0,
+        "ControlQueue": 0,
+        "ReliableQueued": 0,
+        "SnapshotQueued": 0
+      },
+      "Converged": true,
+      "Resumes": 6
+    }
+  ],
+  "ProcessCPUSeconds": 4.875,
+  "ProcessCPUPercentOneCore": 23.210701318839188,
+  "ProcessCPUPercentHost": 0.7253344162137246,
+  "AllocatedBytes": 44164224,
+  "AllocationBytesPerSecond": 2102733.563573968,
+  "DatagramPayloadBytesPerSecond": 143022.33674141244,
+  "PerClientPayloadBytesPerSecond": 8960.893329673785,
+  "Converged": true,
+  "ConnectionsAlive": true,
+  "MemoryChecked": false,
+  "MemoryBounded": false,
+  "StepBudgetPassed": true,
+  "Passed": true,
+  "Failures": null
+}

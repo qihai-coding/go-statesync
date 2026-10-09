@@ -1,0 +1,7 @@
+--- FAIL: TestSnapshotAckBounds (0.00s)
+    snapshot_ack_test.go:47: tick=11 ack=0: unexpected result <nil>
+--- FAIL: TestEndedRoomConnectionErrors (0.02s)
+    server_lifecycle_test.go:35: joining ended room should be terminal: Application error 0xb (remote): connection closed
+FAIL
+FAIL	github.com/qihai-coding/go-statesync	0.534s
+FAIL
