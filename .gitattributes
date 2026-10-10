@@ -1,3 +1,4 @@
 * text=auto eol=lf
 reports/** -text -whitespace
+internal/bbr/ADAPTATION.patch -text -whitespace
 *.prof binary

@@ -13,7 +13,6 @@ import (
 	"time"
 
 	syncnet "github.com/qihai-coding/go-statesync"
-	"github.com/qihai-coding/go-statesync/arena"
 	"github.com/qihai-coding/go-statesync/internal/measure"
 	"github.com/qihai-coding/go-statesync/internal/nettest"
 )
@@ -21,6 +20,7 @@ import (
 const workerEnv = "STATESYNC_CHECK_WORKER"
 
 type isolatedOptions struct {
+	workloadOptions
 	Duration, ResumeEvery time.Duration
 	Clients, Rooms        int
 	Profile               nettest.Profile
@@ -44,17 +44,23 @@ type control struct {
 	Options isolatedOptions
 	Address string
 	CA      []byte
+	Clocks  []roomClock
+	Views   []syncnet.View
 }
 
 type response struct {
-	Error   string `json:",omitempty"`
-	PID     int
-	Address string `json:",omitempty"`
-	CA      []byte `json:",omitempty"`
-	At      time.Time
-	Sample  Sample
-	Views   []syncnet.View `json:",omitempty"`
-	Clients []clientState  `json:",omitempty"`
+	Error                                        string `json:",omitempty"`
+	PID                                          int
+	Address                                      string `json:",omitempty"`
+	CA                                           []byte `json:",omitempty"`
+	At                                           time.Time
+	Sample                                       Sample
+	Views                                        []syncnet.View `json:",omitempty"`
+	Clients                                      []clientState  `json:",omitempty"`
+	Clock                                        time.Duration
+	EntityAges                                   []EntityAge `json:",omitempty"`
+	RecoverySeconds                              float64
+	Converged, RecoveryWithoutReliableCorrection bool
 }
 
 type child struct {
@@ -193,6 +199,7 @@ func workerMain(role string) error {
 					return errors.New("already initialized")
 				}
 				o := request.Options
+				o.workloadOptions = o.workloadOptions.defaults()
 				if err := o.validate(); err != nil {
 					return err
 				}
@@ -205,12 +212,16 @@ func workerMain(role string) error {
 					if err != nil {
 						return err
 					}
-					server, err = syncnet.Listen("127.0.0.1:0", syncnet.ServerTLS(cert), syncnet.DefaultConfig())
+					server, err = syncnet.Listen("127.0.0.1:0", syncnet.ServerTLS(cert), o.config())
 					if err != nil {
 						return err
 					}
 					for _, name := range names {
-						room, err := server.CreateRoom(name, arena.New())
+						game, err := o.game(o.Clients)
+						if err != nil {
+							return err
+						}
+						room, err := server.CreateRoom(name, game)
 						if err != nil {
 							return err
 						}
@@ -231,12 +242,30 @@ func workerMain(role string) error {
 					if err != nil {
 						return err
 					}
-					workload, err = newLoad(context.Background(), request.Address, names, tc, o.Clients, o.ResumeEvery, o.Profile)
+					workload, err = newLoad(context.Background(), request.Address, names, tc, o.Clients, o.ResumeEvery, o.Profile, o.workloadOptions)
 					if err != nil {
 						return err
 					}
 				}
 				initialized = true
+			case "clock", "inspect":
+				if !initialized {
+					return errors.New("worker not initialized")
+				}
+				var err error
+				if len(rooms) > 0 {
+					reply.Views, reply.Sample.Rooms, err = inspectRooms(context.Background(), rooms)
+				}
+				reply.Clock = measure.Now()
+				return err
+			case "converge":
+				if workload == nil || workload.recoveryStarted == 0 {
+					return errors.New("load recovery not started")
+				}
+				var elapsed time.Duration
+				reply.Clients, elapsed, reply.Converged, reply.RecoveryWithoutReliableCorrection = workload.awaitConvergence(context.Background(), request.Views)
+				reply.RecoverySeconds = elapsed.Seconds()
+				return nil
 			case "start", "sample", "finish", "recover":
 				if !initialized {
 					return errors.New("worker not initialized")
@@ -257,12 +286,15 @@ func workerMain(role string) error {
 						return errors.New("not a load worker")
 					}
 					workload.recoverNetwork()
-					reply.At = time.Now()
-					return nil
+					reply.At = workload.recoveryAt
+					ctx, cancel := context.WithDeadline(context.Background(), workload.recoveryAt.Add(time.Second))
+					defer cancel()
+					return workload.stopGames(ctx)
 				}
 				reply.At = time.Now()
 				if request.Op == "finish" && workload != nil {
 					reply.Clients = workload.states()
+					reply.EntityAges = workload.ageReports()
 				}
 				for _, room := range rooms {
 					ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -289,6 +321,7 @@ func workerMain(role string) error {
 					started, cpuBefore, allocatedBefore = time.Now(), cpu, memory.TotalAlloc
 					reply.At = started
 					if workload != nil {
+						workload.clocks = request.Clocks
 						workload.start(started)
 					}
 				}
@@ -318,7 +351,7 @@ func (o isolatedOptions) validate() error {
 	if o.Duration < time.Second || o.Clients < 1 || o.Clients > 16 || o.Rooms < 1 || o.Rooms > 64 || o.ResumeEvery < 0 {
 		return errors.New("invalid workload size or duration")
 	}
-	return o.Profile.Validate()
+	return errors.Join(o.Profile.Validate(), o.workloadOptions.defaults().validate(o.Clients))
 }
 
 func samplePair(ctx context.Context, server, load *child, request control) (response, response, error) {
@@ -339,8 +372,15 @@ func samplePair(ctx context.Context, server, load *child, request control) (resp
 }
 
 func runIsolated(ctx context.Context, o isolatedOptions) (out Report, err error) {
+	o.workloadOptions = o.workloadOptions.defaults()
 	out = Report{Mode: "isolated", Started: time.Now().UTC(), GoVersion: runtime.Version(), Platform: runtime.GOOS + "/" + runtime.GOARCH,
-		Processor: os.Getenv("PROCESSOR_IDENTIFIER"), LogicalCPUs: runtime.NumCPU(), Clients: o.Clients * o.Rooms, ClientsPerRoom: o.Clients, Items: o.Rooms * 16, Profile: o.Profile}
+		Processor: os.Getenv("PROCESSOR_IDENTIFIER"), LogicalCPUs: runtime.NumCPU(), Clients: o.Clients * o.Rooms, ClientsPerRoom: o.Clients, Items: o.Rooms * 16, Profile: o.Profile, Workload: o.Workload, Encoding: o.Encoding, Entities: o.Entities, StateBytes: o.StateBytes, Seed: o.Seed, DatagramSize: o.DatagramSize, QueuesBounded: true}
+	if o.Workload == "arena" {
+		out.Entities = o.Clients + 16
+		out.StateBytes = 13
+	} else {
+		out.Items = 0
+	}
 	if err = o.validate(); err != nil {
 		return out, err
 	}
@@ -375,7 +415,11 @@ func runIsolated(ctx context.Context, o isolatedOptions) (out Report, err error)
 	if _, err = load.call(initCtx, control{Op: "init", Options: o, Address: ready.Address, CA: ready.CA}); err != nil {
 		return out, err
 	}
-	s, l, err := samplePair(ctx, server, load, control{Op: "start", At: time.Now().Add(200 * time.Millisecond)})
+	clocks, err := calibrateChildren(ctx, server, load, o.Rooms)
+	if err != nil {
+		return out, err
+	}
+	s, l, err := samplePair(ctx, server, load, control{Op: "start", At: time.Now().Add(200 * time.Millisecond), Clocks: clocks})
 	if err != nil {
 		return out, err
 	}
@@ -389,6 +433,7 @@ func runIsolated(ctx context.Context, o isolatedOptions) (out Report, err error)
 		out.Samples = append(out.Samples, Sample{Seconds: min(s.Sample.Seconds, l.Sample.Seconds), HeapBytes: s.Sample.HeapBytes + l.Sample.HeapBytes,
 			HeapObjects: s.Sample.HeapObjects + l.Sample.HeapObjects, Goroutines: s.Sample.Goroutines + l.Sample.Goroutines,
 			CPUSeconds: s.Sample.CPUSeconds + l.Sample.CPUSeconds, AllocatedBytes: s.Sample.AllocatedBytes + l.Sample.AllocatedBytes, Rooms: s.Sample.Rooms})
+		out.QueuesBounded = out.QueuesBounded && queuesBounded(s.Sample.Rooms, o.Clients, out.Entities, out.StateBytes)
 		fmt.Printf("%.0f 秒：服务器堆=%.2f MiB，客户端及代理堆=%.2f MiB\n", out.Samples[len(out.Samples)-1].Seconds,
 			float64(s.Sample.HeapBytes)/(1<<20), float64(l.Sample.HeapBytes)/(1<<20))
 	}
@@ -412,7 +457,23 @@ func runIsolated(ctx context.Context, o isolatedOptions) (out Report, err error)
 	if err != nil {
 		return out, err
 	}
-	s, l, err = samplePair(ctx, server, load, control{Op: "finish", At: recovered.At.Add(time.Second)})
+	var recovery response
+	if o.Workload != "arena" {
+		target, callErr := server.call(ctx, control{Op: "inspect"})
+		if callErr != nil {
+			return out, callErr
+		}
+		recovery, err = load.call(ctx, control{Op: "converge", Views: target.Views})
+		if err != nil {
+			return out, err
+		}
+		out.RecoverySeconds = recovery.RecoverySeconds
+		out.RecoveryWithoutReliableCorrection = recovery.RecoveryWithoutReliableCorrection
+		s, l, err = samplePair(ctx, server, load, control{Op: "finish"})
+	} else {
+		out.RecoveryWithoutReliableCorrection = true
+		s, l, err = samplePair(ctx, server, load, control{Op: "finish", At: recovered.At.Add(time.Second)})
+	}
 	if err != nil {
 		return out, err
 	}
@@ -429,6 +490,9 @@ func runIsolated(ctx context.Context, o isolatedOptions) (out Report, err error)
 	out.MemoryChecked = out.ServerProcess.MemoryChecked && out.LoadProcess.MemoryChecked
 	out.MemoryBounded = out.ServerProcess.MemoryBounded && out.LoadProcess.MemoryBounded
 	out.Converged, out.ConnectionsAlive, out.StepBudgetPassed = true, true, true
+	if o.Workload != "arena" {
+		out.Converged = recovery.Converged
+	}
 	if len(s.Views) != o.Rooms || len(s.Sample.Rooms) != o.Rooms || len(l.Clients) != o.Rooms*o.Clients {
 		return out, errors.New("incomplete worker results")
 	}
@@ -450,8 +514,51 @@ func runIsolated(ctx context.Context, o isolatedOptions) (out Report, err error)
 	}
 	out.DatagramPayloadBytesPerSecond = float64(datagrams) / out.ServerProcess.DurationSeconds
 	out.PerClientPayloadBytesPerSecond = float64(datagrams+reliable) / out.ServerProcess.DurationSeconds / float64(out.Clients)
+	reportAges(&out, l.EntityAges, clocks, o.Duration)
+	reportTraffic(&out, l.Clients)
+	checkClientBounds(&out, l.Clients)
 	assess(&out, o.Duration)
 	return out, nil
+}
+
+func calibrateChildren(ctx context.Context, server, load *child, rooms int) ([]roomClock, error) {
+	bestLoad := time.Duration(1<<63 - 1)
+	var loadOffset time.Duration
+	for j := 0; j < 5; j++ {
+		before := measure.Now()
+		reply, err := load.call(ctx, control{Op: "clock"})
+		after := measure.Now()
+		if err != nil {
+			return nil, err
+		}
+		if after-before < bestLoad {
+			bestLoad = after - before
+			loadOffset = after - reply.Clock
+		}
+	}
+	clocks := make([]roomClock, rooms)
+	best := make([]time.Duration, rooms)
+	for i := range best {
+		best[i] = time.Duration(1<<63 - 1)
+	}
+	for j := 0; j < 5; j++ {
+		before := measure.Now()
+		reply, err := server.call(ctx, control{Op: "clock"})
+		after := measure.Now()
+		if err != nil {
+			return nil, err
+		}
+		if len(reply.Views) != rooms {
+			return nil, errors.New("incomplete clock calibration")
+		}
+		for i, view := range reply.Views {
+			if after-before < best[i] {
+				best[i] = after - before
+				clocks[i] = roomClock{i, before - view.ServerTime - loadOffset, best[i] + bestLoad + time.Microsecond}
+			}
+		}
+	}
+	return clocks, nil
 }
 
 func maxTime(a, b time.Time) time.Time {

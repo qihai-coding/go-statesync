@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "D:\\main\\github\\go-statesync\\transport_send.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-bbr-lab\\transport_send.go"
+  }
+}

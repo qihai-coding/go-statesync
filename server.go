@@ -9,7 +9,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/quic-go/quic-go"
+	"github.com/qihai-coding/go-statesync/internal/bbr"
+	"github.com/sagernet/quic-go"
 )
 
 const (
@@ -69,7 +70,7 @@ func Listen(addr string, tlsConfig *tls.Config, cfg Config) (*Server, error) {
 	tc := tlsConfig.Clone()
 	tc.MinVersion = tls.VersionTLS13
 	tc.NextProtos = []string{ALPN}
-	ln, err := quic.ListenAddr(addr, tc, transportConfig())
+	ln, err := quic.ListenAddr(addr, tc, serverTransportConfig())
 	if err != nil {
 		return nil, err
 	}
@@ -166,6 +167,7 @@ func (s *Server) accept() {
 	}
 }
 func (s *Server) handle(c *quic.Conn) {
+	c.SetCongestionControl(bbr.NewBbrSender(bbr.DefaultClock{}, c.InitialPacketSize(), bbr.ProfileStandard))
 	defer c.CloseWithError(closeTemporary, "connection ended")
 	stop := context.AfterFunc(s.ctx, func() { c.CloseWithError(closeRoom, "server stopped") })
 	defer stop()
@@ -259,7 +261,7 @@ func (s *Server) handle(c *quic.Conn) {
 			}
 			return
 		}
-		if len(b) < 2 || (b[1] != msgAction && b[1] != msgResync) {
+		if len(b) < 2 || (b[1] != msgAction && b[1] != msgResync && b[1] != msgBaselineAck) {
 			p.kick(closeProtocol, "invalid message")
 			return
 		}
@@ -280,6 +282,7 @@ type peer struct {
 	reliable  chan []byte
 	snapshots chan [][]byte
 	terminal  atomic.Bool
+	rep       replication
 }
 
 func (p *peer) close() { p.conn.CloseWithError(closeTemporary, "connection closed") }
@@ -348,6 +351,11 @@ func (p *peer) writeReliable() {
 	}
 }
 func (p *peer) writeDatagrams() {
+	trace, ok := p.conn.QlogTrace().(*datagramSendTrace)
+	if !ok {
+		p.close()
+		return
+	}
 	for {
 		select {
 		case <-p.conn.Context().Done():
@@ -359,6 +367,12 @@ func (p *peer) writeDatagrams() {
 					return
 				}
 				p.room.datagramBytes.Add(uint64(len(b)))
+				if len(b) >= 36 {
+					p.room.sentEntityUpdates.Add(uint64(le.Uint16(b[34:36])))
+				}
+				if err := trace.wait(p.conn.Context()); err != nil {
+					return
+				}
 			}
 		}
 	}

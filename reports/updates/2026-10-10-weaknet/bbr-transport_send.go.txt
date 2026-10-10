@@ -1,0 +1,123 @@
+// Experimental diagnostics only; loaded with go -overlay, never shipped.
+package statesync
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"sync"
+	"time"
+
+	"github.com/quic-go/quic-go"
+	"github.com/quic-go/quic-go/qlog"
+	"github.com/quic-go/quic-go/qlogwriter"
+)
+
+func serverTransportConfig() *quic.Config {
+	cfg := transportConfig()
+	cfg.Congestion = func() quic.SendAlgorithmWithDebugInfos { return quic.NewBBRv1(cfg) }
+	cfg.Tracer = func(_ context.Context, _ bool, id quic.ConnectionID) qlogwriter.Trace {
+		return &datagramSendTrace{sent: make(chan struct{}, 1), id: id.String()}
+	}
+	return cfg
+}
+
+type datagramSendTrace struct {
+	sent                               chan struct{}
+	id                                 string
+	mu                                 sync.Mutex
+	closeOnce                          sync.Once
+	lostReordering, lostTime, spurious uint64
+	cwnd, cwndMin, cwndMax             int
+	cwndAt                             time.Time
+	cwndElapsed                        time.Duration
+	cwndArea                           float64
+	rttTotal                           time.Duration
+	rttSamples                         uint64
+}
+
+func (t *datagramSendTrace) AddProducer() qlogwriter.Recorder { return t }
+func (*datagramSendTrace) SupportsSchemas(schema string) bool { return schema == qlog.EventSchema }
+
+func (t *datagramSendTrace) Close() error {
+	t.closeOnce.Do(func() {
+		t.mu.Lock()
+		defer t.mu.Unlock()
+		t.accountCwnd(time.Now())
+		var meanCwnd, meanRTT float64
+		if t.cwndElapsed > 0 {
+			meanCwnd = t.cwndArea / float64(t.cwndElapsed)
+		}
+		if t.rttSamples > 0 {
+			meanRTT = float64(t.rttTotal) / float64(t.rttSamples) / float64(time.Millisecond)
+		}
+		fmt.Fprintf(os.Stderr, "weaknet_lab {\"connection_id\":%q,\"loss_reordering_threshold\":%d,\"loss_time_threshold\":%d,\"spurious_loss_detected\":%d,\"cwnd_min_bytes\":%d,\"cwnd_time_mean_bytes\":%.3f,\"cwnd_max_bytes\":%d,\"cwnd_observed_seconds\":%.6f,\"rtt_sample_mean_ms\":%.3f,\"rtt_samples\":%d}\n", t.id, t.lostReordering, t.lostTime, t.spurious, t.cwndMin, meanCwnd, t.cwndMax, t.cwndElapsed.Seconds(), meanRTT, t.rttSamples)
+	})
+	return nil
+}
+
+func (t *datagramSendTrace) accountCwnd(now time.Time) {
+	if !t.cwndAt.IsZero() {
+		elapsed := now.Sub(t.cwndAt)
+		t.cwndElapsed += elapsed
+		t.cwndArea += float64(t.cwnd) * float64(elapsed)
+	}
+	t.cwndAt = now
+}
+
+func (t *datagramSendTrace) RecordEvent(event qlogwriter.Event) {
+	switch e := event.(type) {
+	case qlog.MetricsUpdated:
+		t.mu.Lock()
+		if e.CongestionWindow > 0 {
+			t.accountCwnd(time.Now())
+			t.cwnd = e.CongestionWindow
+			if t.cwndMin == 0 || e.CongestionWindow < t.cwndMin {
+				t.cwndMin = e.CongestionWindow
+			}
+			t.cwndMax = max(t.cwndMax, e.CongestionWindow)
+		}
+		if e.LatestRTT > 0 {
+			t.rttTotal += e.LatestRTT
+			t.rttSamples++
+		}
+		t.mu.Unlock()
+	case qlog.PacketLost:
+		t.mu.Lock()
+		switch e.Trigger {
+		case qlog.PacketLossReorderingThreshold:
+			t.lostReordering++
+		case qlog.PacketLossTimeThreshold:
+			t.lostTime++
+		}
+		t.mu.Unlock()
+	case qlog.SpuriousLoss:
+		t.mu.Lock()
+		t.spurious++
+		t.mu.Unlock()
+	}
+
+	p, ok := event.(qlog.PacketSent)
+	if !ok {
+		return
+	}
+	for _, frame := range p.Frames {
+		if _, ok := frame.Frame.(*qlog.DatagramFrame); ok {
+			// Original single-datagram dequeue gate stays unchanged in every variant.
+			select {
+			case t.sent <- struct{}{}:
+			default:
+			}
+			return
+		}
+	}
+}
+
+func (t *datagramSendTrace) wait(ctx context.Context) error {
+	select {
+	case <-t.sent:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+}

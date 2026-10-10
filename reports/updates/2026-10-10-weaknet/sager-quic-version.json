@@ -1,0 +1,14 @@
+{
+	"Path": "github.com/sagernet/quic-go",
+	"Version": "v0.61.0-sing-box-mod.9",
+	"Query": "16930172ee48b008726849cc79ec576d5fa2bbc3",
+	"Time": "2026-09-29T15:06:10Z",
+	"GoMod": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\mod-cache\\cache\\download\\github.com\\sagernet\\quic-go\\@v\\v0.61.0-sing-box-mod.9.mod",
+	"GoVersion": "1.25.0",
+	"Origin": {
+		"VCS": "git",
+		"URL": "https://github.com/sagernet/quic-go",
+		"Hash": "16930172ee48b008726849cc79ec576d5fa2bbc3",
+		"Ref": "refs/tags/v0.61.0-sing-box-mod.9"
+	}
+}

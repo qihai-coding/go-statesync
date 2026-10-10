@@ -1,0 +1,418 @@
+// Standalone controller experiment. This package is never part of delivery builds.
+package main
+
+import (
+	"context"
+	"crypto/ed25519"
+	"crypto/rand"
+	"crypto/tls"
+	"crypto/x509"
+	"crypto/x509/pkix"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"math/big"
+	"net"
+	"os"
+	"runtime"
+	"sync"
+	"sync/atomic"
+	"time"
+
+	quic "github.com/sagernet/quic-go"
+	"github.com/sagernet/quic-go/qlog"
+	"github.com/sagernet/quic-go/qlogwriter"
+	bbr "github.com/sagernet/sing-quic/congestion_meta2"
+)
+
+const limit = 8 * 1024
+const queueLimit = 8 * 1024
+
+type packet struct {
+	data []byte
+	to   *net.UDPAddr
+	at   time.Time
+}
+
+type proxy struct {
+	front, back                           *net.UDPConn
+	ctx                                   context.Context
+	cancel                                context.CancelFunc
+	wg                                    sync.WaitGroup
+	mu                                    sync.Mutex
+	client                                *net.UDPAddr
+	down                                  []packet
+	pending, maximum                      int
+	up                                    chan packet
+	wake                                  chan struct{}
+	received, forwarded, dropped, upDrops atomic.Uint64
+}
+
+func newProxy(target string) (*proxy, error) {
+	dst, err := net.ResolveUDPAddr("udp", target)
+	if err != nil {
+		return nil, err
+	}
+	front, err := net.ListenUDP("udp", &net.UDPAddr{IP: net.ParseIP("127.0.0.1")})
+	if err != nil {
+		return nil, err
+	}
+	back, err := net.DialUDP("udp", nil, dst)
+	if err != nil {
+		front.Close()
+		return nil, err
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	p := &proxy{front: front, back: back, ctx: ctx, cancel: cancel, up: make(chan packet, 128), wake: make(chan struct{}, 1)}
+	p.wg.Add(4)
+	go p.read(true)
+	go p.read(false)
+	go p.sendUp()
+	go p.sendDown()
+	return p, nil
+}
+
+func (p *proxy) read(up bool) {
+	defer p.wg.Done()
+	buf := make([]byte, 65535)
+	for {
+		var n int
+		var addr *net.UDPAddr
+		var err error
+		if up {
+			n, addr, err = p.front.ReadFromUDP(buf)
+		} else {
+			n, err = p.back.Read(buf)
+		}
+		if err != nil {
+			return
+		}
+		p.mu.Lock()
+		if up {
+			p.client = addr
+		}
+		to := p.client
+		p.mu.Unlock()
+		if to == nil {
+			continue
+		}
+		v := packet{data: append([]byte(nil), buf[:n]...), to: to, at: time.Now().Add(25 * time.Millisecond)}
+		if up {
+			select {
+			case p.up <- v:
+			default:
+				p.upDrops.Add(1)
+			}
+			continue
+		}
+		p.received.Add(uint64(n))
+		p.mu.Lock()
+		if p.pending+n > queueLimit {
+			p.mu.Unlock()
+			p.dropped.Add(1)
+			continue
+		}
+		p.down = append(p.down, v)
+		p.pending += n
+		p.maximum = max(p.maximum, p.pending)
+		p.mu.Unlock()
+		select {
+		case p.wake <- struct{}{}:
+		default:
+		}
+	}
+}
+
+func wait(ctx context.Context, at time.Time) bool {
+	timer := time.NewTimer(max(time.Until(at), 0))
+	defer timer.Stop()
+	select {
+	case <-timer.C:
+		return true
+	case <-ctx.Done():
+		return false
+	}
+}
+
+func (p *proxy) sendUp() {
+	defer p.wg.Done()
+	for {
+		select {
+		case <-p.ctx.Done():
+			return
+		case v := <-p.up:
+			if !wait(p.ctx, v.at) {
+				return
+			}
+			if _, err := p.back.Write(v.data); err != nil {
+				return
+			}
+		}
+	}
+}
+
+func (p *proxy) sendDown() {
+	defer p.wg.Done()
+	next := time.Now()
+	for {
+		p.mu.Lock()
+		if len(p.down) == 0 {
+			p.mu.Unlock()
+			select {
+			case <-p.ctx.Done():
+				return
+			case <-p.wake:
+			}
+			continue
+		}
+		v := p.down[0]
+		p.mu.Unlock()
+		// One shared serialized byte budget; the in-service packet stays pending.
+		if !wait(p.ctx, maxTime(next, v.at)) {
+			return
+		}
+		n, err := p.front.WriteToUDP(v.data, v.to)
+		if err != nil {
+			return
+		}
+		p.forwarded.Add(uint64(n))
+		next = time.Now().Add(time.Duration(int64(len(v.data)) * int64(time.Second) / limit))
+		p.mu.Lock()
+		p.down[0] = packet{}
+		p.down = p.down[1:]
+		p.pending -= len(v.data)
+		p.mu.Unlock()
+	}
+}
+
+func maxTime(a, b time.Time) time.Time {
+	if a.After(b) {
+		return a
+	}
+	return b
+}
+func (p *proxy) pendingBytes() (int, int) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return p.pending, p.maximum
+}
+func (p *proxy) Close() {
+	p.cancel()
+	p.front.Close()
+	p.back.Close()
+	p.wg.Wait()
+}
+
+type trace struct{ current, minimum, maximum atomic.Int64 }
+
+func (t *trace) AddProducer() qlogwriter.Recorder { return t }
+func (*trace) SupportsSchemas(s string) bool      { return s == qlog.EventSchema }
+func (*trace) Close() error                       { return nil }
+func (t *trace) RecordEvent(event qlogwriter.Event) {
+	e, ok := event.(qlog.MetricsUpdated)
+	if !ok || e.CongestionWindow <= 0 {
+		return
+	}
+	n := int64(e.CongestionWindow)
+	t.current.Store(n)
+	for old := t.minimum.Load(); old == 0 || n < old; old = t.minimum.Load() {
+		if t.minimum.CompareAndSwap(old, n) {
+			break
+		}
+	}
+	for old := t.maximum.Load(); n > old; old = t.maximum.Load() {
+		if t.maximum.CompareAndSwap(old, n) {
+			break
+		}
+	}
+}
+
+type sample struct {
+	Seconds                                                       float64
+	Submitted, DownstreamReceived, DownstreamForwarded, Delivered uint64
+	PendingBytes                                                  int
+	CWNDBytes                                                     int64
+}
+type report struct {
+	Experiment                                                                        string
+	Controller                                                                        string
+	DurationSeconds, RTTMilliseconds                                                  float64
+	LimitBytesPerSecond, QueueLimitBytes                                              int
+	Samples                                                                           []sample
+	SubmittedLast10Rate, UpstreamLast10Rate, ForwardedLast10Rate, DeliveredLast10Rate float64
+	MeanPending10To15, MeanPending15To20                                              float64
+	MaximumPendingBytes, LastPendingBytes                                             int
+	DroppedDownstreamPackets, DroppedUpstreamPackets                                  uint64
+	CWNDMinimumBytes, CWNDMaximumBytes, CWNDLastBytes                                 int64
+	ConnectionAlive, WorkersStopped                                                   bool
+	GoroutinesBefore, GoroutinesAfter                                                 int
+	Passed                                                                            bool
+	Failures                                                                          []string
+}
+
+func tlsConfigs() (*tls.Config, *tls.Config, error) {
+	pub, key, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		return nil, nil, err
+	}
+	v := &x509.Certificate{SerialNumber: big.NewInt(1), Subject: pkix.Name{CommonName: "localhost"}, DNSNames: []string{"localhost"}, NotBefore: time.Now().Add(-time.Minute), NotAfter: time.Now().Add(time.Hour), KeyUsage: x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign, ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth}, BasicConstraintsValid: true, IsCA: true}
+	der, err := x509.CreateCertificate(rand.Reader, v, v, pub, key)
+	if err != nil {
+		return nil, nil, err
+	}
+	cert, err := x509.ParseCertificate(der)
+	if err != nil {
+		return nil, nil, err
+	}
+	pool := x509.NewCertPool()
+	pool.AddCert(cert)
+	return &tls.Config{MinVersion: tls.VersionTLS13, NextProtos: []string{"slowlink-lab"}, Certificates: []tls.Certificate{{Certificate: [][]byte{der}, PrivateKey: key}}}, &tls.Config{MinVersion: tls.VersionTLS13, NextProtos: []string{"slowlink-lab"}, RootCAs: pool, ServerName: "localhost"}, nil
+}
+
+func run() (report, error) {
+	out := report{Experiment: "nonformal BBR low-bandwidth transport self-check", Controller: "SagerNet/quic-go v0.61.0-sing-box-mod.9; sing-quic 75c3ac4fa12b4ded2dc01b392ed7d5eaf3ea6876 congestion_meta2 standard", DurationSeconds: 20, RTTMilliseconds: 50, LimitBytesPerSecond: limit, QueueLimitBytes: queueLimit, GoroutinesBefore: runtime.NumGoroutine()}
+	serverTLS, clientTLS, err := tlsConfigs()
+	if err != nil {
+		return out, err
+	}
+	t := &trace{}
+	cfg := &quic.Config{EnableDatagrams: true, HandshakeIdleTimeout: 10 * time.Second, MaxIdleTimeout: 30 * time.Second, KeepAlivePeriod: time.Second, Tracer: func(context.Context, bool, quic.ConnectionID) qlogwriter.Trace { return t }}
+	listener, err := quic.ListenAddr("127.0.0.1:0", serverTLS, cfg)
+	if err != nil {
+		return out, err
+	}
+	defer listener.Close()
+	p, err := newProxy(listener.Addr().String())
+	if err != nil {
+		return out, err
+	}
+	defer p.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
+	defer cancel()
+	accepted := make(chan *quic.Conn, 1)
+	acceptError := make(chan error, 1)
+	go func() {
+		c, err := listener.Accept(ctx)
+		if err != nil {
+			acceptError <- err
+			return
+		}
+		c.SetCongestionControl(bbr.NewBbrSenderWithProfile(c.InitialPacketSize(), bbr.ProfileStandard))
+		accepted <- c
+	}()
+	client, err := quic.DialAddr(ctx, p.front.LocalAddr().String(), clientTLS, &quic.Config{EnableDatagrams: true, HandshakeIdleTimeout: 10 * time.Second, MaxIdleTimeout: 30 * time.Second, KeepAlivePeriod: time.Second})
+	if err != nil {
+		return out, err
+	}
+	defer client.CloseWithError(0, "experiment stopped")
+	var server *quic.Conn
+	select {
+	case server = <-accepted:
+	case err = <-acceptError:
+		return out, err
+	case <-ctx.Done():
+		return out, ctx.Err()
+	}
+	defer server.CloseWithError(0, "experiment stopped")
+	var submitted, delivered atomic.Uint64
+	var workers sync.WaitGroup
+	workers.Add(2)
+	go func() {
+		defer workers.Done()
+		for {
+			b, err := client.ReceiveDatagram(client.Context())
+			if err != nil {
+				return
+			}
+			delivered.Add(uint64(len(b)))
+		}
+	}()
+	go func() {
+		defer workers.Done()
+		data := make([]byte, 1000)
+		for {
+			if err := server.SendDatagram(data); err != nil {
+				return
+			}
+			submitted.Add(uint64(len(data)))
+		}
+	}()
+	started := time.Now()
+	capture := func() sample {
+		pending, _ := p.pendingBytes()
+		return sample{Seconds: time.Since(started).Seconds(), Submitted: submitted.Load(), DownstreamReceived: p.received.Load(), DownstreamForwarded: p.forwarded.Load(), Delivered: delivered.Load(), PendingBytes: pending, CWNDBytes: t.current.Load()}
+	}
+	out.Samples = append(out.Samples, capture())
+	for i := 1; i <= 20; i++ {
+		if !wait(context.Background(), started.Add(time.Duration(i)*time.Second)) {
+			panic("unreachable")
+		}
+		out.Samples = append(out.Samples, capture())
+	}
+	out.ConnectionAlive = client.Context().Err() == nil && server.Context().Err() == nil
+	a, z := out.Samples[10], out.Samples[20]
+	dt := z.Seconds - a.Seconds
+	out.SubmittedLast10Rate = float64(z.Submitted-a.Submitted) / dt
+	out.UpstreamLast10Rate = float64(z.DownstreamReceived-a.DownstreamReceived) / dt
+	out.ForwardedLast10Rate = float64(z.DownstreamForwarded-a.DownstreamForwarded) / dt
+	out.DeliveredLast10Rate = float64(z.Delivered-a.Delivered) / dt
+	for i := 10; i < 15; i++ {
+		out.MeanPending10To15 += float64(out.Samples[i].PendingBytes) / 5
+	}
+	for i := 15; i < 20; i++ {
+		out.MeanPending15To20 += float64(out.Samples[i].PendingBytes) / 5
+	}
+	out.LastPendingBytes, out.MaximumPendingBytes = p.pendingBytes()
+	out.DroppedDownstreamPackets, out.DroppedUpstreamPackets = p.dropped.Load(), p.upDrops.Load()
+	out.CWNDMinimumBytes, out.CWNDMaximumBytes, out.CWNDLastBytes = t.minimum.Load(), t.maximum.Load(), t.current.Load()
+	if !out.ConnectionAlive {
+		out.Failures = append(out.Failures, "connection closed during sustained load")
+	}
+	if out.SubmittedLast10Rate > 1.5*limit || out.UpstreamLast10Rate > 1.5*limit {
+		out.Failures = append(out.Failures, "late application submissions or offered downstream wire rate exceed 1.5x bottleneck")
+	}
+	if out.DeliveredLast10Rate < 0.4*limit {
+		out.Failures = append(out.Failures, "late delivered application rate too low to demonstrate sustained useful progress")
+	}
+	if out.MeanPending15To20 > out.MeanPending10To15+2*1500 || out.LastPendingBytes > a.PendingBytes+2*1500 {
+		out.Failures = append(out.Failures, "pending queue still grows materially in late observation window")
+	}
+	if out.DroppedUpstreamPackets != 0 {
+		out.Failures = append(out.Failures, "upstream ACK path overflowed")
+	}
+	server.CloseWithError(0, "experiment stopped")
+	client.CloseWithError(0, "experiment stopped")
+	listener.Close()
+	p.Close()
+	stopped := make(chan struct{})
+	go func() { workers.Wait(); close(stopped) }()
+	select {
+	case <-stopped:
+		out.WorkersStopped = true
+	case <-time.After(3 * time.Second):
+		out.Failures = append(out.Failures, "application workers failed to exit")
+	}
+	time.Sleep(100 * time.Millisecond)
+	out.GoroutinesAfter = runtime.NumGoroutine()
+	out.Passed = len(out.Failures) == 0 && out.WorkersStopped
+	return out, nil
+}
+
+func main() {
+	out, err := run()
+	if err != nil {
+		out.Failures = append(out.Failures, err.Error())
+		out.Passed = false
+	}
+	if err := json.NewEncoder(os.Stdout).Encode(out); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	if !out.Passed {
+		if err == nil {
+			err = errors.New("controller slow-link assertions failed")
+		}
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}

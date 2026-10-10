@@ -2,21 +2,21 @@ package statesync
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io"
 	"time"
 )
 
 const (
-	msgJoin     byte = 1
-	msgFull     byte = 2
-	msgChanges  byte = 3
-	msgAction   byte = 4
-	msgResult   byte = 5
-	msgResync   byte = 6
-	msgInputs   byte = 7
-	msgSnapshot byte = 8
-	msgResume   byte = 9
+	msgJoin        byte = 1
+	msgFull        byte = 2
+	msgChanges     byte = 3
+	msgAction      byte = 4
+	msgResult      byte = 5
+	msgResync      byte = 6
+	msgInputs      byte = 7
+	msgSnapshot    byte = 8
+	msgResume      byte = 9
+	msgBaselineAck byte = 10
 
 	// Sizes include version and type, but exclude the stream length prefix.
 	maxJoinFrame   = 2 + 2 + 64 + 32
@@ -26,6 +26,7 @@ const (
 type sessionState struct {
 	token      ResumeToken
 	lastAction uint64
+	epoch      uint64
 }
 
 var le = binary.LittleEndian
@@ -37,6 +38,8 @@ func (e *encoder) u8(v byte)      { *e = append(*e, v) }
 func (e *encoder) u16(v uint16)   { *e = le.AppendUint16(*e, v) }
 func (e *encoder) u32(v uint32)   { *e = le.AppendUint32(*e, v) }
 func (e *encoder) u64(v uint64)   { *e = le.AppendUint64(*e, v) }
+func (e *encoder) var32(v uint32) { *e = binary.AppendUvarint(*e, uint64(v)) }
+func (e *encoder) var64(v uint64) { *e = binary.AppendUvarint(*e, v) }
 func (e *encoder) bytes(b []byte) { e.u16(uint16(len(b))); *e = append(*e, b...) }
 func (e *encoder) entity(v Entity) {
 	e.u32(v.ID)
@@ -76,6 +79,25 @@ func (d *decoder) u8() byte    { return d.take(1)[0] }
 func (d *decoder) u16() uint16 { return le.Uint16(d.take(2)) }
 func (d *decoder) u32() uint32 { return le.Uint32(d.take(4)) }
 func (d *decoder) u64() uint64 { return le.Uint64(d.take(8)) }
+func (d *decoder) var64() uint64 {
+	if d.err != nil {
+		return 0
+	}
+	v, n := binary.Uvarint(d.b)
+	if n <= 0 || n > 1 && d.b[n-1] == 0 {
+		d.err = ErrProtocol
+		return 0
+	}
+	d.b = d.b[n:]
+	return v
+}
+func (d *decoder) var32() uint32 {
+	v := d.var64()
+	if v > uint64(^uint32(0)) {
+		d.err = ErrProtocol
+	}
+	return uint32(v)
+}
 func (d *decoder) bytes(max int) []byte {
 	n := int(d.u16())
 	if n > max {
@@ -180,9 +202,12 @@ func stateHeader(kind byte, tick, rev uint64) encoder {
 }
 func encodeFull(v View, cfg Config, session sessionState) []byte {
 	b := stateHeader(msgFull, v.Tick, v.Revision)
+	b.u64(uint64(v.ServerTime))
+	b.u64(session.epoch)
 	b.u32(v.Player)
 	b.u16(uint16(cfg.TickRate))
 	b.u16(uint16(cfg.SnapshotRate))
+	b.u8(byte(cfg.SnapshotEncoding))
 	b.u64(uint64(cfg.ResumeGracePeriod))
 	b = append(b, session.token[:]...)
 	b.u64(session.lastAction)
@@ -194,16 +219,18 @@ func encodeFull(v View, cfg Config, session sessionState) []byte {
 }
 func decodeFull(b []byte) (View, Config, sessionState, error) {
 	d := decode(b, msgFull)
-	v := View{Tick: d.u64(), Revision: d.u64(), Player: d.u32()}
+	v := View{Tick: d.u64(), Revision: d.u64(), ServerTime: time.Duration(d.u64())}
+	session := sessionState{epoch: d.u64()}
+	v.Player = d.u32()
 	c := DefaultConfig()
 	c.TickRate = int(d.u16())
 	c.SnapshotRate = int(d.u16())
+	c.SnapshotEncoding = SnapshotEncoding(d.u8())
 	c.ResumeGracePeriod = time.Duration(d.u64())
-	session := sessionState{}
 	copy(session.token[:], d.take(32))
 	session.lastAction = d.u64()
 	n := int(d.u16())
-	if n > MaxEntities || v.Player == 0 || c.validate() != nil {
+	if n > MaxEntities || v.Player == 0 || v.ServerTime < 0 || session.epoch == 0 || c.validate() != nil {
 		return v, c, session, ErrProtocol
 	}
 	v.Entities = make([]Entity, n)
@@ -218,8 +245,9 @@ func decodeFull(b []byte) (View, Config, sessionState, error) {
 	}
 	return v, c, session, d.end()
 }
-func encodeChanges(tick, rev uint64, changes []Change) []byte {
+func encodeChanges(tick, rev uint64, at time.Duration, changes []Change) []byte {
 	b := stateHeader(msgChanges, tick, rev)
+	b.u64(uint64(at))
 	b.u16(uint16(len(changes)))
 	for _, v := range changes {
 		if v.Delete {
@@ -231,67 +259,41 @@ func encodeChanges(tick, rev uint64, changes []Change) []byte {
 	}
 	return b
 }
-func decodeChanges(b []byte) (uint64, uint64, []Change, error) {
+func decodeChanges(b []byte) (uint64, uint64, time.Duration, []Change, error) {
 	d := decode(b, msgChanges)
 	t, r := d.u64(), d.u64()
+	at := time.Duration(d.u64())
 	n := int(d.u16())
-	if n > MaxEntities*2 {
-		return 0, 0, nil, ErrProtocol
+	if n > MaxEntities*2 || at < 0 {
+		return 0, 0, 0, nil, ErrProtocol
 	}
 	out := make([]Change, n)
 	for i := range out {
 		f := d.u8()
 		if f > 1 {
-			return 0, 0, nil, ErrProtocol
+			return 0, 0, 0, nil, ErrProtocol
 		}
 		out[i] = Change{Delete: f == 1, Entity: d.entity()}
 	}
-	return t, r, out, d.end()
+	return t, r, at, out, d.end()
 }
-func snapshotPackets(tick, rev uint64, entities []Entity, limit int) ([][]byte, error) {
-	var packets [][]byte
-	b := stateHeader(msgSnapshot, tick, rev)
-	b.u16(0)
-	count := uint16(0)
-	flush := func() {
-		if count > 0 {
-			le.PutUint16(b[18:20], count)
-			packets = append(packets, b)
-		}
-		b = stateHeader(msgSnapshot, tick, rev)
-		b.u16(0)
-		count = 0
+func encodeBaselineAck(epoch, revision uint64, available bool) []byte {
+	b := start(msgBaselineAck)
+	b.u64(epoch)
+	b.u64(revision)
+	if available {
+		b.u8(1)
+	} else {
+		b.u8(0)
 	}
-	for _, e := range entities {
-		if !e.Dynamic {
-			continue
-		}
-		size := 23 + len(e.State)
-		if !validEntity(e) || size+20 > limit {
-			return nil, fmt.Errorf("entity %d exceeds datagram budget", e.ID)
-		}
-		if len(b)+size > limit {
-			flush()
-		}
-		b.entity(e)
-		count++
-	}
-	flush()
-	return packets, nil
+	return b
 }
-func decodeSnapshot(b []byte) (uint64, uint64, []Entity, error) {
-	if len(b) > 1000 {
-		return 0, 0, nil, ErrProtocol
+func decodeBaselineAck(b []byte) (uint64, uint64, bool, error) {
+	d := decode(b, msgBaselineAck)
+	epoch, revision := d.u64(), d.u64()
+	flag := d.u8()
+	if epoch == 0 || flag > 1 {
+		return 0, 0, false, ErrProtocol
 	}
-	d := decode(b, msgSnapshot)
-	tick, rev := d.u64(), d.u64()
-	n := int(d.u16())
-	if n < 1 || n > MaxEntities {
-		return 0, 0, nil, ErrProtocol
-	}
-	out := make([]Entity, n)
-	for i := range out {
-		out[i] = d.entity()
-	}
-	return tick, rev, out, d.end()
+	return epoch, revision, flag == 1, d.end()
 }

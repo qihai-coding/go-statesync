@@ -1,0 +1,7 @@
+commit 16930172ee48b008726849cc79ec576d5fa2bbc3
+Author:     世界 <i@sekai.icu>
+AuthorDate: Tue Sep 29 22:57:10 2026 +0800
+Commit:     世界 <i@sekai.icu>
+CommitDate: Tue Sep 29 23:06:10 2026 +0800
+
+    Fix OOB conn batch reads

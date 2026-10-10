@@ -1,0 +1,3 @@
+Markdown files checked: 17
+Local links checked: 262
+Broken local links: 0

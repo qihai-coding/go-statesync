@@ -1,0 +1,127 @@
+$ErrorActionPreference = 'Stop'
+$taskRoot = (Resolve-Path "$PSScriptRoot/../..").Path
+$taskEvidence = Join-Path $taskRoot 'reports/updates/2026-10-10-weaknet'
+$taskCommits = @{
+    'quic-go' = '16930172ee48b008726849cc79ec576d5fa2bbc3'
+    'sing-quic' = '75c3ac4fa12b4ded2dc01b392ed7d5eaf3ea6876'
+}
+foreach ($taskRepo in $taskCommits.Keys) {
+    $taskCheckout = Join-Path $PSScriptRoot $taskRepo
+    $taskActualCommit = (& git -C $taskCheckout rev-parse HEAD).Trim()
+    if ($LASTEXITCODE -ne 0 -or $taskActualCommit -ne $taskCommits[$taskRepo]) {
+        throw "Unexpected $taskRepo commit: $taskActualCommit"
+    }
+    if ((& git -C $taskCheckout status --porcelain).Count -ne 0) {
+        throw "The isolated $taskRepo checkout contains local changes."
+    }
+}
+$taskQuicInfo = Get-Content (Join-Path $taskEvidence 'sager-quic-version.json') -Raw | ConvertFrom-Json
+$taskSingInfo = Get-Content (Join-Path $taskEvidence 'sager-sing-quic-version.json') -Raw | ConvertFrom-Json
+if ($taskQuicInfo.Origin.Hash -ne $taskCommits['quic-go'] -or $taskSingInfo.Origin.Hash -ne $taskCommits['sing-quic']) {
+    throw 'Resolved dependency versions do not match the fixed primary commits.'
+}
+$taskUtf8 = [Text.UTF8Encoding]::new($false)
+[IO.File]::WriteAllText((Join-Path $PSScriptRoot 'go.mod'), "module example.invalid/weaknet-sager-bbr-lab-overlay`n`ngo 1.26.0`n", $taskUtf8)
+New-Item -ItemType Directory -Force -Path (Join-Path $PSScriptRoot 'sources'),
+    (Join-Path $PSScriptRoot 'mod-cache'), (Join-Path $PSScriptRoot 'build-cache'),
+    (Join-Path $taskRoot 'bin/_go-temp') | Out-Null
+Push-Location $taskRoot
+try {
+    $taskImports = @(& rg -l 'github.com/quic-go/quic-go' -g '*.go' -g '!bin/**' .)
+    if ($LASTEXITCODE -ne 0 -or $taskImports.Count -eq 0) { throw 'No official dependency imports found.' }
+} finally { Pop-Location }
+$taskOriginalFiles = @((Join-Path $taskRoot 'go.mod'), (Join-Path $taskRoot 'go.sum'))
+$taskOriginalFiles += $taskImports | ForEach-Object { (Resolve-Path (Join-Path $taskRoot $_)).Path }
+$taskOriginalFiles += 'D:/Go/Cache/mod/github.com/quic-go/quic-go@v0.62.0/internal/ackhandler/sent_packet_handler.go'
+$taskBefore = @{}
+foreach ($taskFile in $taskOriginalFiles) {
+    $taskBefore[$taskFile] = (Get-FileHash -LiteralPath $taskFile -Algorithm SHA256).Hash
+}
+$taskOverlayMap = @{}
+foreach ($taskImport in $taskImports) {
+    $taskOriginal = (Resolve-Path (Join-Path $taskRoot $taskImport)).Path
+    $taskCopy = Join-Path (Join-Path $PSScriptRoot 'sources') $taskImport
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $taskCopy) | Out-Null
+    $taskText = [IO.File]::ReadAllText($taskOriginal)
+    if ((Split-Path -Leaf $taskOriginal) -eq 'transport_send.go') {
+        $taskText = [IO.File]::ReadAllText((Join-Path $taskRoot 'bin/weaknet-lab/transport_send.go'))
+    }
+    $taskText = $taskText.Replace('github.com/quic-go/quic-go', 'github.com/sagernet/quic-go')
+    if ((Split-Path -Leaf $taskOriginal) -eq 'server.go') {
+        $taskText = $taskText.Replace('"github.com/sagernet/quic-go"', '"github.com/sagernet/quic-go"' + "`n`t" + 'bbr "github.com/sagernet/sing-quic/congestion_meta2"')
+        $taskHandle = 'func (s *Server) handle(c *quic.Conn) {'
+        if ([regex]::Matches($taskText, [regex]::Escape($taskHandle)).Count -ne 1) {
+            throw 'Expected exactly one server connection handler.'
+        }
+        $taskText = $taskText.Replace($taskHandle, $taskHandle + "`n`tc.SetCongestionControl(bbr.NewBbrSenderWithProfile(c.InitialPacketSize(), bbr.ProfileStandard))")
+    }
+    [IO.File]::WriteAllText($taskCopy, $taskText, $taskUtf8)
+    & gofmt -w $taskCopy
+    if ($LASTEXITCODE -ne 0) { throw "Formatting isolated source failed: $taskCopy" }
+    $taskOverlayMap[$taskOriginal] = $taskCopy
+}
+$taskModFile = Join-Path $PSScriptRoot 'lab.mod'
+$taskModText = [IO.File]::ReadAllText((Join-Path $taskRoot 'go.mod'))
+$taskRequire = 'require github.com/quic-go/quic-go v0.62.0'
+if ([regex]::Matches($taskModText, [regex]::Escape($taskRequire)).Count -ne 1) {
+    throw 'Expected exactly one official direct requirement.'
+}
+$taskNewRequire = "require (`n`tgithub.com/sagernet/quic-go $($taskQuicInfo.Version)`n`tgithub.com/sagernet/sing-quic $($taskSingInfo.Version)`n)"
+$taskModText = $taskModText.Replace($taskRequire, $taskNewRequire)
+[IO.File]::WriteAllText($taskModFile, $taskModText, $taskUtf8)
+[IO.File]::WriteAllText((Join-Path $PSScriptRoot 'lab.sum'), [IO.File]::ReadAllText((Join-Path $taskRoot 'go.sum')), $taskUtf8)
+$taskOverlay = Join-Path $PSScriptRoot 'overlay.json'
+[IO.File]::WriteAllText($taskOverlay, (@{ Replace = $taskOverlayMap } | ConvertTo-Json -Depth 3), $taskUtf8)
+$env:GOTMPDIR = Join-Path $taskRoot 'bin/_go-temp'
+$env:GOMODCACHE = Join-Path $PSScriptRoot 'mod-cache'
+$env:GOCACHE = Join-Path $PSScriptRoot 'build-cache'
+$taskBinary = Join-Path $taskRoot 'bin/check-sager-bbr-lab.exe'
+$taskBuildLog = Join-Path $taskEvidence 'sager-bbr-build.txt'
+$taskBuildCommand = 'go build -mod=mod -modfile bin/weaknet-sager-bbr-lab/lab.mod -overlay bin/weaknet-sager-bbr-lab/overlay.json -o bin/check-sager-bbr-lab.exe ./cmd/check'
+[IO.File]::WriteAllText($taskBuildLog, "$taskBuildCommand`n", $taskUtf8)
+Push-Location $taskRoot
+try {
+    & go build -mod=mod -modfile $taskModFile -overlay $taskOverlay -o $taskBinary ./cmd/check 2>&1 | Tee-Object -FilePath $taskBuildLog -Append
+    $taskBuildExit = $LASTEXITCODE
+} finally { Pop-Location }
+$taskChanged = @()
+foreach ($taskFile in $taskOriginalFiles) {
+    if ((Get-FileHash -LiteralPath $taskFile -Algorithm SHA256).Hash -ne $taskBefore[$taskFile]) {
+        $taskChanged += $taskFile
+    }
+}
+$taskSourceHashes = @{}
+foreach ($taskSource in $taskOverlayMap.Values) {
+    $taskSourceHashes[$taskSource] = (Get-FileHash -LiteralPath $taskSource -Algorithm SHA256).Hash
+    $taskName = 'sager-bbr-' + (Split-Path -Leaf $taskSource) + '.txt'
+    Copy-Item -LiteralPath $taskSource -Destination (Join-Path $taskEvidence $taskName) -Force
+}
+Copy-Item -LiteralPath $taskModFile -Destination (Join-Path $taskEvidence 'sager-bbr-lab.mod') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'lab.sum') -Destination (Join-Path $taskEvidence 'sager-bbr-lab.sum') -Force
+Copy-Item -LiteralPath $taskOverlay -Destination (Join-Path $taskEvidence 'sager-bbr-overlay.json') -Force
+$taskSummary = [ordered]@{
+    Commits = $taskCommits
+    Versions = @{ QuicGo = $taskQuicInfo.Version; SingQuic = $taskSingInfo.Version }
+    DirectModulePaths = @('github.com/sagernet/quic-go', 'github.com/sagernet/sing-quic')
+    Replaces = @()
+    CongestionPackage = 'github.com/sagernet/sing-quic/congestion_meta2'
+    Profile = 'ProfileStandard'
+    BuildCommand = $taskBuildCommand
+    BuildExitCode = $taskBuildExit
+    Binary = $taskBinary
+    BinarySHA256 = $null
+    OverlaySHA256 = (Get-FileHash -LiteralPath $taskOverlay -Algorithm SHA256).Hash
+    ModFileSHA256 = (Get-FileHash -LiteralPath $taskModFile -Algorithm SHA256).Hash
+    SourceHashes = $taskSourceHashes
+    OriginalSourceHashes = $taskBefore
+    ChangedOriginalFiles = $taskChanged
+    GoEnvironment = @{ GOTMPDIR = $env:GOTMPDIR; GOMODCACHE = $env:GOMODCACHE; GOCACHE = $env:GOCACHE }
+    LoadExecuted = $false
+}
+if ($taskBuildExit -eq 0) {
+    $taskSummary.BinarySHA256 = (Get-FileHash -LiteralPath $taskBinary -Algorithm SHA256).Hash
+    & go version -m $taskBinary | Out-File -LiteralPath (Join-Path $taskEvidence 'sager-bbr-build-info.txt') -Encoding utf8
+}
+$taskSummary | ConvertTo-Json -Depth 5 | Out-File -LiteralPath (Join-Path $taskEvidence 'sager-bbr-build.json') -Encoding utf8
+if ($taskChanged.Count -ne 0) { throw "Original source or installed cache changed: $taskChanged" }
+if ($taskBuildExit -ne 0) { throw "Isolated Sager BBR build failed with exit code $taskBuildExit; see $taskBuildLog" }

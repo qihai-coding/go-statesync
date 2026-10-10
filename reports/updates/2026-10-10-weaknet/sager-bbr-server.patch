@@ -1,0 +1,22 @@
+diff --git a/server.go b/bin/weaknet-sager-bbr-lab/sources/server.go
+index 17ab131..29d78eb 100644
+--- a/server.go
++++ b/bin/weaknet-sager-bbr-lab/sources/server.go
+@@ -9,7 +9,8 @@ import (
+ 	"sync/atomic"
+ 	"time"
+ 
+-	"github.com/quic-go/quic-go"
++	"github.com/sagernet/quic-go"
++	bbr "github.com/sagernet/sing-quic/congestion_meta2"
+ )
+ 
+ const (
+@@ -166,6 +167,7 @@ func (s *Server) accept() {
+ 	}
+ }
+ func (s *Server) handle(c *quic.Conn) {
++	c.SetCongestionControl(bbr.NewBbrSenderWithProfile(c.InitialPacketSize(), bbr.ProfileStandard))
+ 	defer c.CloseWithError(closeTemporary, "connection ended")
+ 	stop := context.AfterFunc(s.ctx, func() { c.CloseWithError(closeRoom, "server stopped") })
+ 	defer stop()

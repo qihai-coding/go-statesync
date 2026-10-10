@@ -1,0 +1,7 @@
+commit 947ce4371157f0020731bd5362b29f3b74c6e591
+Author:     qiulaidongfeng <2645477756@qq.com>
+AuthorDate: Tue Sep 22 13:09:52 2026 +0800
+Commit:     qiulaidongfeng <2645477756@qq.com>
+CommitDate: Mon Oct 5 22:43:53 2026 +0800
+
+    feat: add mcc V2 dev

@@ -1,0 +1,21 @@
+bin/check.exe: go1.26.5
+	path	github.com/qihai-coding/go-statesync/cmd/check
+	mod	github.com/qihai-coding/go-statesync	v0.2.1+dirty	
+	dep	github.com/quic-go/quic-go	v0.62.0	h1:ZHDjCk5OacATwGvs8PWE97CTvX7AqZiVoW7++ZOXTf8=
+	dep	golang.org/x/crypto	v0.54.0	h1:YLIA59K4fiNzHzjnZt2tUJQjQtUWfWbeHBqKtk3eScw=
+	dep	golang.org/x/sys	v0.47.0	h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=0
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=941d7267df4fd0b9e10d8256754a409f2acf5bbd
+	build	vcs.time=2026-10-09T01:16:25Z
+	build	vcs.modified=true
+
+Algorithm : SHA256
+Hash      : AA07D61714258A4DA036B8D77453DE01166CEE32B5F218A9605728C982BB41BB
+Path      : D:\main\github\go-statesync\bin\check.exe
+

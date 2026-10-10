@@ -48,6 +48,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for target in FuzzDecode FuzzReadFrame FuzzLifecyclePreflight FuzzFullStateResync FuzzSnapshotAck; do
+          for target in FuzzDecode FuzzReadFrame FuzzLifecyclePreflight FuzzFullStateResync FuzzSnapshotAck FuzzDelta; do
             go test -run '^$' -fuzz "^${target}$" -fuzztime 15s -parallel 2 .
           done

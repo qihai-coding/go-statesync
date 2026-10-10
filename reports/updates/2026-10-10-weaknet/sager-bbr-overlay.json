@@ -1,0 +1,14 @@
+{
+  "Replace": {
+    "D:\\main\\github\\go-statesync\\transport_send_test.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\transport_send_test.go",
+    "D:\\main\\github\\go-statesync\\client_lifecycle_test.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\client_lifecycle_test.go",
+    "D:\\main\\github\\go-statesync\\integration_test.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\integration_test.go",
+    "D:\\main\\github\\go-statesync\\v3_integration_test.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\v3_integration_test.go",
+    "D:\\main\\github\\go-statesync\\client_baseline_test.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\client_baseline_test.go",
+    "D:\\main\\github\\go-statesync\\server.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\server.go",
+    "D:\\main\\github\\go-statesync\\hardening_test.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\hardening_test.go",
+    "D:\\main\\github\\go-statesync\\client.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\client.go",
+    "D:\\main\\github\\go-statesync\\transport_send.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\transport_send.go",
+    "D:\\main\\github\\go-statesync\\resume_test.go": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\resume_test.go"
+  }
+}

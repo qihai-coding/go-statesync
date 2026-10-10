@@ -1,0 +1,34 @@
+diff --git a/reports/updates/2026-10-10-weaknet/slowlink-v2-main.go.txt b/reports/updates/2026-10-10-weaknet/slowlink-mit-main.go.txt
+index 94510f3..0316da8 100644
+--- a/reports/updates/2026-10-10-weaknet/slowlink-v2-main.go.txt
++++ b/reports/updates/2026-10-10-weaknet/slowlink-mit-main.go.txt
+@@ -19,10 +19,10 @@ import (
+ 	"sync/atomic"
+ 	"time"
+ 
++	"github.com/qihai-coding/go-statesync/internal/bbr"
+ 	quic "github.com/sagernet/quic-go"
+ 	"github.com/sagernet/quic-go/qlog"
+ 	"github.com/sagernet/quic-go/qlogwriter"
+-	bbr "github.com/sagernet/sing-quic/congestion_meta2"
+ )
+ 
+ const limit = 8 * 1024
+@@ -287,7 +287,7 @@ func tlsConfigs() (*tls.Config, *tls.Config, error) {
+ }
+ 
+ func run() (report, error) {
+-	out := report{Experiment: "nonformal BBR low-bandwidth transport self-check", Controller: "SagerNet/quic-go v0.61.0-sing-box-mod.9; sing-quic 75c3ac4fa12b4ded2dc01b392ed7d5eaf3ea6876 congestion_meta2 standard", DurationSeconds: 20, RTTMilliseconds: 50, LimitBytesPerSecond: limit, QueueLimitBytes: queueLimit, GoroutinesBefore: runtime.NumGoroutine()}
++	out := report{Experiment: "nonformal MIT BBR low-bandwidth transport self-check", Controller: "SagerNet/quic-go v0.61.0-sing-box-mod.9; local internal/bbr MIT/BSD Hysteria ca8fbd874fd6ca82413948de6dc5924405e103e1 standard", DurationSeconds: 20, RTTMilliseconds: 50, LimitBytesPerSecond: limit, QueueLimitBytes: queueLimit, GoroutinesBefore: runtime.NumGoroutine()}
+ 	serverTLS, clientTLS, err := tlsConfigs()
+ 	if err != nil {
+ 		return out, err
+@@ -314,7 +314,7 @@ func run() (report, error) {
+ 			acceptError <- err
+ 			return
+ 		}
+-		c.SetCongestionControl(bbr.NewBbrSenderWithProfile(c.InitialPacketSize(), bbr.ProfileStandard))
++		c.SetCongestionControl(bbr.NewBbrSender(bbr.DefaultClock{}, c.InitialPacketSize(), bbr.ProfileStandard))
+ 		accepted <- c
+ 	}()
+ 	client, err := quic.DialAddr(ctx, p.front.LocalAddr().String(), clientTLS, &quic.Config{EnableDatagrams: true, HandshakeIdleTimeout: 10 * time.Second, MaxIdleTimeout: 30 * time.Second, KeepAlivePeriod: time.Second})

@@ -1,0 +1,12 @@
+diff --git a/bin/weaknet-lab/transport_send.go b/bin/weaknet-bbr-lab/transport_send.go
+index 6fcb5a5..5d3b830 100644
+--- a/bin/weaknet-lab/transport_send.go
++++ b/bin/weaknet-bbr-lab/transport_send.go
+@@ -15,6 +15,7 @@ import (
+ 
+ func serverTransportConfig() *quic.Config {
+ 	cfg := transportConfig()
++	cfg.Congestion = func() quic.SendAlgorithmWithDebugInfos { return quic.NewBBRv1(cfg) }
+ 	cfg.Tracer = func(_ context.Context, _ bool, id quic.ConnectionID) qlogwriter.Trace {
+ 		return &datagramSendTrace{sent: make(chan struct{}, 1), id: id.String()}
+ 	}

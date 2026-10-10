@@ -1,0 +1,22 @@
+diff --git "a/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\quic-go\\internal\\ackhandler\\sent_packet_handler.go" "b/D:\\main\\github\\go-statesync\\bin\\weaknet-lab/sent_packet_handler-cubic.go"
+index 9b539ea..2bfdc97 100644
+--- "a/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\quic-go\\internal\\ackhandler\\sent_packet_handler.go"
++++ "b/D:\\main\\github\\go-statesync\\bin\\weaknet-lab/sent_packet_handler-cubic.go"
+@@ -134,7 +134,7 @@ func NewSentPacketHandler(
+ 		rttStats,
+ 		connStats,
+ 		initialMaxDatagramSize,
+-		true, // use Reno
++		false, // LAB ONLY: use CUBIC
+ 		qlogger,
+ 	)
+ 
+@@ -1136,7 +1136,7 @@ func (h *sentPacketHandler) MigratedPath(now monotime.Time, initialMaxDatagramSi
+ 		h.rttStats,
+ 		h.connStats,
+ 		initialMaxDatagramSize,
+-		true, // use Reno
++		false, // LAB ONLY: use CUBIC
+ 		h.qlogger,
+ 	)
+ 	h.setLossDetectionTimer(now)

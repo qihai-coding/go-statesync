@@ -1,0 +1,32 @@
+[
+  {
+    "Variant": "baseline",
+    "Binary": "D:\\main\\github\\go-statesync\\bin\\check-baseline-lab.exe",
+    "SHA256": "D15F3E8CB51A0DD7AD6665D59EBCE86F8E7B8A7FFB9F4F0BC6CFA3069A3E43DC",
+    "Overlay": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\baseline-overlay.json",
+    "ModFile": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\lab.mod",
+    "OverlaySHA256": "50642865B91423472AF904F229FA8BF3D673A5BF760E941F718FF75FAC3C00FD",
+    "DiagnosticSourceSHA256": "CBB86E542EEA3540599C8A65C246A484081F7CC52283EACB9F2F8DBB189C95FD",
+    "HandlerOverlaySHA256": null
+  },
+  {
+    "Variant": "cubic",
+    "Binary": "D:\\main\\github\\go-statesync\\bin\\check-cubic-lab.exe",
+    "SHA256": "6F0A0105BE17D3470608C08A2106F2E4BDC0EC440D44D88127146AA017D98DD2",
+    "Overlay": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\cubic-overlay.json",
+    "ModFile": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\lab.mod",
+    "OverlaySHA256": "75D63D831F4F7F424C14D6493E2D3DC1E14EFC517F27D282178947E37AF7EC7D",
+    "DiagnosticSourceSHA256": "CBB86E542EEA3540599C8A65C246A484081F7CC52283EACB9F2F8DBB189C95FD",
+    "HandlerOverlaySHA256": "B7324B006EFBCCA5B800588DC81CB9B656744D66042573EA1A14D3BB0D18D47D"
+  },
+  {
+    "Variant": "cubic-wide32",
+    "Binary": "D:\\main\\github\\go-statesync\\bin\\check-cubic-wide32-lab.exe",
+    "SHA256": "2AB4AB3310DCB7E3700D83CF114B398FEFBB1B86F86DAE781A24E3DE30F80DEE",
+    "Overlay": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\cubic-wide32-overlay.json",
+    "ModFile": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\lab.mod",
+    "OverlaySHA256": "CFDED2E3783EFDE902558BF7C026B1D68C57572C5A8464EC7C6687A3334F0F35",
+    "DiagnosticSourceSHA256": "CBB86E542EEA3540599C8A65C246A484081F7CC52283EACB9F2F8DBB189C95FD",
+    "HandlerOverlaySHA256": "69CDE496E618153B061EBD184A8F2476446D48ED4C94FE42A7647F5BD6A5D467"
+  }
+]

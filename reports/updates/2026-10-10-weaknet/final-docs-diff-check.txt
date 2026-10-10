@@ -1,0 +1,3 @@
+COMMAND: git diff --check (final report approved by agent)
+EXIT: 0
+OUTPUT: none.

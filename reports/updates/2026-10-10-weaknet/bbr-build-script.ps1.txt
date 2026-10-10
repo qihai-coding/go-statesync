@@ -1,0 +1,95 @@
+$ErrorActionPreference = 'Stop'
+$taskRoot = (Resolve-Path "$PSScriptRoot/../..").Path
+$taskEvidence = Join-Path $taskRoot 'reports/updates/2026-10-10-weaknet'
+$taskCommit = '947ce4371157f0020731bd5362b29f3b74c6e591'
+$taskFork = Join-Path $PSScriptRoot 'quic-go'
+$taskActualCommit = (& git -C $taskFork rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or $taskActualCommit -ne $taskCommit) {
+    throw "Fork checkout must be fixed at $taskCommit; actual $taskActualCommit."
+}
+if ((& git -C $taskFork status --porcelain).Count -ne 0) {
+    throw 'The isolated fork checkout contains local changes.'
+}
+$taskUtf8 = [Text.UTF8Encoding]::new($false)
+[IO.File]::WriteAllText((Join-Path $PSScriptRoot 'go.mod'), "module example.invalid/weaknet-bbr-lab-overlay`n`ngo 1.26.0`n", $taskUtf8)
+$taskOriginalFiles = @(
+    (Join-Path $taskRoot 'go.mod'),
+    (Join-Path $taskRoot 'go.sum'),
+    (Join-Path $taskRoot 'transport_send.go'),
+    'D:/Go/Cache/mod/github.com/quic-go/quic-go@v0.62.0/internal/ackhandler/sent_packet_handler.go'
+)
+$taskBefore = @{}
+foreach ($taskFile in $taskOriginalFiles) {
+    $taskBefore[$taskFile] = (Get-FileHash -LiteralPath $taskFile -Algorithm SHA256).Hash
+}
+New-Item -ItemType Directory -Force -Path $taskEvidence, (Join-Path $taskRoot 'bin/_go-temp'),
+    (Join-Path $PSScriptRoot 'mod-cache'), (Join-Path $PSScriptRoot 'build-cache') | Out-Null
+$taskModFile = Join-Path $PSScriptRoot 'lab.mod'
+$taskModText = [IO.File]::ReadAllText((Join-Path $taskRoot 'go.mod')) + "`nreplace github.com/quic-go/quic-go => `"$($taskFork.Replace('\', '/'))`"`n"
+[IO.File]::WriteAllText($taskModFile, $taskModText, $taskUtf8)
+[IO.File]::WriteAllText((Join-Path $PSScriptRoot 'lab.sum'), [IO.File]::ReadAllText((Join-Path $taskRoot 'go.sum')), $taskUtf8)
+$taskTransport = [IO.File]::ReadAllText((Join-Path $taskRoot 'bin/weaknet-lab/transport_send.go'))
+$taskMarker = "`tcfg := transportConfig()"
+if ([regex]::Matches($taskTransport, [regex]::Escape($taskMarker)).Count -ne 1) {
+    throw 'Expected exactly one server transport initialization in the shared diagnostic source.'
+}
+$taskTransport = $taskTransport.Replace($taskMarker, $taskMarker + "`n`tcfg.Congestion = func() quic.SendAlgorithmWithDebugInfos { return quic.NewBBRv1(cfg) }")
+$taskTransportPath = Join-Path $PSScriptRoot 'transport_send.go'
+[IO.File]::WriteAllText($taskTransportPath, $taskTransport, $taskUtf8)
+& gofmt -w $taskTransportPath
+if ($LASTEXITCODE -ne 0) { throw 'Formatting the isolated transport source failed.' }
+$taskOverlay = Join-Path $PSScriptRoot 'overlay.json'
+$taskOverlayText = @{ Replace = @{ (Join-Path $taskRoot 'transport_send.go') = $taskTransportPath } } | ConvertTo-Json -Depth 3
+[IO.File]::WriteAllText($taskOverlay, $taskOverlayText, $taskUtf8)
+$env:GOTMPDIR = Join-Path $taskRoot 'bin/_go-temp'
+$env:GOMODCACHE = Join-Path $PSScriptRoot 'mod-cache'
+$env:GOCACHE = Join-Path $PSScriptRoot 'build-cache'
+$taskBinary = Join-Path $taskRoot 'bin/check-bbr-lab.exe'
+$taskBuildLog = Join-Path $taskEvidence 'bbr-build.txt'
+$taskBuildCommand = 'go build -mod=mod -modfile bin/weaknet-bbr-lab/lab.mod -overlay bin/weaknet-bbr-lab/overlay.json -o bin/check-bbr-lab.exe ./cmd/check'
+[IO.File]::WriteAllText($taskBuildLog, "$taskBuildCommand`n", $taskUtf8)
+Push-Location $taskRoot
+try {
+    & go build -mod=mod -modfile $taskModFile -overlay $taskOverlay -o $taskBinary ./cmd/check 2>&1 | Tee-Object -FilePath $taskBuildLog -Append
+    $taskBuildExit = $LASTEXITCODE
+} finally {
+    Pop-Location
+}
+$taskChanged = @()
+foreach ($taskFile in $taskOriginalFiles) {
+    if ((Get-FileHash -LiteralPath $taskFile -Algorithm SHA256).Hash -ne $taskBefore[$taskFile]) {
+        $taskChanged += $taskFile
+    }
+}
+Copy-Item -LiteralPath $taskModFile -Destination (Join-Path $taskEvidence 'bbr-lab.mod') -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'lab.sum') -Destination (Join-Path $taskEvidence 'bbr-lab.sum') -Force
+Copy-Item -LiteralPath $taskTransportPath -Destination (Join-Path $taskEvidence 'bbr-transport_send.go.txt') -Force
+Copy-Item -LiteralPath $taskOverlay -Destination (Join-Path $taskEvidence 'bbr-overlay.json') -Force
+Copy-Item -LiteralPath (Join-Path $taskFork 'go.mod') -Destination (Join-Path $taskEvidence 'bbr-upstream-go.mod.txt') -Force
+$taskSummary = [ordered]@{
+    Repository = 'https://github.com/qiulaidongfeng/quic-go'
+    Ref = 'refs/heads/master'
+    Commit = $taskCommit
+    Checkout = $taskFork
+    UpstreamModule = 'github.com/quic-go/quic-go'
+    BuildCommand = $taskBuildCommand
+    BuildExitCode = $taskBuildExit
+    Binary = $taskBinary
+    BinarySHA256 = $null
+    OverlaySHA256 = (Get-FileHash -LiteralPath $taskOverlay -Algorithm SHA256).Hash
+    SourceSHA256 = (Get-FileHash -LiteralPath $taskTransportPath -Algorithm SHA256).Hash
+    ModFileSHA256 = (Get-FileHash -LiteralPath $taskModFile -Algorithm SHA256).Hash
+    SharedDiagnosticSourceSHA256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'bin/weaknet-lab/transport_send.go') -Algorithm SHA256).Hash
+    UpstreamGoModSHA256 = (Get-FileHash -LiteralPath (Join-Path $taskFork 'go.mod') -Algorithm SHA256).Hash
+    OriginalSourceHashes = $taskBefore
+    ChangedOriginalFiles = $taskChanged
+    GoEnvironment = @{ GOTMPDIR = $env:GOTMPDIR; GOMODCACHE = $env:GOMODCACHE; GOCACHE = $env:GOCACHE }
+    LoadExecuted = $false
+}
+if ($taskBuildExit -eq 0) {
+    $taskSummary.BinarySHA256 = (Get-FileHash -LiteralPath $taskBinary -Algorithm SHA256).Hash
+    & go version -m $taskBinary | Out-File -LiteralPath (Join-Path $taskEvidence 'bbr-build-info.txt') -Encoding utf8
+}
+$taskSummary | ConvertTo-Json -Depth 5 | Out-File -LiteralPath (Join-Path $taskEvidence 'bbr-build.json') -Encoding utf8
+if ($taskChanged.Count -ne 0) { throw "Original source or installed cache changed: $taskChanged" }
+if ($taskBuildExit -ne 0) { throw "Isolated BBR build failed with exit code $taskBuildExit; see $taskBuildLog" }

@@ -1,0 +1,1 @@
+External SDK consumer builds with only local project replacement; no QUIC replacement.

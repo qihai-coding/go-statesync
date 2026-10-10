@@ -1,0 +1,6 @@
+{
+  "InstalledHandlerSHA256": "7B7A772F3900A0E61405E4F8D01AF7E10DA03AFBAF947150A0DCEF619746924D",
+  "TransportPath": "D:\\main\\github\\go-statesync\\transport_send.go",
+  "InstalledHandlerPath": "D:/Go/Cache/mod/github.com/quic-go/quic-go@v0.62.0/internal/ackhandler/sent_packet_handler.go",
+  "TransportSHA256": "BCC6AE89E658B1D63686457C0A6207847DE8C2FB3B4A83E04AED5EBE283AF8F0"
+}

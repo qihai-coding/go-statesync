@@ -1,0 +1,66 @@
+package statesync
+
+import (
+	"bytes"
+	"testing"
+	"time"
+)
+
+func TestSampleWithInfoTracksDisplayedSource(t *testing.T) {
+	c := testClient(t)
+	e := c.entities[2].entity
+	e.State = []byte{30}
+	if err := c.update(e, 30, time.Second, false); err != nil {
+		t.Fatal(err)
+	}
+	now := time.Now()
+	c.anchor, c.anchorAt = 30, now
+	for _, tc := range []struct {
+		name    string
+		at      time.Time
+		value   byte
+		source  time.Duration
+		holding bool
+	}{
+		{"interpolation", now, 24, 800 * time.Millisecond, false},
+		{"latest hold", now.Add(time.Hour), 30, time.Second, true},
+		{"oldest hold", now.Add(-time.Hour), 0, 0, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			state, info, ok := c.SampleWithInfo(2, tc.at)
+			if !ok || !bytes.Equal(state, []byte{tc.value}) || absDuration(info.SourceTime-tc.source) > 100*time.Nanosecond ||
+				info.LatestStateTime != time.Second || info.Holding != tc.holding || info.Predicted {
+				t.Fatalf("state=%x info=%+v ok=%v", state, info, ok)
+			}
+			if plain, ok := c.Sample(2, tc.at); !ok || !bytes.Equal(plain, state) {
+				t.Fatal("sampling metadata changed displayed state")
+			}
+		})
+	}
+	if state, info, ok := c.SampleWithInfo(999, now); ok || state != nil || info != (SampleInfo{}) {
+		t.Fatal("missing entity acquired source metadata", state, info, ok)
+	}
+}
+
+func absDuration(v time.Duration) time.Duration {
+	if v < 0 {
+		return -v
+	}
+	return v
+}
+
+func TestSampleWithInfoMarksLocalPrediction(t *testing.T) {
+	c := testClient(t)
+	c.sequence = 2
+	c.history = []Input{{Sequence: 1, Data: []byte{1}}, {Sequence: 2, Data: []byte{2}}}
+	e := c.entities[1].entity
+	e.Ack, e.State = 1, []byte{5}
+	if err := c.update(e, 30, time.Second, false); err != nil {
+		t.Fatal(err)
+	}
+	state, info, ok := c.SampleWithInfo(1, time.Now().Add(time.Hour))
+	if !ok || !bytes.Equal(state, []byte{7}) || !info.Predicted || info.Holding ||
+		info.SourceTime != time.Second || info.LatestStateTime != time.Second {
+		t.Fatal("local prediction lost authoritative source", state, info, ok)
+	}
+}

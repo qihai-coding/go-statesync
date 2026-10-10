@@ -1,0 +1,3 @@
+COMMAND: go build -o bin/check-weaknet.exe ./cmd/check
+EXIT: 0
+OUTPUT: none; binary hash and build metadata in final-load-binary.txt.

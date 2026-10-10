@@ -1,0 +1,123 @@
+START normal-delta-60s
+30 秒：服务器堆=3.01 MiB，客户端及代理堆=99.57 MiB
+60 秒：服务器堆=3.03 MiB，客户端及代理堆=101.61 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=60.92%（单核），每客户端下行=64891 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/normal-delta-60s.json
+END normal-delta-60s exit=0
+START normal-full-60s
+30 秒：服务器堆=3.91 MiB，客户端及代理堆=106.61 MiB
+60 秒：服务器堆=2.96 MiB，客户端及代理堆=109.10 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=47.50%（单核），每客户端下行=145914 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/normal-full-60s.json
+END normal-full-60s exit=0
+START weak-150ms-seed7-delta-5m
+START weak-150ms-seed7-full-5m
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=2
+PROGRESS weak-150ms-seed7 running=0
+END process=40700 exit=0
+END process=28096 exit=0
+START weak-150ms-seed701-delta-5m
+START weak-150ms-seed701-full-5m
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=2
+PROGRESS weak-150ms-seed701 running=0
+END process=33136 exit=0
+END process=36412 exit=0
+START weak-300ms-seed7-delta-5m
+START weak-300ms-seed7-full-5m
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=2
+PROGRESS weak-300ms-seed7 running=0
+END process=968 exit=0
+END process=15688 exit=0
+START weak-300ms-seed701-delta-5m
+START weak-300ms-seed701-full-5m
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=2
+PROGRESS weak-300ms-seed701 running=0
+END process=3548 exit=0
+END process=33576 exit=0
+START entropy-delta-60s
+30 秒：服务器堆=2.97 MiB，客户端及代理堆=106.46 MiB
+60 秒：服务器堆=2.82 MiB，客户端及代理堆=109.09 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=50.08%（单核），每客户端下行=145481 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/entropy-delta-60s.json
+END entropy-delta-60s exit=0
+START boundary-512-600-delta-60s
+30 秒：服务器堆=4.54 MiB，客户端及代理堆=584.90 MiB
+60 秒：服务器堆=4.55 MiB，客户端及代理堆=602.46 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=316.57%（单核），每客户端下行=431747 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/boundary-512-600-delta-60s.json
+END boundary-512-600-delta-60s exit=0
+START entropy-full-60s
+30 秒：服务器堆=3.00 MiB，客户端及代理堆=106.41 MiB
+60 秒：服务器堆=3.03 MiB，客户端及代理堆=109.09 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=58.63%（单核），每客户端下行=145755 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/entropy-full-60s.json
+END entropy-full-60s exit=0
+START boundary-512-600-full-60s
+30 秒：服务器堆=3.57 MiB，客户端及代理堆=651.82 MiB
+60 秒：服务器堆=6.28 MiB，客户端及代理堆=666.29 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=308.63%（单核），每客户端下行=2122915 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/boundary-512-600-full-60s.json
+END boundary-512-600-full-60s exit=0
+START motion-delta-10m
+30 秒：服务器堆=2.94 MiB，客户端及代理堆=98.91 MiB
+60 秒：服务器堆=2.96 MiB，客户端及代理堆=98.91 MiB
+90 秒：服务器堆=2.80 MiB，客户端及代理堆=98.98 MiB
+120 秒：服务器堆=2.96 MiB，客户端及代理堆=98.97 MiB
+150 秒：服务器堆=2.93 MiB，客户端及代理堆=99.01 MiB
+180 秒：服务器堆=3.00 MiB，客户端及代理堆=99.05 MiB
+210 秒：服务器堆=2.90 MiB，客户端及代理堆=99.03 MiB
+240 秒：服务器堆=2.98 MiB，客户端及代理堆=99.00 MiB
+270 秒：服务器堆=2.92 MiB，客户端及代理堆=99.01 MiB
+300 秒：服务器堆=2.95 MiB，客户端及代理堆=99.05 MiB
+330 秒：服务器堆=2.97 MiB，客户端及代理堆=99.06 MiB
+360 秒：服务器堆=3.00 MiB，客户端及代理堆=99.07 MiB
+390 秒：服务器堆=2.97 MiB，客户端及代理堆=99.09 MiB
+420 秒：服务器堆=2.86 MiB，客户端及代理堆=98.89 MiB
+450 秒：服务器堆=2.98 MiB，客户端及代理堆=99.09 MiB
+480 秒：服务器堆=2.88 MiB，客户端及代理堆=99.00 MiB
+510 秒：服务器堆=2.93 MiB，客户端及代理堆=98.99 MiB
+540 秒：服务器堆=2.92 MiB，客户端及代理堆=98.97 MiB
+570 秒：服务器堆=2.95 MiB，客户端及代理堆=98.89 MiB
+600 秒：服务器堆=2.95 MiB，客户端及代理堆=101.20 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=47.55%（单核），每客户端下行=63832 字节/秒，长期内存检查=通过=true，报告=reports/updates/2026-10-10-weaknet/motion-delta-10m.json
+END motion-delta-10m exit=0
+START resume-8x16-delta-60s
+30 秒：服务器堆=20.92 MiB，客户端及代理堆=717.69 MiB
+60 秒：服务器堆=17.75 MiB，客户端及代理堆=737.07 MiB
+完成：通过=true，房间=8，客户端=128，进程处理器占用=590.80%（单核），每客户端下行=63402 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/resume-8x16-delta-60s.json
+END resume-8x16-delta-60s exit=0
+START arena-delta-20s
+21 秒：服务器堆=2.31 MiB，客户端及代理堆=5.36 MiB
+完成：通过=true，房间=1，客户端=16，进程处理器占用=7.14%（单核），每客户端下行=3794 字节/秒，长期内存检查=未执行（需至少十分钟及有效采样），报告=reports/updates/2026-10-10-weaknet/arena-delta-20s.json
+END arena-delta-20s exit=0
+Failed byte pairs: 0; failed formal members: 0

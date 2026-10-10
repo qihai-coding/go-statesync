@@ -1,0 +1,31 @@
+diff --git "a/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\quic-go\\internal\\ackhandler\\sent_packet_handler.go" "b/D:\\main\\github\\go-statesync\\bin\\weaknet-lab/sent_packet_handler-cubic-wide32.go"
+index 9b539ea..2452e85 100644
+--- "a/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\quic-go\\internal\\ackhandler\\sent_packet_handler.go"
++++ "b/D:\\main\\github\\go-statesync\\bin\\weaknet-lab/sent_packet_handler-cubic-wide32.go"
+@@ -20,7 +20,7 @@ const (
+ 	// Specified as an RTT multiplier.
+ 	timeThreshold = 9.0 / 8
+ 	// Maximum reordering in packets before packet threshold loss detection considers a packet lost.
+-	packetThreshold = 3
++	packetThreshold = 32 // LAB ONLY: fixed wider reordering threshold
+ 	// Before validating the client's address, the server won't send more than 3x bytes than it received.
+ 	amplificationFactor = 3
+ 	// We use Retry packets to derive an RTT estimate. Make sure we don't set the RTT to a super low value yet.
+@@ -134,7 +134,7 @@ func NewSentPacketHandler(
+ 		rttStats,
+ 		connStats,
+ 		initialMaxDatagramSize,
+-		true, // use Reno
++		false, // LAB ONLY: use CUBIC
+ 		qlogger,
+ 	)
+ 
+@@ -1136,7 +1136,7 @@ func (h *sentPacketHandler) MigratedPath(now monotime.Time, initialMaxDatagramSi
+ 		h.rttStats,
+ 		h.connStats,
+ 		initialMaxDatagramSize,
+-		true, // use Reno
++		false, // LAB ONLY: use CUBIC
+ 		h.qlogger,
+ 	)
+ 	h.setLossDetectionTimer(now)

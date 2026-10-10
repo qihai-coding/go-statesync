@@ -1,0 +1,12 @@
+{
+  "CheckedAtUTC": "2026-10-10T02:53:29.0933964Z",
+  "SourceFiles": 53,
+  "SourceMismatches": [],
+  "HistoricalFiles": 78,
+  "HistoricalMismatches": [],
+  "FinalBinaryHash": "BBF1341E85F242E004EE85AD4064586B1AD924CF81F490AAD564AB8E86F88617",
+  "FinalBinaryUnchanged": true,
+  "HistoricalCheckHash": "0218939384E2C8C210E8E63FC820F3E292C70E9D13CBAC12C87D27281F4A4C30",
+  "HistoricalCheckMeasuredHash": "AA07D61714258A4DA036B8D77453DE01166CEE32B5F218A9605728C982BB41BB",
+  "HistoricalBinariesUnchanged": true
+}

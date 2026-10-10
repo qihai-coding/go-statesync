@@ -1,0 +1,1 @@
+{"AckOnlyPackets":10000,"AckOnlyRetainedSentTimes":10000,"ActualFirstRTTNanoseconds":11000000,"EntriesAfterFirstAck":0,"EntriesAfterTwoSpacesSent":1,"FindingsConfirmed":true,"MeasuredFirstRTTNanoseconds":10000000,"Scope":"algorithm-only deterministic self-check; no network load","SeparateSpacesSentPacketZero":2}

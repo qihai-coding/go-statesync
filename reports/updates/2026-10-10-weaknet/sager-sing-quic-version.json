@@ -1,0 +1,13 @@
+{
+	"Path": "github.com/sagernet/sing-quic",
+	"Version": "v0.7.2-0.20261002084117-75c3ac4fa12b",
+	"Query": "75c3ac4fa12b4ded2dc01b392ed7d5eaf3ea6876",
+	"Time": "2026-10-02T08:41:17Z",
+	"GoMod": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\mod-cache\\cache\\download\\github.com\\sagernet\\sing-quic\\@v\\v0.7.2-0.20261002084117-75c3ac4fa12b.mod",
+	"GoVersion": "1.25.0",
+	"Origin": {
+		"VCS": "git",
+		"URL": "https://github.com/sagernet/sing-quic",
+		"Hash": "75c3ac4fa12b4ded2dc01b392ed7d5eaf3ea6876"
+	}
+}

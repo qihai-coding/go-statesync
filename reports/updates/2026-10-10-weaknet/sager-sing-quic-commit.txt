@@ -1,0 +1,7 @@
+commit 75c3ac4fa12b4ded2dc01b392ed7d5eaf3ea6876
+Author:     世界 <i@sekai.icu>
+AuthorDate: Fri Oct 2 16:41:17 2026 +0800
+Commit:     世界 <i@sekai.icu>
+CommitDate: Fri Oct 2 16:41:17 2026 +0800
+
+    Fix idle connection close racing with new streams

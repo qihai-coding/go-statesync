@@ -1,0 +1,16 @@
+{
+  "Binary": "D:\\main\\github\\go-statesync\\bin\\check-slowlink-lab.exe",
+  "BinarySHA256": "D58C228624F5910D08A0309DCBCD246D2F35BA8CEBD5A5960755A02A97A4C683",
+  "Source": "D:\\main\\github\\go-statesync\\bin\\_weaknet-slowlink\\main.go",
+  "SourceSHA256": "97637E5070C48705A636FD1768026BC309A88EA28EBAA33AF736AF1043E9CEE5",
+  "Module": "D:\\main\\github\\go-statesync\\bin\\_weaknet-slowlink\\go.mod",
+  "ModuleSHA256": "1CED82AAF4D8E566FA996DA32124850C983AF7D792C2A3DF6D5BC0D87324CD3D",
+  "DurationSeconds": 20,
+  "RTTMilliseconds": 50,
+  "LimitBytesPerSecond": 8192,
+  "QueueLimitBytes": 8192,
+  "ApplicationDatagramBytes": 1000,
+  "Controller": "public standard BBR (congestion_meta2), source unmodified",
+  "GOMODCACHE": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\mod-cache",
+  "GOTMPDIR": "D:\\main\\github\\go-statesync\\bin\\_go-temp"
+}

@@ -1,0 +1,27 @@
+go version go1.26.5 windows/amd64
+bin/check-weaknet.exe: go1.26.5
+	path	github.com/qihai-coding/go-statesync/cmd/check
+	mod	github.com/qihai-coding/go-statesync	v0.2.1+dirty	
+	dep	github.com/andybalholm/brotli	v1.0.6	h1:Yf9fFpf49Zrxb9NlQaluyE92/+X7UVHlhMNJN2sxfOI=
+	dep	github.com/klauspost/compress	v1.17.9	h1:6KIumPrER1LHsvBVuDa0r5xaG0Es51mhhB9BQB2qeMA=
+	dep	github.com/metacubex/utls	v1.8.7	h1:Cp+yWkNTFkSihETgGWq34hlVFds5HpYWVOR1xovUVTs=
+	dep	github.com/sagernet/quic-go	v0.61.0-sing-box-mod.9	h1:Lojx77uC63TxZO38Z1OSo6aOoBSXY+ueH0/IKKeTZuI=
+	dep	golang.org/x/crypto	v0.54.0	h1:YLIA59K4fiNzHzjnZt2tUJQjQtUWfWbeHBqKtk3eScw=
+	dep	golang.org/x/exp	v0.0.0-20250911091902-df9299821621	h1:2id6c1/gto0kaHYyrixvknJ8tUK/Qs5IsmBtrc+FtgU=
+	dep	golang.org/x/sys	v0.47.0	h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=0
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=941d7267df4fd0b9e10d8256754a409f2acf5bbd
+	build	vcs.time=2026-10-09T01:16:25Z
+	build	vcs.modified=true
+
+Algorithm : SHA256
+Hash      : BBF1341E85F242E004EE85AD4064586B1AD924CF81F490AAD564AB8E86F88617
+Path      : D:\main\github\go-statesync\bin\check-weaknet.exe
+
+

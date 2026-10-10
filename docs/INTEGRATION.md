@@ -1,6 +1,6 @@
 # 接入与验证指南
 
-需要 Go（编程语言）1.26 或以上。唯一直接运行依赖是 quic-go（加密网络传输库）0.62.0。Windows（微软桌面操作系统）、Linux（开源操作系统）和 macOS（苹果桌面操作系统）均有对应构建路径；当前使用第 2 版协议，客户端和服务器必须一起升级。第二阶段结果见 [核心加固验收报告](../reports/phase2/VALIDATION.md)，首版历史记录见 [首版报告](../reports/VALIDATION.md)。
+需要 Go（编程语言）1.26 或以上。唯一直接运行依赖是 quic-go（加密网络传输库）0.62.0。Windows（微软桌面操作系统）、Linux（开源操作系统）和 macOS（苹果桌面操作系统）均有对应构建路径；当前开发树使用第 3 版协议，客户端和服务器必须一起升级，见[迁移说明](../MIGRATION.md)。第二阶段结果见 [核心加固验收报告](../reports/phase2/VALIDATION.md)，首版历史记录见 [首版报告](../reports/VALIDATION.md)。
 
 在仓库根目录执行：
 
@@ -45,8 +45,10 @@ go run ./cmd/client -room beta -pickup 1 -duration 5s
 | 每服务器房间 | 64 | 可创建、关闭、重建 |
 | 每房间队列 | 控制 128，输入批次 256 | 固定容量 |
 | 每连接发送队列 | 可靠 64，快照 1 批 | 快照覆盖旧批次，可靠积压断开 |
+| 快照编码 | 无损差量 | 完整模式用于同协议对照 |
+| 每连接每端可靠字典 | 最多 256 个实体 | 状态合计最多 128 KiB（千二进制字节） |
 
-服务器命令行通过 -tick、-snapshots、-players 修改频率和人数，通过 -resume-grace 修改保留时间。库配置使用 Config（配置结构）。客户端从完整状态报文获得逻辑频率，不应自行猜测。
+服务器命令行通过 -tick、-snapshots、-players 修改频率和人数，通过 -resume-grace 修改保留时间，-encoding（快照编码模式）接受 delta（差量）或 full（完整），-datagram-size（数据报上限）指定 600～1000 字节。库配置使用 Config（配置结构）的 SnapshotEncoding（快照编码配置）。客户端从完整状态报文获得逻辑频率，不应自行猜测。
 
 ## 接入自己的游戏
 
@@ -69,7 +71,7 @@ go run ./cmd/client -room beta -pickup 1 -duration 5s
 | Action（离散操作） | 根据连接绑定的玩家判定权限、距离和归属，返回状态变更与结果；失败不得修改状态 |
 | Entities（当前实体） | 返回完整实体列表及显式编码状态 |
 
-创建房间时同步读取一次初始实体，此后的所有方法只在房间所属的执行循环内调用。应保持快速、非阻塞，不在这些方法中访问磁盘或等待网络。游戏返回的切片及字节在交给框架后不得修改；新的状态使用新字节值。核心会把同一份编码结果作为只读数据广播给多个连接。
+创建房间时同步读取一次初始实体，此后的所有方法只在房间所属的执行循环内调用。应保持快速、非阻塞，不在这些方法中访问磁盘或等待网络。游戏返回的切片及字节在交给框架后不得修改；新的状态使用新字节值。各连接共享只读状态字节，运动报文按各连接已确认字典分别编码；实体列表不必由游戏排序。
 
 Entity（实体记录）包含编号、生命周期代数、拥有者、是否持续发送快照、已确认输入编号和游戏状态字节。拥有者为 0 表示非玩家受控实体。每个客户端对应一个用于本地预测的动态实体。实体生成或删除必须通过 Change（状态变更）声明；回收实体编号时增加生命周期代数。
 
@@ -82,6 +84,8 @@ Entity（实体记录）包含编号、生命周期代数、拥有者、是否�
 | SubmitInput（提交输入） | 立即预测一小步，并发送最近三条输入 |
 | Authoritative（权威视图） | 返回最近收到的逻辑状态副本，适合检查一致性 |
 | Sample（显示采样） | 本地角色返回预测状态；其他角色返回延迟插值状态 |
+| SampleWithInfo（带来源信息采样） | 同时返回该显示状态的真实来源时间、最新状态时间、保持和预测标记 |
+| Stats（客户端统计） | 实际运动记录更新、完整状态、可靠变更次数及当前字典占用 |
 | Action（离散操作） | 使用调用方递增的请求编号；同会话最近一次操作可跨连接原样重试 |
 | Resync（重新同步） | 清除预测歧义并请求完整状态；最多每秒一次，过快返回 ErrBusy（繁忙错误） |
 | DialResume（续接） | 凭有效凭证获取新客户端对象，立即接管旧连接 |
@@ -95,7 +99,7 @@ Entity（实体记录）包含编号、生命周期代数、拥有者、是否�
 ## 同步行为
 
 - 加入时先可靠发送完整状态。只有可靠生命周期事件可以生成实体。
-- 每个运动快照是独立的完整实体状态；按完整实体拆包，不等待整帧所有分包。
+- 每条运动记录独立引用已确认的可靠基线，不依赖上一包；按完整记录预算拆包，不等待整帧所有分包。
 - 全局状态版本必须与客户端一致，实体代数必须匹配，运动帧号必须更新，快照才会应用。
 - 每个玩家每个服务端逻辑步最多执行一条移动输入；丢失输入被较新输入越过后视为跳过，不补跑额外模拟时间。
 - 没有输入时，示例角色保持位置。游戏仍会按固定步长推进。
@@ -114,6 +118,8 @@ go test -run '^$' -fuzz '^FuzzDecode$' -fuzztime 15s -parallel 2
 go test -run '^$' -fuzz '^FuzzReadFrame$' -fuzztime 15s -parallel 2
 go test -run '^$' -fuzz '^FuzzLifecyclePreflight$' -fuzztime 15s -parallel 2
 go test -run '^$' -fuzz '^FuzzFullStateResync$' -fuzztime 15s -parallel 2
+go test -run '^$' -fuzz '^FuzzSnapshotAck$' -fuzztime 15s -parallel 2
+go test -run '^$' -fuzz '^FuzzDelta$' -fuzztime 15s -parallel 2
 go test -run '^$' -bench . -benchmem -count 3
 go test -race ./... -count=1
 ~~~
@@ -128,10 +134,10 @@ go test -race ./... -count=1
 
 本次验证使用校验过下载摘要的便携编译器，没有修改系统环境变量。
 
-10 分钟稳定性和资源测试：
+演示负载的八房间续接与资源测试：
 
 ~~~powershell
-go run ./cmd/check -duration 10m -rooms 8 -clients 16 -resume-every 30s -report reports/local/soak-8x16-10m.json
+go run ./cmd/check -isolate -duration 10m -rooms 8 -clients 16 -resume-every 30s -report reports/local/soak-8x16-10m.json
 ~~~
 
 16 人弱网验证：
@@ -144,6 +150,16 @@ go run ./cmd/check -duration 20s -clients 16 -resume-every 3s -rtt 300ms -jitter
 
 弱网代理直接干扰加密 UDP（用户数据报协议）报文，覆盖握手、重传、丢包、重复与乱序。队列和调度缓冲都有容量上限；使用固定随机种子，但操作系统调度仍会影响具体丢包序列。
 
+差量标准负载使用 16 人、256 个动态实体和每实体 32 字节稀疏运动状态。原 arena（二维演示）继续使用 13 字节状态，不为压缩指标增加填充。两模式的实体分组、逻辑和快照频率相同：
+
+~~~powershell
+go run ./cmd/check -isolate -workload motion -encoding delta -entities 256 -state-bytes 32 -clients 16 -duration 60s -report reports/local/motion-delta.json
+go run ./cmd/check -isolate -workload motion -encoding full -entities 256 -state-bytes 32 -clients 16 -duration 60s -report reports/local/motion-full.json
+go run ./cmd/check -isolate -workload motion -encoding delta -clients 16 -duration 5m -rtt 300ms -jitter 30ms -loss 0.05 -duplicate 0.02 -reorder 0.02 -seed 7 -report reports/local/weak-delta.json
+~~~
+
+弱网对照分别使用 150／300 毫秒、种子 7／701，完整与差量每组五分钟；正常网络两模式各六十秒。稀疏负载各组总应用字节下降至少 50%，每个远端实体显示年龄第 95 百分位不超过一秒；解除弱网起一秒内权威、预测及远端显示收敛，且恢复期间没有可靠状态纠正。-workload entropy（高熵负载）的两模式对照仅要求差量流量增幅不超过 5%。另用 -state-bytes 512（最大状态长度）和 -datagram-size 600（最小数据报预算）运行边界组，标准负载运行十分钟检查资源。
+
 ### 指标含义
 
 - 房间单步耗时包含游戏更新、快照编码和消息入队，目标第 99 百分位小于 10 毫秒。
@@ -152,15 +168,15 @@ go run ./cmd/check -duration 20s -clients 16 -resume-every 3s -rtt 300ms -jitter
 - 带宽统计为应用层负载，未包含加密、传输头、确认和重传开销。
 - 内存每 30 秒主动回收后采样。长测以第 60 秒为基线，末次堆大小允许基线的 25% 加 4 MiB（兆二进制字节）余量；协程数允许每房间增加 16。
 - 短测用于功能和收敛验证。新报告以 MemoryChecked（是否执行长期内存检查）标记证据范围；不足 10 分钟或缺少有效采样时为假，MemoryBounded（内存与协程增长是否受限）也为假，不能据此认定内存失败或通过。只有前者为真时，后者才有检查结果含义。
-- Passed（本次运行通过）对短测汇总功能、连接及单步预算；对至少 10 分钟的运行还要求完成并通过内存检查。旧报告没有 MemoryChecked（是否执行长期内存检查）字段，短测中的内存通过标志不代表长期检查已执行；旧报告原样保留。
-- 测试最后恢复正常网络并继续发送零移动输入，等待一秒后比较所有实体状态及本地预测值。
-- 插值输出有意晚于权威状态；一致性检查使用 Authoritative（权威视图）。
+- Passed（本次运行通过）汇总对应负载的功能、连接、单步、时效和恢复门槛；至少十分钟的运行还要求通过内存检查。压缩率由同条件两份报告比较，不是单次运行的通过标志。
+- 演示负载沿用一秒等待后观察；标准负载解除弱网后通过小操作冻结模拟，操作耗时计入一秒预算，每二十毫秒检查权威状态、本地预测及远端插值显示，禁止借可靠实体变更或完整重新同步完成恢复。
+- 显示年龄对应逐实体实际返回的采样来源，不使用全局最新包时间代替，保持旧状态也计入年龄。前五秒预热，之后采用十毫秒桶的保守上界；跨进程时钟校准误差记入报告。
 
 ## 已知范围
 
 这是房间同步核心和可运行示例。玩家身份为服务器分配的会话编号，房间默认开放加入。断线续接只在当前进程内有效；真实账号认证、持久化、匹配、跨服务器调度和游戏引擎适配由接入应用提供。
 
-首版采用完整运动快照和显式离散事件。差量压缩和可见范围筛选应根据实际带宽或处理耗时再加入。
+本版加入已确认可靠字典上的差量快照，显式离散事件和受控角色限制不变。可见范围筛选尚未加入。
 
 ## 设计参考
 

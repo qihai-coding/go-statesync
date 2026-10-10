@@ -1,0 +1,14 @@
+{
+  "Experiment": "standalone nonformal BBR low-bandwidth self-check v2",
+  "BuiltUTC": "2026-10-10T01:49:52.8212919Z",
+  "Binary": "bin/check-slowlink-lab-v2.exe",
+  "BinarySHA256": "57E2EF7C03D62E0564400DABBA9FCE525B5802009AD06A094AA8DEDC88E5A43A",
+  "Source": "bin/_weaknet-slowlink/main.go",
+  "SourceSHA256": "136E63B791CE99853C0779B74691EB5F2F6B72EEB67AAECD3B1FC2A77F811A34",
+  "TestSourceSHA256": "5A125701D8C0D87E365521417FAE1ADB245A39547CF62C7FDF388C067C12CF71",
+  "ModuleSHA256": "1CED82AAF4D8E566FA996DA32124850C983AF7D792C2A3DF6D5BC0D87324CD3D",
+  "ModuleCache": "bin/weaknet-sager-bbr-lab/mod-cache",
+  "GOTMPDIR": "bin/_go-temp",
+  "Command": "go test .; go build -o ../check-slowlink-lab-v2.exe .",
+  "FrozenSource": "reports/updates/2026-10-10-weaknet/slowlink-v2-main.go.txt"
+}

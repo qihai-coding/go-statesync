@@ -1,0 +1,57 @@
+{
+  "Commits": {
+    "quic-go": "16930172ee48b008726849cc79ec576d5fa2bbc3",
+    "sing-quic": "75c3ac4fa12b4ded2dc01b392ed7d5eaf3ea6876"
+  },
+  "Versions": {
+    "QuicGo": "v0.61.0-sing-box-mod.9",
+    "SingQuic": "v0.7.2-0.20261002084117-75c3ac4fa12b"
+  },
+  "DirectModulePaths": [
+    "github.com/sagernet/quic-go",
+    "github.com/sagernet/sing-quic"
+  ],
+  "Replaces": [],
+  "CongestionPackage": "github.com/sagernet/sing-quic/congestion_meta2",
+  "Profile": "ProfileStandard",
+  "BuildCommand": "go build -mod=mod -modfile bin/weaknet-sager-bbr-lab/lab.mod -overlay bin/weaknet-sager-bbr-lab/overlay.json -o bin/check-sager-bbr-lab.exe ./cmd/check",
+  "BuildExitCode": 0,
+  "Binary": "D:\\main\\github\\go-statesync\\bin\\check-sager-bbr-lab.exe",
+  "BinarySHA256": "0C8B4A5B6B63ABF4C445E579589118F05F9BCC4D9D55B6708482CABEDBCF31CE",
+  "OverlaySHA256": "E1F73E50BC235E37706E8C49850AED2D93243328E3EB7CC6BEF7A393EDD5F910",
+  "ModFileSHA256": "DA0BA347B226C2F1015E9EBA6409066AA6DC654AA2859B0290390F7F624477AC",
+  "SourceHashes": {
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\server.go": "E435D8AC824C524C1FB9218664AFFE9F53BB266BD05474A9621DFD47D64EEDC6",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\transport_send.go": "9FE5BDA6185EBE84E22F1A4C4FCD743F213A8F98A8B7A41DD9C226E0C07ED381",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\client_baseline_test.go": "1D4CC7F42CB97B07796866B019983EE85A296269D0721B96188038ED101C86D0",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\client.go": "708DFA1E66235ADB747435D1CA8F518D15868FF99A79807F668716B95CD59EAB",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\hardening_test.go": "2EB10E20D02E14C9787DD639BE1A0D0BB4C6CD6251648E0B0A3BE0C595F7C82E",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\client_lifecycle_test.go": "4AE0A28FD0416C643D0613316599DEC6ECB0F8DDC13F2F96FE551C2F16D0849E",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\transport_send_test.go": "5887C64D8E0673D5E15B581960C9B822BC0C57E908B326F934A176F426A0B1FA",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\v3_integration_test.go": "21CF83386F1BC0F2A1CC73626FB337E1A57AD79C265325D0B18AA59F3A102018",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\resume_test.go": "4E6E749802211369BD34C2105A314111383E6C4FC74FE2F27DA8D16BBF2D5BE4",
+    "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\sources\\.\\integration_test.go": "248E0616883B11B466E69DE58C5AF4A423337CC8060068FDE3BC00927AF9E70F"
+  },
+  "OriginalSourceHashes": {
+    "D:\\main\\github\\go-statesync\\integration_test.go": "377BB7D4A1DE07770B02042BF88E8033DBF12BA6B9E59470E40A91FF6684C4CA",
+    "D:\\main\\github\\go-statesync\\transport_send_test.go": "0E9B91A9A515572CF1FC8D16CDB1274E20480ACC698948E0EDEE2E93080DC8AE",
+    "D:\\main\\github\\go-statesync\\client_lifecycle_test.go": "FC97AFFB6BBEEEC1E09CCA90DC22B479E9F207C1D8D2B2037CF0DFDFAAA0CC55",
+    "D:\\main\\github\\go-statesync\\go.mod": "0D16AF7240AD9A8E33EC06118826587267D6C4E41EA84FCC667680DD04D72EA1",
+    "D:\\main\\github\\go-statesync\\transport_send.go": "BCC6AE89E658B1D63686457C0A6207847DE8C2FB3B4A83E04AED5EBE283AF8F0",
+    "D:\\main\\github\\go-statesync\\client_baseline_test.go": "844EE42C174FD0040A9EF9BFBDB5748ECFCA580C72F13EFDFB37AB92B0B79233",
+    "D:/Go/Cache/mod/github.com/quic-go/quic-go@v0.62.0/internal/ackhandler/sent_packet_handler.go": "7B7A772F3900A0E61405E4F8D01AF7E10DA03AFBAF947150A0DCEF619746924D",
+    "D:\\main\\github\\go-statesync\\client.go": "FDE4828360212AB2896A6BBCD1E6B02E60F7F747A16BE73396B823293BF54C5F",
+    "D:\\main\\github\\go-statesync\\server.go": "984CF91E6F777BC1C1F865D7EA98EC94DB3E2EE9289E3185B47BE7462CB59774",
+    "D:\\main\\github\\go-statesync\\hardening_test.go": "3F1C023D164BAA72E506F065F2C1EC2C47E3D0B709481619D6ECADF96991C53D",
+    "D:\\main\\github\\go-statesync\\go.sum": "CB2D3495681AC245D43D257F932C41204D669F1F759524E8AE2A8A735CCA441A",
+    "D:\\main\\github\\go-statesync\\v3_integration_test.go": "B8786127AC814C8024DD3544EDE2B0073D6C8D951875285C30FD98B69B4B1DB9",
+    "D:\\main\\github\\go-statesync\\resume_test.go": "F6176844F3889F985AB2951FA658EC7DEA27B47B433E320D5A7EE343D916BF3F"
+  },
+  "ChangedOriginalFiles": [],
+  "GoEnvironment": {
+    "GOCACHE": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\build-cache",
+    "GOTMPDIR": "D:\\main\\github\\go-statesync\\bin\\_go-temp",
+    "GOMODCACHE": "D:\\main\\github\\go-statesync\\bin\\weaknet-sager-bbr-lab\\mod-cache"
+  },
+  "LoadExecuted": false
+}

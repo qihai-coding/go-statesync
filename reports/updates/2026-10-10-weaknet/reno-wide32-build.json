@@ -1,0 +1,13 @@
+{
+  "Variant": "reno-wide32",
+  "Binary": "D:\\main\\github\\go-statesync\\bin\\check-reno-wide32-lab.exe",
+  "SHA256": "6CC166E8A3E179B7350BDD9ECAF5256EA2F15D344475B04FF576590ADEC11168",
+  "Overlay": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\reno-wide32-overlay.json",
+  "OverlaySHA256": "41107F0AE40E1F0FB9A7FD2EB948B1474507F580AA26A863222338C69C04AABC",
+  "ModFile": "D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\lab.mod",
+  "DiagnosticSourceSHA256": "CBB86E542EEA3540599C8A65C246A484081F7CC52283EACB9F2F8DBB189C95FD",
+  "HandlerOverlaySHA256": "930770A596A3AEAD4847AD20AFD4B02F576152C63FA0500749C85D1CB6493D2E",
+  "Algorithm": "Reno (both original true selections unchanged)",
+  "PacketThreshold": 32,
+  "TimeThreshold": "9/8 (unchanged)"
+}

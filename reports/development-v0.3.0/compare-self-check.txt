@@ -1,0 +1,1 @@
+Comparison self-check PASS: normal and entropy pass; all four weak byte pairs fail.

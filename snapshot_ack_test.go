@@ -20,10 +20,12 @@ func checkSnapshotAck(t *testing.T, tick, ack uint64, value byte) {
 	anchor, anchorAt := c.anchor, c.anchorAt
 	e := c.entities[c.local].entity
 	e.Ack, e.State = ack, []byte{value}
-	packets, err := snapshotPackets(tick, c.revision, []Entity{e}, 1000)
+	// Keep source time valid while fuzzing the entire tick number space.
+	packets, err := snapshotPackets(30, c.revision, []Entity{e}, 1000)
 	if err != nil {
 		t.Fatal(err)
 	}
+	le.PutUint64(packets[0][2:10], tick)
 	err = c.applySnapshot(packets[0])
 	invalid := tick > 10 && (ack < 2 || ack > 5)
 	if invalid != errors.Is(err, ErrProtocol) || !invalid && err != nil {

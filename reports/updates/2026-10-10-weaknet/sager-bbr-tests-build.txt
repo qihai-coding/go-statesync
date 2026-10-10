@@ -1,0 +1,1 @@
+go test -c -modfile bin/weaknet-sager-bbr-lab/lab.mod -overlay bin/weaknet-sager-bbr-lab/overlay.json -o bin/sager-bbr-lab-tests.test.exe .

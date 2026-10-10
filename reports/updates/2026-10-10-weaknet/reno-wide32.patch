@@ -1,0 +1,13 @@
+diff --git "a/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\quic-go\\internal\\ackhandler\\sent_packet_handler.go" "b/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\sent_packet_handler-reno-wide32.go"
+index 9b539ea..ccf1ea6 100644
+--- "a/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\quic-go\\internal\\ackhandler\\sent_packet_handler.go"
++++ "b/D:\\main\\github\\go-statesync\\bin\\weaknet-lab\\sent_packet_handler-reno-wide32.go"
+@@ -20,7 +20,7 @@ const (
+ 	// Specified as an RTT multiplier.
+ 	timeThreshold = 9.0 / 8
+ 	// Maximum reordering in packets before packet threshold loss detection considers a packet lost.
+-	packetThreshold = 3
++	packetThreshold = 32 // LAB ONLY: Reno unchanged; fixed wider reordering threshold
+ 	// Before validating the client's address, the server won't send more than 3x bytes than it received.
+ 	amplificationFactor = 3
+ 	// We use Retry packets to derive an RTT estimate. Make sure we don't set the RTT to a super low value yet.

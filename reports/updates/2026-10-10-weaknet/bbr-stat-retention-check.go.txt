@@ -1,0 +1,49 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"reflect"
+
+	"github.com/quic-go/quic-go"
+)
+
+func main() {
+	sender := quic.NewBBRv1(&quic.Config{})
+	now := quic.NewTime()
+	sent := reflect.ValueOf(sender).MethodByName("OnPacketSent")
+	packetType := sent.Type().In(2)
+	for i := 0; i < 10000; i++ {
+		sent.Call([]reflect.Value{
+			reflect.ValueOf(now), reflect.ValueOf(quic.ByteCount(0)),
+			reflect.ValueOf(i).Convert(packetType), reflect.ValueOf(quic.ByteCount(80)), reflect.ValueOf(false),
+		})
+	}
+	entries := reflect.ValueOf(sender).Elem().FieldByName("sentTimes").Len()
+	if entries != 10000 {
+		panic(fmt.Sprintf("ACK-only retention changed: got %d entries", entries))
+	}
+	spaces := quic.NewBBRv1(&quic.Config{})
+	spaces.OnPacketSent(now, 100, 0, 100, true)
+	spaces.OnPacketSent(now+1_000_000, 200, 0, 100, true)
+	afterSent := reflect.ValueOf(spaces).Elem().FieldByName("sentTimes").Len()
+	spaces.OnPacketAcked(0, 100, 200, now+11_000_000)
+	afterFirstAck := reflect.ValueOf(spaces).Elem().FieldByName("sentTimes").Len()
+	minRTT := reflect.ValueOf(spaces).Elem().FieldByName("lastNewMinRTT").Int()
+	spaces.OnPacketAcked(0, 100, 100, now+21_000_000)
+	if afterSent != 1 || afterFirstAck != 0 || minRTT != 10_000_000 {
+		panic("packet number space collision behavior changed")
+	}
+	json.NewEncoder(os.Stdout).Encode(map[string]any{
+		"Scope":                        "algorithm-only deterministic self-check; no network load",
+		"AckOnlyPackets":               10000,
+		"AckOnlyRetainedSentTimes":     entries,
+		"SeparateSpacesSentPacketZero": 2,
+		"EntriesAfterTwoSpacesSent":    afterSent,
+		"EntriesAfterFirstAck":         afterFirstAck,
+		"MeasuredFirstRTTNanoseconds":  minRTT,
+		"ActualFirstRTTNanoseconds":    11_000_000,
+		"FindingsConfirmed":            true,
+	})
+}

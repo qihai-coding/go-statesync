@@ -1,0 +1,20 @@
+{
+  "Experiment": "standalone nonformal final MIT/BSD BBR low-bandwidth self-check",
+  "BuiltUTC": "2026-10-10T02:08:04.9658927Z",
+  "Binary": "bin/check-slowlink-mit-lab.exe",
+  "BinarySHA256": "02C20CCB5BD784E955023C410054DEE28A87CD27390FCA0C294F43C78A7D3F2A",
+  "Source": "bin/_weaknet-slowlink/main.go",
+  "SourceSHA256": "8138CFD439403B6ADA0CD2F96BB1883D17548CD11A753BF2A3BC3BD9A88F3EEC",
+  "TestSourceSHA256": "5A125701D8C0D87E365521417FAE1ADB245A39547CF62C7FDF388C067C12CF71",
+  "ModuleSHA256": "74605EFD3DC48AAAB72508399B8295F450756E87E05ECF3E61BE18CFB5BF9AD3",
+  "ModuleCache": "bin/weaknet-sager-bbr-lab/mod-cache",
+  "GOTMPDIR": "bin/_go-temp",
+  "Command": "go mod tidy; go test .; go build -o ../check-slowlink-mit-lab.exe .",
+  "OnlyReplace": "github.com/qihai-coding/go-statesync => ../..",
+  "Controller": "internal/bbr (Hysteria ca8fbd874fd6ca82413948de6dc5924405e103e1 MIT + Google QUICHE BSD)",
+  "ControllerSenderSHA256": "DF2F92C74C60B01BBB22020B1C300A88BE69D799A0890A6E1D770D2DAB3A64FE",
+  "RootManifest": "reports/updates/2026-10-10-weaknet/slowlink-mit-rootgo-manifest.json",
+  "RootManifestSHA256": "4BBE322C19853A8BA09BC19C478EBDA72ACE1BAF79657B765F8DB472BB4754CE",
+  "RootManifestIncludes": "go.mod + go.sum + 51 project .go files, including 8 controller production files and tests",
+  "FrozenSource": "reports/updates/2026-10-10-weaknet/slowlink-mit-main.go.txt"
+}

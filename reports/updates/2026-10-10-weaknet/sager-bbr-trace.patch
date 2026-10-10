@@ -1,0 +1,17 @@
+diff --git a/bin/weaknet-lab/transport_send.go b/bin/weaknet-sager-bbr-lab/sources/transport_send.go
+index 6fcb5a5..ab36206 100644
+--- a/bin/weaknet-lab/transport_send.go
++++ b/bin/weaknet-sager-bbr-lab/sources/transport_send.go
+@@ -8,9 +8,9 @@ import (
+ 	"sync"
+ 	"time"
+ 
+-	"github.com/quic-go/quic-go"
+-	"github.com/quic-go/quic-go/qlog"
+-	"github.com/quic-go/quic-go/qlogwriter"
++	"github.com/sagernet/quic-go"
++	"github.com/sagernet/quic-go/qlog"
++	"github.com/sagernet/quic-go/qlogwriter"
+ )
+ 
+ func serverTransportConfig() *quic.Config {

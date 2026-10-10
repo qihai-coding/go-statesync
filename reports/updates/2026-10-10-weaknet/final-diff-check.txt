@@ -1,0 +1,3 @@
+COMMAND: git diff --check (before matrix)
+EXIT: 0
+OUTPUT: none; successful command recorded after freeze.

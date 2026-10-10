@@ -46,14 +46,17 @@ type Room struct {
 	snapshotAccumulator                                     int
 	histogram                                               [1001]uint64
 	totalStep, maxStep                                      time.Duration
+	started                                                 time.Duration
 	inputDrops, snapshotDrops, reliableBytes, datagramBytes atomic.Uint64
+	deltaBytes, fullRecordBytes, deltaRecords, fullRecords  atomic.Uint64
+	expectedEntityUpdates, sentEntityUpdates                atomic.Uint64
 	cleanupErr                                              atomic.Pointer[error]
 }
 
 // Construction only allocates room-owned state; initialization runs in start.
 func newRoom(parent context.Context, cfg Config, game Game) *Room {
 	ctx, cancel := context.WithCancelCause(parent)
-	return &Room{cfg: cfg, game: game, ctx: ctx, cancel: cancel, done: make(chan struct{}),
+	return &Room{cfg: cfg, game: game, ctx: ctx, cancel: cancel, done: make(chan struct{}), started: measure.Now(),
 		commands: make(chan roomCommand, 128), inputs: make(chan inputBatch, 256),
 		players: make(map[uint32]*player), entities: make(map[uint32]Entity)}
 }
@@ -329,12 +332,22 @@ func (r *Room) step() error {
 		if err != nil {
 			return err
 		}
-		packets, err := snapshotPackets(r.tick, r.revision, entities, r.cfg.DatagramSize)
+		groups, err := snapshotGroups(entities, r.cfg.DatagramSize)
 		if err != nil {
 			return err
 		}
+		view := View{Tick: r.tick, Revision: r.revision, ServerTime: measure.Now() - r.started}
 		for _, p := range r.players {
 			if p.peer != nil && p.peer.active() {
+				packets, stats, err := p.peer.rep.build(view, groups, r.cfg.SnapshotEncoding)
+				if err != nil {
+					return err
+				}
+				r.deltaBytes.Add(stats.deltaBytes)
+				r.fullRecordBytes.Add(stats.fullBytes)
+				r.deltaRecords.Add(stats.deltaRecords)
+				r.fullRecords.Add(stats.fullRecords)
+				r.expectedEntityUpdates.Add(stats.deltaRecords + stats.fullRecords)
 				p.peer.offer(packets)
 			}
 		}
@@ -419,7 +432,7 @@ func (r *Room) apply(changes []Change, exclude *peer) error {
 	if r.revision == ^uint64(0) {
 		return errors.New("revision exhausted")
 	}
-	b := encodeChanges(r.tick, r.revision+1, wire)
+	b := encodeChanges(r.tick, r.revision+1, measure.Now()-r.started, wire)
 	if len(b) > MaxFrame {
 		return errors.New("change batch exceeds frame limit")
 	}
@@ -428,7 +441,11 @@ func (r *Room) apply(changes []Change, exclude *peer) error {
 	r.revision++
 	for _, p := range r.players {
 		if p.peer != nil && p.peer != exclude && p.peer.active() {
-			p.peer.send(b)
+			if p.peer.send(b) {
+				if err := p.peer.rep.installChanges(wire, r.revision); err != nil {
+					return err
+				}
+			}
 		}
 	}
 	return nil
@@ -438,7 +455,12 @@ func (r *Room) full(p *player) error {
 	if err != nil {
 		return err
 	}
-	p.peer.send(encodeFull(View{Tick: r.tick, Revision: r.revision, Player: p.peer.id, Entities: es}, r.cfg, sessionState{p.token, p.lastAction}))
+	v := View{Tick: r.tick, Revision: r.revision, Player: p.peer.id, Entities: es, ServerTime: measure.Now() - r.started}
+	epoch, err := p.peer.rep.installFull(v)
+	if err != nil {
+		return err
+	}
+	p.peer.send(encodeFull(v, r.cfg, sessionState{token: p.token, lastAction: p.lastAction, epoch: epoch}))
 	return nil
 }
 func actionResult(id uint64, ok bool, data []byte) []byte {
@@ -465,7 +487,10 @@ func (r *Room) handle(c roomCommand) error {
 			es[i] = cloneEntity(es[i])
 		}
 		m := Metrics{Ticks: r.tick, StepTotal: r.totalStep, StepMax: r.maxStep, InputQueue: len(r.inputs), ControlQueue: len(r.commands),
-			InputDrops: r.inputDrops.Load(), SnapshotDrops: r.snapshotDrops.Load(), ReliableBytes: r.reliableBytes.Load(), DatagramBytes: r.datagramBytes.Load()}
+			InputDrops: r.inputDrops.Load(), SnapshotDrops: r.snapshotDrops.Load(), ReliableBytes: r.reliableBytes.Load(), DatagramBytes: r.datagramBytes.Load(),
+			DeltaBytes: r.deltaBytes.Load(), FullRecordBytes: r.fullRecordBytes.Load(), DeltaRecords: r.deltaRecords.Load(), FullRecords: r.fullRecords.Load(),
+			ExpectedEntityUpdates: r.expectedEntityUpdates.Load(), SentEntityUpdates: r.sentEntityUpdates.Load()}
+		m.SnapshotRecords = m.DeltaRecords + m.FullRecords
 		target := (r.tick*99 + 99) / 100
 		sum := uint64(0)
 		for i, v := range r.histogram {
@@ -483,8 +508,10 @@ func (r *Room) handle(c roomCommand) error {
 			m.Players++
 			m.ReliableQueued += len(p.peer.reliable)
 			m.SnapshotQueued += len(p.peer.snapshots)
+			m.BaselineEntities += len(p.peer.rep.bases)
+			m.BaselineBytes += p.peer.rep.baselineBytes()
 		}
-		c.inspect <- inspectResult{View{Tick: r.tick, Revision: r.revision, Entities: es}, m}
+		c.inspect <- inspectResult{View{Tick: r.tick, Revision: r.revision, Entities: es, ServerTime: measure.Now() - r.started}, m}
 		return nil
 	}
 	if !c.peer.active() {
@@ -556,6 +583,11 @@ func (r *Room) handle(c roomCommand) error {
 		return nil
 	}
 	switch c.kind {
+	case msgBaselineAck:
+		epoch, revision, available, err := decodeBaselineAck(c.data)
+		if err != nil || p.peer.rep.acknowledge(epoch, revision, available) != nil {
+			p.peer.kick(closeProtocol, "invalid baseline acknowledgement")
+		}
 	case msgAction:
 		d := decode(c.data, msgAction)
 		op := d.u64()

@@ -11,14 +11,14 @@ import (
 
 func TestProtocolGoldenAndBounds(t *testing.T) {
 	b := encodeInputs([]Input{{Sequence: 1, Data: []byte{0x7f}}})
-	if hex.EncodeToString(b) != "020701010000000000000001007f" {
+	if hex.EncodeToString(b) != "030701010000000000000001007f" {
 		t.Fatalf("wire format changed: %x", b)
 	}
 	in, err := decodeInputs(b)
 	if err != nil || len(in) != 1 || in[0].Sequence != 1 || in[0].Data[0] != 0x7f {
 		t.Fatal(in, err)
 	}
-	for _, bad := range [][]byte{nil, {2}, {1, 7, 1}, append(append([]byte(nil), b...), 0), {2, 7, 0}, {2, 7, 4}} {
+	for _, bad := range [][]byte{nil, {ProtocolVersion}, {2, 7, 1}, append(append([]byte(nil), b...), 0), {ProtocolVersion, 7, 0}, {ProtocolVersion, 7, 4}} {
 		if _, err := decodeInputs(bad); err == nil {
 			t.Fatalf("accepted %x", bad)
 		}
@@ -69,22 +69,38 @@ func TestSessionWireLayout(t *testing.T) {
 	if err := writeFrame(&framed, join); err != nil {
 		t.Fatal(err)
 	}
-	want := "2900000002010500616c706861" + "0000000000000000000000000000000000000000000000000000000000000000"
+	want := "2900000003010500616c706861" + "0000000000000000000000000000000000000000000000000000000000000000"
 	if hex.EncodeToString(framed.Bytes()) != want {
 		t.Fatalf("join layout changed: %x", framed.Bytes())
 	}
 	cfg := DefaultConfig()
-	session := sessionState{token: ResumeToken{1, 2, 3}, lastAction: 42}
-	v := View{Tick: 7, Revision: 8, Player: 9}
+	session := sessionState{token: ResumeToken{1, 2, 3}, lastAction: 42, epoch: 11}
+	v := View{Tick: 7, Revision: 8, ServerTime: 123 * time.Millisecond, Player: 9}
 	b := encodeFull(v, cfg, session)
-	if len(b) != 76 || le.Uint64(b[26:34]) != uint64(time.Minute) ||
-		!bytes.Equal(b[34:66], session.token[:]) || le.Uint64(b[66:74]) != 42 {
+	if len(b) != 93 || le.Uint64(b[18:26]) != uint64(v.ServerTime) || le.Uint64(b[26:34]) != session.epoch ||
+		b[42] != byte(DeltaSnapshots) || le.Uint64(b[43:51]) != uint64(time.Minute) ||
+		!bytes.Equal(b[51:83], session.token[:]) || le.Uint64(b[83:91]) != 42 {
 		t.Fatalf("full state session layout changed: %x", b)
 	}
 	got, decoded, meta, err := decodeFull(b)
-	if err != nil || got.Player != v.Player || got.Tick != v.Tick ||
+	if err != nil || got.Player != v.Player || got.Tick != v.Tick || got.ServerTime != v.ServerTime ||
 		decoded.ResumeGracePeriod != time.Minute || meta != session {
 		t.Fatal("session round trip failed", err)
+	}
+}
+
+func TestProtocolRejectsVersionTwo(t *testing.T) {
+	b := encodeInputs([]Input{{Sequence: 1, Data: []byte{0}}})
+	b[0] = 2
+	if _, err := decodeInputs(b); err != ErrProtocol {
+		t.Fatal("version two datagram accepted", err)
+	}
+	var framed bytes.Buffer
+	if err := writeFrame(&framed, b); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := readFrame(&framed, MaxFrame); err != ErrProtocol {
+		t.Fatal("version two reliable frame accepted", err)
 	}
 }
 
@@ -118,6 +134,16 @@ func TestIndependentSnapshotChunks(t *testing.T) {
 	if _, err := snapshotPackets(1, 1, []Entity{{ID: 1, Generation: 1, Dynamic: true, State: make([]byte, 513)}}, 1000); err == nil {
 		t.Fatal("large state accepted")
 	}
+	boundary := Entity{ID: ^uint32(0), Generation: ^uint32(0), Dynamic: true, Ack: ^uint64(0), State: make([]byte, MaxState)}
+	packets, err = snapshotPackets(1, 1, []Entity{boundary}, 600)
+	if err != nil || len(packets) != 1 || len(packets[0]) > 600 {
+		t.Fatal("maximum state did not fit minimum datagram", err)
+	}
+	_, _, decoded, err := decodeSnapshot(packets[0])
+	if err != nil || len(decoded) != 1 || decoded[0].ID != boundary.ID || decoded[0].Generation != boundary.Generation ||
+		decoded[0].Ack != boundary.Ack || !bytes.Equal(decoded[0].State, boundary.State) {
+		t.Fatal("boundary record did not round trip", err)
+	}
 }
 
 type byteModel struct{}
@@ -140,9 +166,9 @@ func (byteModel) Interpolate(a, b []byte, f float32) []byte {
 }
 func testClient(t *testing.T) *Client {
 	t.Helper()
-	c := &Client{model: byteModel{}, buffer: 200 * time.Millisecond}
+	c := &Client{model: byteModel{}, buffer: 200 * time.Millisecond, reliable: make(chan []byte, 64)}
 	es := []Entity{{ID: 1, Generation: 1, Owner: 1, Dynamic: true, State: []byte{0}}, {ID: 2, Generation: 1, Owner: 2, Dynamic: true, State: []byte{0}}}
-	if err := c.applyFull(encodeFull(View{Player: 1, Revision: 1, Entities: es}, DefaultConfig(), sessionState{})); err != nil {
+	if err := c.applyFull(encodeFull(View{Player: 1, Revision: 1, Entities: es}, DefaultConfig(), sessionState{epoch: 1})); err != nil {
 		t.Fatal(err)
 	}
 	return c
@@ -152,14 +178,14 @@ func TestReconciliationAndLifecycle(t *testing.T) {
 	c.sequence = 2
 	c.history = []Input{{1, []byte{1}}, {2, []byte{2}}}
 	e := Entity{ID: 1, Generation: 1, Owner: 1, Dynamic: true, Ack: 1, State: []byte{5}}
-	if err := c.update(e, 2, false); err != nil {
+	if err := c.update(e, 2, 2*time.Second/30, false); err != nil {
 		t.Fatal(err)
 	}
 	if c.predicted[0] != 7 || len(c.history) != 1 {
 		t.Fatal("unacknowledged input was not replayed")
 	}
 	deleted := Entity{ID: 2, Generation: 1, State: []byte{0}}
-	if err := c.applyChanges(encodeChanges(3, 2, []Change{{Delete: true, Entity: deleted}})); err != nil {
+	if err := c.applyChanges(encodeChanges(3, 2, 100*time.Millisecond, []Change{{Delete: true, Entity: deleted}})); err != nil {
 		t.Fatal(err)
 	}
 	old := Entity{ID: 2, Generation: 1, Owner: 2, Dynamic: true, State: []byte{99}}
@@ -173,7 +199,7 @@ func TestReconciliationAndLifecycle(t *testing.T) {
 	replacement := old
 	replacement.Generation = 2
 	replacement.State = []byte{10}
-	if err := c.applyChanges(encodeChanges(4, 3, []Change{{Entity: replacement}})); err != nil {
+	if err := c.applyChanges(encodeChanges(4, 3, 4*time.Second/30, []Change{{Entity: replacement}})); err != nil {
 		t.Fatal(err)
 	}
 	packets, _ = snapshotPackets(101, 3, []Entity{old}, 1000)
@@ -184,7 +210,7 @@ func TestReconciliationAndLifecycle(t *testing.T) {
 }
 func TestInterpolationHoldsAtEdges(t *testing.T) {
 	c := testClient(t)
-	c.update(Entity{ID: 2, Generation: 1, Owner: 2, Dynamic: true, State: []byte{30}}, 30, false)
+	c.update(Entity{ID: 2, Generation: 1, Owner: 2, Dynamic: true, State: []byte{30}}, 30, time.Second, false)
 	now := time.Now()
 	c.anchor = 30
 	c.anchorAt = now
@@ -227,7 +253,7 @@ func TestSnapshotDuplicatesAndReordering(t *testing.T) {
 }
 
 func TestIgnoredSnapshotDoesNotAdvanceClock(t *testing.T) {
-	for _, reason := range []string{"old generation", "wrong owner", "unknown entity", "static entity"} {
+	for _, reason := range []string{"old generation", "unknown entity", "static entity"} {
 		t.Run(reason, func(t *testing.T) {
 			c := testClient(t)
 			c.entities[2].entity.Generation = 2
@@ -239,15 +265,16 @@ func TestIgnoredSnapshotDoesNotAdvanceClock(t *testing.T) {
 			switch reason {
 			case "old generation":
 				e.Generation--
-			case "wrong owner":
-				e.Owner++
 			case "unknown entity":
 				e.ID = 999
 			}
-			packet := stateHeader(msgSnapshot, 100, c.revision)
-			packet.u16(1)
-			packet.entity(e)
-			if err := c.applySnapshot(packet); err != nil {
+			// Static status comes from the reliable lifecycle, not snapshot records.
+			e.Dynamic = true
+			packets, err := snapshotPackets(100, c.revision, []Entity{e}, 1000)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := c.applySnapshot(packets[0]); err != nil {
 				t.Fatal(err)
 			}
 			if c.tick != 0 || c.anchor != 0 || c.entities[2].entity.State[0] != 0 {
@@ -255,7 +282,7 @@ func TestIgnoredSnapshotDoesNotAdvanceClock(t *testing.T) {
 			}
 			current := c.entities[2].entity
 			current.State = []byte{7}
-			if err := c.applyChanges(encodeChanges(1, 2, []Change{{Entity: current}})); err != nil {
+			if err := c.applyChanges(encodeChanges(1, 2, time.Second/30, []Change{{Entity: current}})); err != nil {
 				t.Fatal("ignored snapshot invalidated a later reliable batch", err)
 			}
 		})
@@ -264,14 +291,14 @@ func TestIgnoredSnapshotDoesNotAdvanceClock(t *testing.T) {
 
 func TestMixedSnapshotAdvancesFromAcceptedRecord(t *testing.T) {
 	c := testClient(t)
-	packet := stateHeader(msgSnapshot, 15, c.revision)
-	packet.u16(2)
 	unknown := Entity{ID: 999, Generation: 1, Owner: 2, Dynamic: true, State: []byte{99}}
-	packet.entity(unknown)
 	valid := c.entities[2].entity
 	valid.State = []byte{7}
-	packet.entity(valid)
-	if err := c.applySnapshot(packet); err != nil {
+	packets, err := snapshotPackets(15, c.revision, []Entity{unknown, valid}, 1000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := c.applySnapshot(packets[0]); err != nil {
 		t.Fatal(err)
 	}
 	if c.tick != 15 || c.anchor != 15 || c.entities[2].entity.State[0] != 7 || c.entities[999] != nil {
@@ -280,7 +307,7 @@ func TestMixedSnapshotAdvancesFromAcceptedRecord(t *testing.T) {
 }
 func FuzzDecode(f *testing.F) {
 	f.Add(encodeInputs([]Input{{1, []byte{0}}}))
-	f.Add([]byte{2, 8})
+	f.Add([]byte{ProtocolVersion, msgSnapshot})
 	f.Fuzz(func(t *testing.T, b []byte) {
 		if len(b) > MaxFrame {
 			return
@@ -330,23 +357,200 @@ func BenchmarkSnapshotEncoding(b *testing.B) {
 func BenchmarkLifecycleBatchApply(b *testing.B) {
 	for _, count := range []int{16, MaxEntities} {
 		b.Run(fmt.Sprint(count), func(b *testing.B) {
-			c := &Client{model: byteModel{}}
+			c := &Client{model: byteModel{}, reliable: make(chan []byte, 64)}
 			entities := make([]Entity, count)
 			for i := range entities {
 				entities[i] = Entity{ID: uint32(i + 1), Generation: 1, Owner: uint32(i + 1), Dynamic: true, State: []byte{0}}
 			}
-			if err := c.applyFull(encodeFull(View{Player: 1, Revision: 1, Entities: entities}, DefaultConfig(), sessionState{})); err != nil {
+			if err := c.applyFull(encodeFull(View{Player: 1, Revision: 1, Entities: entities}, DefaultConfig(), sessionState{epoch: 1})); err != nil {
 				b.Fatal(err)
 			}
-			packet := encodeChanges(0, 0, []Change{{Entity: entities[1]}})
+			packet := encodeChanges(0, 0, 0, []Change{{Entity: entities[1]}})
 			b.ReportAllocs()
 			for b.Loop() {
 				le.PutUint64(packet[2:10], c.tick+1)
 				le.PutUint64(packet[10:18], c.revision+1)
+				le.PutUint64(packet[18:26], uint64(time.Duration(c.tick+1)*time.Second/30))
 				if err := c.applyChanges(packet); err != nil {
 					b.Fatal(err)
 				}
 			}
 		})
+	}
+}
+
+type vectorModel struct{ byteModel }
+
+func (vectorModel) ValidateState(b []byte) error {
+	if len(b) == 0 || len(b) > MaxState {
+		return ErrProtocol
+	}
+	return nil
+}
+func (vectorModel) Predict(s, in []byte, _ float32) ([]byte, error) {
+	b := append([]byte(nil), s...)
+	b[0] += in[0]
+	return b, nil
+}
+
+func vectorClient(t *testing.T) (*Client, replication) {
+	t.Helper()
+	v := View{Player: 1, Revision: 1, Entities: []Entity{
+		{ID: 1, Generation: 1, Owner: 1, Dynamic: true, State: make([]byte, 32)},
+		{ID: 2, Generation: 1, Owner: 2, Dynamic: true, State: make([]byte, 32)},
+	}}
+	c := &Client{model: vectorModel{}, buffer: 200 * time.Millisecond}
+	r := replication{}
+	epoch, err := r.installFull(v)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := c.applyFull(encodeFull(v, DefaultConfig(), sessionState{epoch: epoch})); err != nil {
+		t.Fatal(err)
+	}
+	if err := r.acknowledge(epoch, v.Revision, true); err != nil {
+		t.Fatal(err)
+	}
+	return c, r
+}
+
+func clientDeltaPacket(t *testing.T, r *replication, tick uint64, e Entity) []byte {
+	t.Helper()
+	groups, err := snapshotGroups([]Entity{e}, 1000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := View{Tick: tick, Revision: r.revision, ServerTime: time.Duration(tick) * time.Second / 30}
+	packets, stats, err := r.build(v, groups, DeltaSnapshots)
+	if err != nil || len(packets) != 1 || stats.deltaRecords != 1 {
+		t.Fatal("fixture did not produce a delta", err, stats)
+	}
+	return packets[0]
+}
+
+func TestClientDeltaSnapshotsDoNotDependOnPreviousPacket(t *testing.T) {
+	c, r := vectorClient(t)
+	e := cloneEntity(c.entities[2].entity)
+	e.State[0] = 5
+	lost := clientDeltaPacket(t, &r, 1, e)
+	e.State[0] = 9
+	latest := clientDeltaPacket(t, &r, 3, e)
+	for _, packet := range [][]byte{latest, lost, latest} {
+		if err := c.applySnapshot(packet); err != nil {
+			t.Fatal(err)
+		}
+		if c.entities[2].entity.State[0] != 9 || c.entities[2].tick != 3 || c.bases[2].state[0] != 0 {
+			t.Fatal("loss, reordering or duplicate changed the independent baseline")
+		}
+	}
+}
+
+func TestClientDeltaUnchangedStateStillAcknowledgesInputs(t *testing.T) {
+	c, r := vectorClient(t)
+	c.sequence = 2
+	c.history = []Input{{Sequence: 1, Data: []byte{1}}, {Sequence: 2, Data: []byte{2}}}
+	c.predicted[0] = 3
+	e := c.entities[1].entity
+	e.Ack = 1
+	if err := c.applySnapshot(clientDeltaPacket(t, &r, 1, e)); err != nil {
+		t.Fatal(err)
+	}
+	if c.entities[1].entity.Ack != 1 || len(c.history) != 1 || c.history[0].Sequence != 2 || c.predicted[0] != 2 {
+		t.Fatal("unchanged state skipped input confirmation")
+	}
+}
+
+func TestClientFullFallbackKeepsReliableBaseline(t *testing.T) {
+	c, r := vectorClient(t)
+	e := cloneEntity(c.entities[2].entity)
+	e.State = []byte{9}
+	groups, err := snapshotGroups([]Entity{e}, 1000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	packets, stats, err := r.build(View{Tick: 1, Revision: 1, ServerTime: time.Second / 30}, groups, DeltaSnapshots)
+	if err != nil || stats.fullRecords != 1 || len(packets) != 1 {
+		t.Fatal("length change did not use complete record", err, stats)
+	}
+	if err := c.applySnapshot(packets[0]); err != nil || len(c.entities[2].entity.State) != 1 || len(c.bases[2].state) != 32 {
+		t.Fatal("complete fallback replaced reliable baseline", err)
+	}
+	e.State = make([]byte, 32)
+	e.State[0] = 12
+	if err := c.applySnapshot(clientDeltaPacket(t, &r, 2, e)); err != nil || len(c.entities[2].entity.State) != 32 || c.entities[2].entity.State[0] != 12 {
+		t.Fatal("delta could not restore original-length baseline", err)
+	}
+}
+
+func TestClientResyncChangesEpochAtSameRevision(t *testing.T) {
+	c, r := vectorClient(t)
+	e := cloneEntity(c.entities[2].entity)
+	e.State[0] = 7
+	old := clientDeltaPacket(t, &r, 100, e)
+	c.resyncing = true
+	v := c.Authoritative()
+	epoch, err := r.installFull(v)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := c.applyFull(encodeFull(v, DefaultConfig(), sessionState{epoch: epoch})); err != nil {
+		t.Fatal(err)
+	}
+	if err := c.applySnapshot(old); err != nil {
+		t.Fatal(err)
+	}
+	if c.tick != 0 || c.entities[2].entity.State[0] != 0 || c.epoch != 2 {
+		t.Fatal("old epoch crossed a same-revision resync")
+	}
+	if err := r.acknowledge(epoch, v.Revision, true); err != nil {
+		t.Fatal(err)
+	}
+	if err := c.applySnapshot(clientDeltaPacket(t, &r, 1, e)); err != nil || c.entities[2].entity.State[0] != 7 {
+		t.Fatal("new epoch delta did not apply", err)
+	}
+}
+
+func TestClientReliableLifecycleOwnsDeltaBaseline(t *testing.T) {
+	c, r := vectorClient(t)
+	e := cloneEntity(c.entities[2].entity)
+	apply := func(tick, revision uint64, changes []Change) {
+		t.Helper()
+		if err := c.applyChanges(encodeChanges(tick, revision, time.Duration(tick)*time.Second/30, changes)); err != nil {
+			t.Fatal(err)
+		}
+		r.installChanges(changes, revision)
+		if err := r.acknowledge(r.epoch, revision, true); err != nil {
+			t.Fatal(err)
+		}
+	}
+	e.State[0] = 10
+	apply(1, 2, []Change{{Entity: e}})
+	if c.bases[2].state[0] != 0 {
+		t.Fatal("ordinary reliable update replaced immutable baseline")
+	}
+	e.State = append([]byte(nil), e.State...)
+	e.State[0] = 20
+	if err := c.applySnapshot(clientDeltaPacket(t, &r, 2, e)); err != nil || c.entities[2].entity.State[0] != 20 {
+		t.Fatal("delta used ordinary update as baseline", err)
+	}
+	e.Generation, e.Owner = 2, 3
+	e.State = append([]byte(nil), e.State...)
+	e.State[0] = 50
+	apply(3, 3, []Change{{Entity: e}})
+	if c.bases[2].generation != 2 || c.bases[2].state[0] != 50 {
+		t.Fatal("new generation did not install reliable baseline")
+	}
+	e.State = append([]byte(nil), e.State...)
+	e.State[0] = 55
+	late := clientDeltaPacket(t, &r, 4, e)
+	if err := c.applySnapshot(late); err != nil || c.entities[2].entity.State[0] != 55 || c.entities[2].entity.Owner != 3 {
+		t.Fatal("replacement delta lost lifecycle metadata", err)
+	}
+	apply(5, 4, []Change{{Delete: true, Entity: e}})
+	if _, ok := c.bases[2]; ok {
+		t.Fatal("deleted entity retained its baseline")
+	}
+	if err := c.applySnapshot(late); err != nil || c.entities[2] != nil {
+		t.Fatal("late delta resurrected deleted entity", err)
 	}
 }

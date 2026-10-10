@@ -27,7 +27,15 @@ func main() {
 	flag.IntVar(&cfg.SnapshotRate, "snapshots", 15, "每秒快照数")
 	flag.IntVar(&cfg.MaxPlayers, "players", 16, "每房间人数上限")
 	flag.DurationVar(&cfg.ResumeGracePeriod, "resume-grace", time.Minute, "断线会话保留时间，0 为关闭续接")
+	encoding := flag.String("encoding", "delta", "快照编码 delta（差量）/full（完整）")
+	flag.IntVar(&cfg.DatagramSize, "datagram-size", 1000, "数据报应用负载上限 600..1000 字节")
 	flag.Parse()
+	if *encoding != "delta" && *encoding != "full" {
+		log.Fatal("encoding 必须为 delta 或 full")
+	}
+	if *encoding == "full" {
+		cfg.SnapshotEncoding = syncnet.FullSnapshots
+	}
 	if *generate {
 		for _, f := range []string{*certFile, *keyFile} {
 			if err := os.MkdirAll(filepath.Dir(f), 0700); err != nil {
@@ -54,7 +62,7 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-	json.NewEncoder(os.Stdout).Encode(map[string]any{"地址": server.Addr().String(), "房间": *rooms, "逻辑频率": cfg.TickRate, "快照频率": cfg.SnapshotRate})
+	json.NewEncoder(os.Stdout).Encode(map[string]any{"地址": server.Addr().String(), "房间": *rooms, "逻辑频率": cfg.TickRate, "快照频率": cfg.SnapshotRate, "快照编码": *encoding})
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	<-ctx.Done()

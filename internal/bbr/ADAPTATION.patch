@@ -1,0 +1,412 @@
+diff --git "a/bin\\_go-temp\\internal-bbr-upstream\\bandwidth.go" "b/internal\\bbr\\bandwidth.go"
+index 52deb24..fdd0d66 100644
+--- "a/bin\\_go-temp\\internal-bbr-upstream\\bandwidth.go"
++++ "b/internal\\bbr\\bandwidth.go"
+@@ -4,7 +4,7 @@ import (
+ 	"math"
+ 	"time"
+ 
+-	"github.com/apernet/quic-go/congestion"
++	"github.com/sagernet/quic-go/congestion"
+ )
+ 
+ const (
+diff --git "a/bin\\_go-temp\\internal-bbr-upstream\\bandwidth_sampler.go" "b/internal\\bbr\\bandwidth_sampler.go"
+index 2bd66d0..6de3cdd 100644
+--- "a/bin\\_go-temp\\internal-bbr-upstream\\bandwidth_sampler.go"
++++ "b/internal\\bbr\\bandwidth_sampler.go"
+@@ -4,8 +4,8 @@ import (
+ 	"math"
+ 	"time"
+ 
+-	"github.com/apernet/quic-go/congestion"
+-	"github.com/apernet/quic-go/monotime"
++	"github.com/sagernet/quic-go/congestion"
++	"github.com/sagernet/quic-go/monotime"
+ )
+ 
+ const (
+diff --git "a/bin\\_go-temp\\internal-bbr-upstream\\bbr_sender.go" "b/internal\\bbr\\bbr_sender.go"
+index 4185311..f556a26 100644
+--- "a/bin\\_go-temp\\internal-bbr-upstream\\bbr_sender.go"
++++ "b/internal\\bbr\\bbr_sender.go"
+@@ -3,16 +3,13 @@ package bbr
+ import (
+ 	"fmt"
+ 	"math/rand"
+-	"net"
+-	"os"
+-	"strconv"
+ 	"strings"
+ 	"time"
+ 
+-	"github.com/apernet/quic-go/congestion"
+-	"github.com/apernet/quic-go/monotime"
++	"github.com/sagernet/quic-go/congestion"
++	"github.com/sagernet/quic-go/monotime"
+ 
+-	"github.com/apernet/hysteria/core/v2/internal/congestion/common"
++	"github.com/qihai-coding/go-statesync/internal/bbr/common"
+ )
+ 
+ // BbrSender implements BBR congestion control algorithm.  BBR aims to estimate
+@@ -38,8 +35,6 @@ const (
+ 	defaultHighGain = 2.885
+ 	// The newly derived CWND gain for STARTUP, 2.
+ 	derivedHighCWNDGain = 2.0
+-
+-	debugEnv = "HYSTERIA_BBR_DEBUG"
+ )
+ 
+ // The cycle of gains used during the PROBE_BW stage.
+@@ -312,11 +307,9 @@ type bbrSender struct {
+ 	maxDatagramSize congestion.ByteCount
+ 	// Recorded on packet sent. equivalent |unacked_packets_->bytes_in_flight()|
+ 	bytesInFlight congestion.ByteCount
+-
+-	debug bool
+ }
+ 
+-var _ congestion.CongestionControl = &bbrSender{}
++var _ congestion.CongestionControlEx = &bbrSender{}
+ 
+ func NewBbrSender(
+ 	clock Clock,
+@@ -339,7 +332,6 @@ func newBbrSender(
+ 	initialMaxCongestionWindow congestion.ByteCount,
+ 	profile Profile,
+ ) *bbrSender {
+-	debug, _ := strconv.ParseBool(os.Getenv(debugEnv))
+ 	b := &bbrSender{
+ 		clock:                        clock,
+ 		mode:                         bbrModeStartup,
+@@ -366,13 +358,9 @@ func newBbrSender(
+ 		cwndToCalculateMinPacingRate:                     initialCongestionWindow,
+ 		maxCongestionWindowWithNetworkParametersAdjusted: initialMaxCongestionWindow,
+ 		maxDatagramSize: initialMaxDatagramSize,
+-		debug:           debug,
+ 	}
+ 	b.pacer = common.NewPacer(b.bandwidthForPacer)
+ 	b.applyProfile(profile)
+-	if b.debug {
+-		b.debugPrint("Profile: %s", b.profile)
+-	}
+ 
+ 	b.enterStartupMode(b.clock.Now())
+ 
+@@ -487,9 +475,6 @@ func (b *bbrSender) OnRetransmissionTimeout(packetsRetransmitted bool) {
+ 
+ // SetMaxDatagramSize implements the SendAlgorithm interface.
+ func (b *bbrSender) SetMaxDatagramSize(s congestion.ByteCount) {
+-	if b.debug {
+-		b.debugPrint("Max Datagram Size: %d", s)
+-	}
+ 	if s < b.maxDatagramSize {
+ 		panic(fmt.Sprintf("congestion BUG: decreased max datagram size from %d to %d", b.maxDatagramSize, s))
+ 	}
+@@ -617,19 +602,9 @@ func (b *bbrSender) OnCongestionEventEx(priorInFlight congestion.ByteCount, even
+ 	b.calculateCongestionWindow(bytesAcked, excessAcked)
+ 	b.calculateRecoveryWindow(bytesAcked, bytesLost)
+ 
+-	// Cleanup internal state.
+-	// This is where we clean up obsolete (acked or lost) packets from the bandwidth sampler.
+-	// The "least unacked" should actually be FirstOutstanding, but since we are not passing
+-	// that through OnCongestionEventEx, we will only do an estimate using acked/lost packets
+-	// for now. Because of fast retransmission, they should differ by no more than 2 packets.
+-	// (this is controlled by packetThreshold in quic-go's sentPacketHandler)
+-	var leastUnacked congestion.PacketNumber
+-	if len(ackedPackets) != 0 {
+-		leastUnacked = ackedPackets[len(ackedPackets)-1].PacketNumber - 2
+-	} else {
+-		leastUnacked = lostPackets[len(lostPackets)-1].PacketNumber + 1
+-	}
+-	b.sampler.RemoveObsoletePackets(leastUnacked)
++	// SagerNet reports the actual lowest outstanding packet through
++	// OnPacketsLost. An estimate from the largest ACK can discard a packet
++	// that remains in flight after reordering.
+ 
+ 	if isRoundStart {
+ 		b.numLossEventsInRound = 0
+@@ -724,9 +699,6 @@ func (b *bbrSender) enterStartupMode(now monotime.Time) {
+ 	b.pacingGain = b.highGain
+ 	b.congestionWindowGain = b.highCwndGain
+ 
+-	if b.debug {
+-		b.debugPrint("Phase: STARTUP")
+-	}
+ }
+ 
+ // Enters the PROBE_BW mode.
+@@ -746,9 +718,6 @@ func (b *bbrSender) enterProbeBandwidthMode(now monotime.Time) {
+ 	b.lastCycleStart = now
+ 	b.pacingGain = pacingGain[b.cycleCurrentOffset]
+ 
+-	if b.debug {
+-		b.debugPrint("Phase: PROBE_BW")
+-	}
+ }
+ 
+ // Updates the round-trip counter if a round-trip has passed.  Returns true if
+@@ -837,9 +806,6 @@ func (b *bbrSender) maybeExitStartupOrDrain(now monotime.Time) {
+ 		b.pacingGain = b.drainGain
+ 		b.congestionWindowGain = b.highCwndGain
+ 
+-		if b.debug {
+-			b.debugPrint("Phase: DRAIN")
+-		}
+ 	}
+ 	if b.mode == bbrModeDrain && b.bytesInFlight <= b.getTargetCongestionWindow(1) {
+ 		b.enterProbeBandwidthMode(now)
+@@ -856,11 +822,6 @@ func (b *bbrSender) maybeEnterOrExitProbeRtt(now monotime.Time, isRoundStart, mi
+ 		// is at the target small value.
+ 		b.exitProbeRttAt = 0
+ 
+-		if b.debug {
+-			b.debugPrint("BandwidthEstimate: %s, CongestionWindowGain: %.2f, PacingGain: %.2f, PacingRate: %s",
+-				formatSpeed(b.bandwidthEstimate()), b.congestionWindowGain, b.pacingGain, formatSpeed(b.PacingRate()))
+-			b.debugPrint("Phase: PROBE_RTT")
+-		}
+ 	}
+ 
+ 	if b.mode == bbrModeProbeRtt {
+@@ -882,9 +843,6 @@ func (b *bbrSender) maybeEnterOrExitProbeRtt(now monotime.Time, isRoundStart, mi
+ 			}
+ 			if now.Sub(b.exitProbeRttAt) >= 0 && b.probeRttRoundPassed {
+ 				b.minRttTimestamp = now
+-				if b.debug {
+-					b.debugPrint("MinRTT: %s", b.getMinRtt())
+-				}
+ 				if !b.isAtFullBandwidth {
+ 					b.enterStartupMode(now)
+ 				} else {
+@@ -1056,33 +1014,24 @@ func (b *bbrSender) shouldExitStartupDueToLoss(lastPacketSendState *sendTimeStat
+ 	return false
+ }
+ 
+-func (b *bbrSender) debugPrint(format string, a ...any) {
+-	fmt.Printf("[BBRSender] [%s] %s\n",
+-		time.Now().Format("15:04:05"),
+-		fmt.Sprintf(format, a...))
+-}
+-
+ func bdpFromRttAndBandwidth(rtt time.Duration, bandwidth Bandwidth) congestion.ByteCount {
+ 	return congestion.ByteCount(rtt) * congestion.ByteCount(bandwidth) / congestion.ByteCount(BytesPerSecond) / congestion.ByteCount(time.Second)
+ }
+ 
+-func GetInitialPacketSize(addr net.Addr) congestion.ByteCount {
+-	// If this is not a UDP address, we don't know anything about the MTU.
+-	// Use the minimum size of an Initial packet as the max packet size.
+-	if _, ok := addr.(*net.UDPAddr); ok {
+-		return congestion.InitialPacketSize
+-	} else {
+-		return congestion.MinInitialPacketSize
+-	}
++// OnPacketNeutered removes a packet that left flight without an ACK or loss.
++func (b *bbrSender) OnPacketNeutered(packetNumber congestion.PacketNumber) {
++	b.sampler.OnPacketNeutered(packetNumber)
+ }
+ 
+-func formatSpeed(bw Bandwidth) string {
+-	bwf := float64(bw)
+-	units := []string{"bps", "Kbps", "Mbps", "Gbps"}
+-	unitIndex := 0
+-	for bwf > 1000 && unitIndex < len(units)-1 {
+-		bwf /= 1000
+-		unitIndex++
++// OnPacketsLost receives the transport's actual lowest outstanding packet.
++// Loss bytes are accounted only by OnCongestionEventEx, never by cleanup.
++func (b *bbrSender) OnPacketsLost(leastUnacked congestion.PacketNumber) {
++	b.sampler.RemoveObsoletePackets(leastUnacked)
++}
++
++// OnAppLimited follows the transport's notification of an empty packer.
++func (b *bbrSender) OnAppLimited(bytesInFlight congestion.ByteCount) {
++	if bytesInFlight < b.GetCongestionWindow() {
++		b.sampler.OnAppLimited()
+ 	}
+-	return fmt.Sprintf("%.2f %s", bwf, units[unitIndex])
+ }
+diff --git "a/bin\\_go-temp\\internal-bbr-upstream\\bbr_sender_test.go" "b/internal\\bbr\\bbr_sender_test.go"
+index 5aff552..a113c1b 100644
+--- "a/bin\\_go-temp\\internal-bbr-upstream\\bbr_sender_test.go"
++++ "b/internal\\bbr\\bbr_sender_test.go"
+@@ -3,7 +3,7 @@ package bbr
+ import (
+ 	"testing"
+ 
+-	"github.com/apernet/quic-go/congestion"
++	"github.com/sagernet/quic-go/congestion"
+ 	"github.com/stretchr/testify/require"
+ )
+ 
+diff --git "a/bin\\_go-temp\\internal-bbr-upstream\\clock.go" "b/internal\\bbr\\clock.go"
+index 541987e..2862955 100644
+--- "a/bin\\_go-temp\\internal-bbr-upstream\\clock.go"
++++ "b/internal\\bbr\\clock.go"
+@@ -1,6 +1,6 @@
+ package bbr
+ 
+-import "github.com/apernet/quic-go/monotime"
++import "github.com/sagernet/quic-go/monotime"
+ 
+ // A Clock returns the current time
+ type Clock interface {
+diff --git "a/bin\\_go-temp\\internal-bbr-upstream\\packet_number_indexed_queue.go" "b/internal\\bbr\\packet_number_indexed_queue.go"
+index 08b99de..c8c5ed6 100644
+--- "a/bin\\_go-temp\\internal-bbr-upstream\\packet_number_indexed_queue.go"
++++ "b/internal\\bbr\\packet_number_indexed_queue.go"
+@@ -1,7 +1,7 @@
+ package bbr
+ 
+ import (
+-	"github.com/apernet/quic-go/congestion"
++	"github.com/sagernet/quic-go/congestion"
+ )
+ 
+ // packetNumberIndexedQueue is a queue of mostly continuous numbered entries
+diff --git "a/bin\\_go-temp\\internal-bbr-upstream\\common\\pacer.go" "b/internal\\bbr\\common\\pacer.go"
+index e0bddbe..17e19a2 100644
+--- "a/bin\\_go-temp\\internal-bbr-upstream\\common\\pacer.go"
++++ "b/internal\\bbr\\common\\pacer.go"
+@@ -3,8 +3,8 @@ package common
+ import (
+ 	"time"
+ 
+-	"github.com/apernet/quic-go/congestion"
+-	"github.com/apernet/quic-go/monotime"
++	"github.com/sagernet/quic-go/congestion"
++	"github.com/sagernet/quic-go/monotime"
+ )
+ 
+ const (
+diff --git a/internal/bbr/callback_test.go b/internal/bbr/callback_test.go
+new file mode 100644
+index 0000000..a376245
+--- /dev/null
++++ b/internal/bbr/callback_test.go
+@@ -0,0 +1,125 @@
++package bbr
++
++import (
++	"testing"
++	"time"
++
++	"github.com/sagernet/quic-go/congestion"
++	"github.com/sagernet/quic-go/monotime"
++)
++
++type fixedClock struct{ at monotime.Time }
++
++func (c fixedClock) Now() monotime.Time { return c.at }
++
++type fixedRTT struct{}
++
++func (fixedRTT) MinRTT() time.Duration                  { return 50 * time.Millisecond }
++func (fixedRTT) LatestRTT() time.Duration               { return 50 * time.Millisecond }
++func (fixedRTT) SmoothedRTT() time.Duration             { return 50 * time.Millisecond }
++func (fixedRTT) MeanDeviation() time.Duration           { return 5 * time.Millisecond }
++func (fixedRTT) MaxAckDelay() time.Duration             { return 25 * time.Millisecond }
++func (fixedRTT) PTO(bool) time.Duration                 { return 100 * time.Millisecond }
++func (fixedRTT) UpdateRTT(time.Duration, time.Duration) {}
++func (fixedRTT) SetMaxAckDelay(time.Duration)           {}
++func (fixedRTT) SetInitialRTT(time.Duration)            {}
++
++func callbackSender() *bbrSender {
++	b := NewBbrSender(fixedClock{monotime.Time(time.Second)}, 1000, ProfileStandard)
++	b.SetRTTStatsProvider(fixedRTT{})
++	b.minRtt = 50 * time.Millisecond
++	return b
++}
++
++func TestCallbacksPreserveReorderedPacketUntilActualCleanup(t *testing.T) {
++	b := callbackSender()
++	for n := congestion.PacketNumber(1); n <= 5; n++ {
++		b.OnPacketSent(monotime.Time(time.Second).Add(time.Duration(n)*time.Millisecond), (congestion.ByteCount(n)-1)*1000, n, 1000, true)
++	}
++	b.OnCongestionEventEx(5000, monotime.Time(2*time.Second), []congestion.AckedPacketInfo{{PacketNumber: 5, BytesAcked: 1000}}, nil)
++	if b.sampler.connectionStateMap.GetEntry(1) == nil {
++		t.Fatal("largest ACK discarded an older outstanding packet")
++	}
++	b.OnPacketsLost(1)
++	if b.sampler.connectionStateMap.GetEntry(1) == nil {
++		t.Fatal("actual least-unacked packet must remain tracked")
++	}
++	// A late ACK for the genuinely outstanding packet must still produce a sample.
++	b.OnCongestionEventEx(4000, monotime.Time(3*time.Second), []congestion.AckedPacketInfo{{PacketNumber: 1, BytesAcked: 1000}}, nil)
++	if b.sampler.TotalBytesAcked() != 2000 {
++		t.Fatalf("acked=%d, want 2000", b.sampler.TotalBytesAcked())
++	}
++	b.OnPacketsLost(2)
++	if b.sampler.connectionStateMap.GetEntry(1) != nil || b.sampler.connectionStateMap.GetEntry(2) == nil {
++		t.Fatal("cleanup must remove packets strictly below the actual boundary")
++	}
++}
++
++func TestCallbacksLossNeuteringAndLateACKDoNotDoubleCount(t *testing.T) {
++	b := callbackSender()
++	b.OnPacketSent(monotime.Time(time.Second), 0, 1, 1000, true)
++	b.OnPacketSent(monotime.Time(time.Second).Add(time.Millisecond), 1000, 2, 1000, true)
++	b.OnCongestionEventEx(2000, monotime.Time(2*time.Second), nil, []congestion.LostPacketInfo{{PacketNumber: 2, BytesLost: 1000}})
++	if !b.hasNoAppLimitedSample || b.sampler.connectionStateMap.GetEntry(2) == nil {
++		t.Fatal("loss event did not consume its valid send-state before cleanup")
++	}
++	b.OnPacketNeutered(1)
++	b.OnPacketNeutered(1) // Repeated notifications cannot count an absent packet.
++	b.OnPacketsLost(3)
++	b.OnPacketsLost(3)
++	if b.sampler.TotalBytesLost() != 1000 || b.sampler.TotalBytesNeutered() != 1000 {
++		t.Fatalf("lost=%d neutered=%d, want 1000 each", b.sampler.TotalBytesLost(), b.sampler.TotalBytesNeutered())
++	}
++	if !b.sampler.connectionStateMap.IsEmpty() || b.sampler.connectionStateMap.EntrySlotsUsed() != 0 {
++		t.Fatal("no obsolete packet slots should remain")
++	}
++	// SagerNet does not report already-lost ACKs as a fresh congestion event.
++	// The sampler must nevertheless ignore such an ACK after its state was removed.
++	late := b.sampler.onPacketAcknowledged(monotime.Time(3*time.Second), 2)
++	if late.stateAtSend.isValid || b.sampler.TotalBytesAcked() != 0 || !b.sampler.connectionStateMap.IsEmpty() {
++		t.Fatal("late ACK recreated removed state or counted bytes")
++	}
++}
++
++func TestCallbacksACKOnlyAndSustainedRetentionStayBounded(t *testing.T) {
++	b := callbackSender()
++	const rounds = 10000
++	const livePackets = 8
++	for n := congestion.PacketNumber(1); n <= rounds; n++ {
++		at := monotime.Time(time.Second).Add(time.Duration(n) * time.Millisecond)
++		b.OnPacketSent(at, 0, n, 40, false)
++	}
++	if b.sampler.TotalBytesSent() != 0 || b.sampler.connectionStateMap.EntrySlotsUsed() != 0 {
++		t.Fatal("ACK-only packets retained state or contributed sampled bytes")
++	}
++	for n := congestion.PacketNumber(rounds + 1); n <= 2*rounds; n++ {
++		at := monotime.Time(time.Second).Add(time.Duration(n) * time.Millisecond)
++		b.OnPacketSent(at, 7000, n, 1000, true)
++		// Model the transport retaining at most the most recent eight packets.
++		b.OnPacketsLost(n - livePackets + 1)
++		if got := b.sampler.connectionStateMap.EntrySlotsUsed(); got > livePackets {
++			t.Fatalf("after packet %d retained %d slots, want <=%d", n, got, livePackets)
++		}
++	}
++	b.OnPacketsLost(2*rounds + 1)
++	if b.sampler.connectionStateMap.EntrySlotsUsed() != 0 {
++		t.Fatal("terminal cleanup retained historical packet slots")
++	}
++}
++
++func TestAppLimitedCallbackUsesTransportFlightAndMarksSamples(t *testing.T) {
++	b := callbackSender()
++	b.OnPacketSent(monotime.Time(time.Second), 0, 1, 1000, true)
++	b.OnAppLimited(b.GetCongestionWindow())
++	if b.sampler.IsAppLimited() {
++		t.Fatal("a full congestion window is not application-limited")
++	}
++	b.OnAppLimited(1000)
++	if !b.sampler.IsAppLimited() || b.sampler.EndOfAppLimitedPhase() != 1 {
++		t.Fatal("empty-packer callback did not mark the sent-packet boundary")
++	}
++	b.OnPacketSent(monotime.Time(time.Second).Add(time.Millisecond), 1000, 2, 1000, true)
++	if p := b.sampler.connectionStateMap.GetEntry(2); p == nil || !p.sendTimeState.isAppLimited {
++		t.Fatal("new sample did not inherit the application-limited marker")
++	}
++}

@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	ProtocolVersion byte = 2
-	ALPN                 = "statesync/2"
+	ProtocolVersion byte = 3
+	ALPN                 = "statesync/3"
 	MaxState             = 512
 	MaxInput             = 64
 	MaxAction            = 512
@@ -32,17 +32,27 @@ type ResumeToken [32]byte
 func (ResumeToken) String() string   { return "[redacted]" }
 func (ResumeToken) GoString() string { return "ResumeToken([redacted])" }
 
+type SnapshotEncoding uint8
+
+const (
+	DeltaSnapshots SnapshotEncoding = iota
+	FullSnapshots
+)
+
 type Config struct {
 	TickRate          int
 	SnapshotRate      int
 	MaxPlayers        int
 	DatagramSize      int
 	ResumeGracePeriod time.Duration
+	SnapshotEncoding  SnapshotEncoding
 }
 
-func DefaultConfig() Config { return Config{30, 15, 16, 1000, time.Minute} }
+func DefaultConfig() Config {
+	return Config{TickRate: 30, SnapshotRate: 15, MaxPlayers: 16, DatagramSize: 1000, ResumeGracePeriod: time.Minute}
+}
 func (c Config) validate() error {
-	if c.TickRate < 1 || c.TickRate > 120 || c.SnapshotRate < 1 || c.SnapshotRate > c.TickRate || c.MaxPlayers < 1 || c.MaxPlayers > 16 || c.DatagramSize < 600 || c.DatagramSize > 1000 || c.ResumeGracePeriod < 0 {
+	if c.TickRate < 1 || c.TickRate > 120 || c.SnapshotRate < 1 || c.SnapshotRate > c.TickRate || c.MaxPlayers < 1 || c.MaxPlayers > 16 || c.DatagramSize < 600 || c.DatagramSize > 1000 || c.ResumeGracePeriod < 0 || c.SnapshotEncoding > FullSnapshots {
 		return fmt.Errorf("invalid config: %+v", c)
 	}
 	return nil
@@ -92,26 +102,44 @@ type Model interface {
 }
 
 type View struct {
-	Tick     uint64
-	Revision uint64
-	Player   uint32
-	Entities []Entity
+	Tick       uint64
+	Revision   uint64
+	Player     uint32
+	Entities   []Entity
+	ServerTime time.Duration
+}
+type SampleInfo struct {
+	SourceTime, LatestStateTime time.Duration
+	Holding, Predicted          bool
+}
+type ClientStats struct {
+	EntityUpdates, ReliableChanges, FullStates uint64
+	BaselineEntities, BaselineBytes            int
 }
 type Metrics struct {
-	Ticks           uint64
-	StepTotal       time.Duration
-	StepP99         time.Duration
-	StepMax         time.Duration
-	InputDrops      uint64
-	SnapshotDrops   uint64
-	ReliableBytes   uint64
-	DatagramBytes   uint64
-	Players         int
-	RetainedPlayers int
-	InputQueue      int
-	ControlQueue    int
-	ReliableQueued  int
-	SnapshotQueued  int
+	Ticks                 uint64
+	StepTotal             time.Duration
+	StepP99               time.Duration
+	StepMax               time.Duration
+	InputDrops            uint64
+	SnapshotDrops         uint64
+	ReliableBytes         uint64
+	DatagramBytes         uint64
+	Players               int
+	RetainedPlayers       int
+	InputQueue            int
+	ControlQueue          int
+	ReliableQueued        int
+	SnapshotQueued        int
+	BaselineEntities      int
+	BaselineBytes         int
+	DeltaBytes            uint64
+	FullRecordBytes       uint64
+	SnapshotRecords       uint64
+	DeltaRecords          uint64
+	FullRecords           uint64
+	ExpectedEntityUpdates uint64
+	SentEntityUpdates     uint64
 }
 type inspectResult struct {
 	view    View

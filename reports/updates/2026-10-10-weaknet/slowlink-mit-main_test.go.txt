@@ -1,0 +1,27 @@
+package main
+
+import (
+	"testing"
+
+	"github.com/sagernet/quic-go/qlog"
+)
+
+func TestFlightPeakTracksMetricsWithoutWindow(t *testing.T) {
+	v := new(trace)
+	v.RecordEvent(qlog.MetricsUpdated{BytesInFlight: 6000})
+	v.RecordEvent(qlog.MetricsUpdated{BytesInFlight: 4000})
+	v.RecordEvent(qlog.MetricsUpdated{CongestionWindow: 10000})
+	if got := v.flightPeak.Swap(0); got != 6000 {
+		t.Fatalf("peak=%d, want 6000", got)
+	}
+	v.RecordEvent(qlog.MetricsUpdated{BytesInFlight: 3000})
+	if got := v.flightPeak.Load(); got != 3000 {
+		t.Fatalf("next interval peak=%d, want 3000", got)
+	}
+	if got := v.flightMaximum.Load(); got != 6000 {
+		t.Fatalf("global peak=%d, want 6000", got)
+	}
+	if got := v.current.Load(); got != 10000 {
+		t.Fatalf("window=%d, want 10000", got)
+	}
+}

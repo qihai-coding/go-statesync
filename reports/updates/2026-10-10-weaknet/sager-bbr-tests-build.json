@@ -1,0 +1,7 @@
+{
+  "Command": "go test -c -modfile bin/weaknet-sager-bbr-lab/lab.mod -overlay bin/weaknet-sager-bbr-lab/overlay.json -o bin/sager-bbr-lab-tests.test.exe .",
+  "ExitCode": 0,
+  "Binary": "D:\\main\\github\\go-statesync\\bin\\sager-bbr-lab-tests.test.exe",
+  "SHA256": "4A699AD9ACE4E98551141D69773411AE65B6E0BA20D958FA578740F10415708D",
+  "Executed": false
+}

@@ -1,0 +1,29 @@
+{
+  "Repository": "https://github.com/qiulaidongfeng/quic-go",
+  "Ref": "refs/heads/master",
+  "Commit": "947ce4371157f0020731bd5362b29f3b74c6e591",
+  "Checkout": "D:\\main\\github\\go-statesync\\bin\\weaknet-bbr-lab\\quic-go",
+  "UpstreamModule": "github.com/quic-go/quic-go",
+  "BuildCommand": "go build -mod=mod -modfile bin/weaknet-bbr-lab/lab.mod -overlay bin/weaknet-bbr-lab/overlay.json -o bin/check-bbr-lab.exe ./cmd/check",
+  "BuildExitCode": 0,
+  "Binary": "D:\\main\\github\\go-statesync\\bin\\check-bbr-lab.exe",
+  "BinarySHA256": "1425B8398C7D70463ED21FFED22D35F6392235E90A2238CB323C2C89B34C0748",
+  "OverlaySHA256": "65FD064F8CA4C0A8F7E9D89299FC30E0081BE0973495EAC255AEADB819041384",
+  "SourceSHA256": "190B6680C9F999D862E0DF66DEF985677657AE51019D6D177EF7C68E37FE12A4",
+  "ModFileSHA256": "81335AB2CCAD5E5289356300341C6FBE6F07B73B8FC1FA7EDB854733ABDEBC0E",
+  "SharedDiagnosticSourceSHA256": "CBB86E542EEA3540599C8A65C246A484081F7CC52283EACB9F2F8DBB189C95FD",
+  "UpstreamGoModSHA256": "E612998E9A2A30FE8522521A3DEFA89F98E21DCBF267F09B0A38F0F4BA2CE340",
+  "OriginalSourceHashes": {
+    "D:/Go/Cache/mod/github.com/quic-go/quic-go@v0.62.0/internal/ackhandler/sent_packet_handler.go": "7B7A772F3900A0E61405E4F8D01AF7E10DA03AFBAF947150A0DCEF619746924D",
+    "D:\\main\\github\\go-statesync\\go.mod": "0D16AF7240AD9A8E33EC06118826587267D6C4E41EA84FCC667680DD04D72EA1",
+    "D:\\main\\github\\go-statesync\\transport_send.go": "BCC6AE89E658B1D63686457C0A6207847DE8C2FB3B4A83E04AED5EBE283AF8F0",
+    "D:\\main\\github\\go-statesync\\go.sum": "CB2D3495681AC245D43D257F932C41204D669F1F759524E8AE2A8A735CCA441A"
+  },
+  "ChangedOriginalFiles": [],
+  "GoEnvironment": {
+    "GOTMPDIR": "D:\\main\\github\\go-statesync\\bin\\_go-temp",
+    "GOMODCACHE": "D:\\main\\github\\go-statesync\\bin\\weaknet-bbr-lab\\mod-cache",
+    "GOCACHE": "D:\\main\\github\\go-statesync\\bin\\weaknet-bbr-lab\\build-cache"
+  },
+  "LoadExecuted": false
+}

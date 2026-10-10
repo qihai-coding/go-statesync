@@ -1,0 +1,10 @@
+fuzz: elapsed: 0s, gathering baseline coverage: 0/67 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 67/67 completed, now fuzzing with 2 workers
+fuzz: elapsed: 3s, execs: 14429 (4809/sec), new interesting: 2 (total: 69)
+fuzz: elapsed: 6s, execs: 14429 (0/sec), new interesting: 2 (total: 69)
+fuzz: elapsed: 9s, execs: 14429 (0/sec), new interesting: 2 (total: 69)
+fuzz: elapsed: 12s, execs: 14429 (0/sec), new interesting: 2 (total: 69)
+fuzz: elapsed: 15s, execs: 14429 (0/sec), new interesting: 2 (total: 69)
+fuzz: elapsed: 16s, execs: 14429 (0/sec), new interesting: 2 (total: 69)
+PASS
+ok  	github.com/qihai-coding/go-statesync	16.844s

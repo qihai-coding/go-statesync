@@ -14,6 +14,7 @@ func pendingResyncClient(t *testing.T) *Client {
 	c.token = ResumeToken{1}
 	c.lastAction = 42
 	c.tick = 10
+	c.serverTime = 10 * time.Second / 30
 	c.sequence = 5
 	c.entities[c.local].entity.Ack = 2
 	c.history = []Input{{3, []byte{1}}, {4, []byte{1}}, {5, []byte{1}}}
@@ -27,11 +28,12 @@ func pendingResyncClient(t *testing.T) *Client {
 func TestFullStateRejectsInvalidResync(t *testing.T) {
 	for _, reason := range []string{
 		"unsolicited", "controlled ID", "controlled generation", "ack behind cutoff", "ack ahead of cutoff",
-		"action rollback", "tick rate", "snapshot rate", "grace period", "invalid state",
+		"action rollback", "tick rate", "snapshot rate", "grace period", "encoding", "invalid state",
+		"same epoch", "old epoch", "server time rollback",
 	} {
 		t.Run(reason, func(t *testing.T) {
 			c := pendingResyncClient(t)
-			v, cfg, session := c.Authoritative(), c.cfg, sessionState{c.token, c.lastAction}
+			v, cfg, session := c.Authoritative(), c.cfg, sessionState{token: c.token, lastAction: c.lastAction, epoch: 2}
 			v.Tick++
 			v.Entities[0].Ack = c.sequence
 			v.Entities[0].State = []byte{9}
@@ -54,8 +56,16 @@ func TestFullStateRejectsInvalidResync(t *testing.T) {
 				cfg.SnapshotRate = 10
 			case "grace period":
 				cfg.ResumeGracePeriod /= 2
+			case "encoding":
+				cfg.SnapshotEncoding = FullSnapshots
 			case "invalid state":
 				v.Entities[1].State = nil
+			case "same epoch":
+				session.epoch = 1
+			case "old epoch":
+				session.epoch = 0
+			case "server time rollback":
+				v.ServerTime--
 			}
 			before, cooling, waiting := c.Authoritative(), c.lastResync, c.resyncing
 			if err := c.applyFull(encodeFull(v, cfg, session)); !errors.Is(err, ErrProtocol) {
@@ -86,7 +96,7 @@ func TestFullStateRestoresResyncAndFreshConnection(t *testing.T) {
 				v.Entities[0].Ack = 99
 			}
 			started := time.Now()
-			if err := c.applyFull(encodeFull(v, DefaultConfig(), sessionState{ResumeToken{1}, 43})); err != nil {
+			if err := c.applyFull(encodeFull(v, DefaultConfig(), sessionState{token: ResumeToken{1}, lastAction: 43, epoch: 2})); err != nil {
 				t.Fatal("valid full state rejected", err)
 			}
 			if len(c.history) != 0 || len(c.recent) != 0 || c.resyncing || c.sequence != v.Entities[0].Ack ||
@@ -103,10 +113,10 @@ func TestFullStateRestoresResyncAndFreshConnection(t *testing.T) {
 func FuzzFullStateResync(f *testing.F) {
 	cfg := DefaultConfig()
 	entities := []Entity{{ID: 1, Generation: 1, Owner: 1, Dynamic: true, Ack: 5, State: []byte{9}}}
-	v := View{Player: 1, Tick: 11, Revision: 1, Entities: entities}
-	f.Add(encodeFull(v, cfg, sessionState{ResumeToken{1}, 43}))
+	v := View{Player: 1, Tick: 11, Revision: 1, ServerTime: 11 * time.Second / 30, Entities: entities}
+	f.Add(encodeFull(v, cfg, sessionState{token: ResumeToken{1}, lastAction: 43, epoch: 2}))
 	entities[0].Ack = 4
-	f.Add(encodeFull(v, cfg, sessionState{ResumeToken{1}, 43}))
+	f.Add(encodeFull(v, cfg, sessionState{token: ResumeToken{1}, lastAction: 43, epoch: 2}))
 	f.Fuzz(func(t *testing.T, packet []byte) {
 		if len(packet) > MaxFrame {
 			return
