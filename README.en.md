@@ -7,11 +7,11 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/Protocol-v3-5268e8)](PROTOCOL.md)
 
-[中文](README.md) · [Integration guide](docs/INTEGRATION.md) · [Protocol](PROTOCOL.md) · [Session resume](RESUME.md) · [Development validation](reports/updates/2026-10-10-weaknet/VALIDATION.md)
+[中文](README.md) · [Integration guide](docs/INTEGRATION.md) · [Protocol](PROTOCOL.md) · [Session resume](RESUME.md) · [Release validation](reports/release-v0.3.0/VALIDATION.md)
 
 An engine-independent core for rooms of up to 16 players, with a standalone server, headless reference client, a 2D movement and pickup example, and weak-network tests over real encrypted connections. Detailed technical documents are currently in Chinese.
 
-The current development tree targets **v0.3.0 / wire protocol v3** and is not published. Released **v0.2.1** uses protocol v2. Upgrade clients and servers together; see [migration](MIGRATION.md).
+The current version is **v0.3.0 / wire protocol v3**. **v0.2.1** retains protocol v2. Upgrade clients and servers together; see [migration](MIGRATION.md).
 
 ## Features
 
@@ -59,12 +59,12 @@ The local certificate lasts 24 hours, and generation does not overwrite existing
 ## Use as a library
 
 ```sh
-go get github.com/qihai-coding/go-statesync@v0.2.1
+go get github.com/qihai-coding/go-statesync@v0.3.0
 ```
 
 Implement `Game` for server simulation and `Model` for prediction and codecs, using an independent game instance per room. Start with the [2D example](arena/arena.go), then follow the [integration guide](docs/INTEGRATION.md).
 
-The installation command above fetches the released v2 library; v3 is available in this working tree. `Config.SnapshotEncoding` defaults to `DeltaSnapshots`; `FullSnapshots` provides a same-protocol bandwidth control. `SampleWithInfo` exposes the actual source time of rendered states.
+The installation command above fetches protocol v3. `Config.SnapshotEncoding` defaults to `DeltaSnapshots`; `FullSnapshots` provides a same-protocol bandwidth control. `SampleWithInfo` exposes the actual source time of rendered states.
 
 Resume is explicitly initiated by the application and returns a **new client object**:
 
@@ -91,7 +91,7 @@ go run ./cmd/check -isolate -rooms 8 -clients 16 -duration 10m -resume-every 30s
 
 Race detection requires a compatible C compiler. [CI](https://github.com/qihai-coding/go-statesync/actions/workflows/ci.yml) runs native tests and builds on Windows, Linux, and macOS, with race detection and six fuzz targets on Linux.
 
-[Development validation](reports/updates/2026-10-10-weaknet/VALIDATION.md) records same-protocol comparisons, display age, recovery, and resources for this working tree. [Initial development validation](reports/development-v0.3.0/VALIDATION.md) preserves the earlier weak-network failures; [v0.2.1 validation](reports/release-v0.2.1/VALIDATION.md) remains evidence for the published version. The room-step target is **p99 below 10 ms**. Server and client/proxy resource measurements exclude the coordinator. Total application bytes include both directions, initial synchronization, and resume; transport overhead is excluded. See [measurement methodology](docs/MEASUREMENT.md).
+[Release validation](reports/release-v0.3.0/VALIDATION.md) links this version's source and remote checks to the [raw weak-network validation](reports/updates/2026-10-10-weaknet/VALIDATION.md). [Initial development validation](reports/development-v0.3.0/VALIDATION.md) preserves the earlier weak-network failures; [v0.2.1 validation](reports/release-v0.2.1/VALIDATION.md) remains evidence for the previous release. The room-step target is **p99 below 10 ms**. Server and client/proxy resource measurements exclude the coordinator. Total application bytes include both directions, initial synchronization, and resume; transport overhead is excluded. See [measurement methodology](docs/MEASUREMENT.md).
 
 With 16 clients, 256 dynamic entities, 32-byte sparse states, and unchanged 30/15 Hz tick/snapshot rates, normal-network total bytes fell by 54.79%. All four five-minute weak-network pairs (150/300 ms RTT, seeds 7/701) saved 55.70%–56.09%, exceeding the 50% target. Worst per-entity p95 display age stayed at or below 0.35 seconds; every weak-network member recovered within 0.29 seconds without reliable state correction. The report preserves raw bytes, expected/submitted/applied updates, and resource evidence.
 

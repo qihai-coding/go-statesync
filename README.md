@@ -7,11 +7,11 @@
 [![License（许可证）](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Protocol（协议）](https://img.shields.io/badge/Protocol-v3-5268e8)](PROTOCOL.md)
 
-[English](README.en.md) · [接入指南](docs/INTEGRATION.md) · [协议](PROTOCOL.md) · [断线续接](RESUME.md) · [开发验收](reports/updates/2026-10-10-weaknet/VALIDATION.md)
+[English](README.en.md) · [接入指南](docs/INTEGRATION.md) · [协议](PROTOCOL.md) · [断线续接](RESUME.md) · [发布验收](reports/release-v0.3.0/VALIDATION.md)
 
 面向每房间最多 16 人的合作游戏与实时交互应用。核心库独立于游戏引擎，提供独立服务器、无界面参考客户端、二维移动与拾取示例，以及真实加密连接上的弱网测试。
 
-当前开发版本 **v0.3.0**，使用第 3 版同步协议，尚未发布。已发布的 v0.2.1 使用第 2 版；客户端与服务器需要一起升级，详见[迁移说明](MIGRATION.md)。
+当前版本 **v0.3.0**，使用第 3 版同步协议。v0.2.1 保留第 2 版；客户端与服务器需要一起升级，详见[迁移说明](MIGRATION.md)。
 
 ## 核心能力
 
@@ -81,12 +81,12 @@ go run ./cmd/client -room beta -pickup 1 -x 1 -duration 8s -disconnect-after 2s
 ## 作为库使用
 
 ```sh
-go get github.com/qihai-coding/go-statesync@v0.2.1
+go get github.com/qihai-coding/go-statesync@v0.3.0
 ```
 
 实现 `Game`（服务端游戏接口）和 `Model`（客户端预测及编码接口），为每个房间创建独立游戏实例。可先查看[二维示例](arena/arena.go)，再按[接入指南](docs/INTEGRATION.md#接入自己的游戏)替换游戏规则。
 
-上面的安装命令取得已发布的第 2 版；本地第 3 版使用当前工作树。`Config.SnapshotEncoding`（快照编码配置）默认是 `DeltaSnapshots`（差量模式），`FullSnapshots`（完整模式）用于同协议带宽对照。`SampleWithInfo`（带来源信息采样）可读取实际显示状态的来源时间。
+上面的安装命令取得第 3 版。`Config.SnapshotEncoding`（快照编码配置）默认是 `DeltaSnapshots`（差量模式），`FullSnapshots`（完整模式）用于同协议带宽对照。`SampleWithInfo`（带来源信息采样）可读取实际显示状态的来源时间。
 
 业务保存凭证并显式续接，成功后获得新的客户端对象：
 
@@ -113,7 +113,7 @@ go run ./cmd/check -isolate -rooms 8 -clients 16 -duration 10m -resume-every 30s
 
 竞态检测需要兼容的 C（编程语言）编译器。[持续集成](https://github.com/qihai-coding/go-statesync/actions/workflows/ci.yml)在三种桌面系统上执行原生测试和构建，另在 Linux（开源操作系统）执行竞态检测与六类模糊测试。
 
-[开发验收](reports/updates/2026-10-10-weaknet/VALIDATION.md)记录当前源码的同协议对照、时效、恢复和资源结果；[首次开发验收](reports/development-v0.3.0/VALIDATION.md)保留此前弱网未达标结果，[v0.2.1 发布验收](reports/release-v0.2.1/VALIDATION.md)保留已发布版本证据。房间单步目标为第 99 百分位低于 10 毫秒。本版分别记录服务器和客户端／代理进程资源，总量不含协调父进程；总应用字节包含双向消息、初始同步和续接。测量方法见[独立性能测量](docs/MEASUREMENT.md)。
+[发布验收](reports/release-v0.3.0/VALIDATION.md)关联本版源码、远程检查与[弱网优化原始报告](reports/updates/2026-10-10-weaknet/VALIDATION.md)；[首次开发验收](reports/development-v0.3.0/VALIDATION.md)保留此前弱网未达标结果，[v0.2.1 发布验收](reports/release-v0.2.1/VALIDATION.md)保留旧版本证据。房间单步目标为第 99 百分位低于 10 毫秒。本版分别记录服务器和客户端／代理进程资源，总量不含协调父进程；总应用字节包含双向消息、初始同步和续接。测量方法见[独立性能测量](docs/MEASUREMENT.md)。
 
 本轮固定 16 人、256 个动态实体、32 字节稀疏状态及每秒 30／15 次逻辑／快照频率：普通网络总字节下降 54.79%；150／300 毫秒、种子 7／701 的四组五分钟弱网对照下降 55.70%～56.09%，全部超过 50%。最差逐实体显示年龄第 95 百分位不超过 0.35 秒；解除弱网后全部在 0.29 秒内收敛，未依赖可靠状态纠正。原始字节、计划／提交／接受更新量及资源证据见报告。
 

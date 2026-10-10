@@ -1,0 +1,7 @@
+Checked at UTC: 2026-10-10T03:24:29.0815144Z
+Historical measurement/report files checked: 444.
+Changed historical measurement/report files: 0.
+Only reports/README.md navigation is updated.
+Existing v0.2.0 and v0.2.1 tag objects and peeled commits exactly match the pre-publication remote snapshot.
+Release IDs 406631567 and 407404304: titles, bodies, publication dates, target commits, asset IDs/names/sizes/digests match the pre-publication snapshot.
+This is the documentation checkpoint; after publishing v0.3.0 the same checks are repeated before completion.
